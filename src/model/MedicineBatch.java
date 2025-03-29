@@ -2,6 +2,13 @@ package model;
 
 import java.time.LocalDate;
 
+/**
+ * Changes:
+ * <ul>
+ *  <li>added {@link #isExpired()} method</li>
+ * </ul>
+ */
+
 public class MedicineBatch {
     
     private int batchId;
@@ -29,28 +36,14 @@ public class MedicineBatch {
     }
 
     // getters & setters
-    public int getBatchId() {
-        return batchId;
-    }
+    public int getId() {return batchId;}
+    public LocalDate getExpiryDate() {return expiryDate;}
+    public int getMedicineId() {return medicineId;}
+    public int getQuantity() {return quantity;}
+    public int getStock() {return stock;}
+    public LocalDate getStockedDate() {return stockedDate;}
 
-    public LocalDate getExpiryDate() {
-        return expiryDate;
-    }
-
-    public int getMedicineId() {
-        return medicineId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-    public int getStock() {
-        return stock;
-    }
-    public LocalDate getStockedDate() {
-        return stockedDate;
-    }
-
+    // methods
     public boolean isExpired(){
         return LocalDate.now().isAfter(expiryDate);
     }

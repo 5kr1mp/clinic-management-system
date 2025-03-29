@@ -1,7 +1,5 @@
 package model;
 
-import java.time.LocalDate;
-
 public class Medicine {
 
     private int id;
@@ -21,18 +19,8 @@ public class Medicine {
         this.manufacturer = "Unknown";
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getManufacturer() {
-        return manufacturer;
-    }
-    
-    public String getName() {
-        return name;
-    }
-
-    // getters and setters
+    public int getId() {return id;}
+    public String getManufacturer() {return manufacturer;}
+    public String getName() {return name;}
 
 }
