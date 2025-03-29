@@ -6,6 +6,14 @@ import java.util.ArrayList;
 import model.*;
 import util.DateRange;
 
+/**
+ * Changes:
+ * <ul>
+ *  <li>Updated method calls for {@link model.PatientRecord#getId()}; previously "getRecordId()"</li>
+ *  <li>Added {@link #generateId()} method</li>
+ * </ul>
+ */
+
 public class PatientRecordService {
 
     private PatientRecordDao dao;
@@ -14,22 +22,35 @@ public class PatientRecordService {
         this.dao = patientRecordDao;
     }
 
-    void add(PatientRecord record) throws Exception{
+    public int generateId() {
+        ArrayList<PatientRecord> records = dao.getAll();
+        int maxId = 0;
+    
+        for (PatientRecord record : records) {
+            if (record.getId() > maxId) {
+                maxId = record.getId();
+            }
+        }
+    
+        return maxId + 1;
+    }
 
-        if (dao.get(record.getRecordId()) != null) throw new Exception("Record with ID " + record.getRecordId() + " already exists.");
+    public void add(PatientRecord record) throws Exception{
+
+        if (dao.get(record.getId()) != null) throw new Exception("Record with ID " + record.getId() + " already exists.");
 
         dao.add(record);
         System.out.println("Patient record added successfully.");
     }
 
-    void update(PatientRecord record) throws Exception{
-        if (dao.get(record.getRecordId()) == null) throw new Exception("Record with ID " + record.getRecordId() + " not found.");
+    public void update(PatientRecord record) throws Exception{
+        if (dao.get(record.getId()) == null) throw new Exception("Record with ID " + record.getId() + " not found.");
 
         dao.update(record);
         System.out.println("Patient record updated successfully.");
     }
 
-    void delete(int id) throws Exception{
+    public void delete(int id) throws Exception{
 
         PatientRecord record = dao.get(id);
 

@@ -14,6 +14,9 @@ public class PatientDao {
         // Assuming inani ang constructor sa Patient
         // Patient {
         //     int id,
+        //     String lastname,
+        //     String firstname,
+        //     Sting middlename,
         //     String name,
         //     Designation designation,
         //     Category Category,
@@ -21,16 +24,20 @@ public class PatientDao {
         //     ArrayList<PatientRecord> records
         // }
         new Patient(
-            1,
-            "A",
+            2024-0143,
+            "Cookie",
+            "Shadow",
+            "Milk",
             Designation.BSIT_1IT,
             Category.STUDENT,
             "09123124234",
-            new ArrayList<>()
+            new ArrayList<>() // no records
         ),
         new Patient(
-            2,
-            "B",
+            2024-00045,
+            "Salada",
+            "Trixy",
+            "D.",
             Designation.BSIT_1IT,
             Category.STUDENT,
             "09124321234",

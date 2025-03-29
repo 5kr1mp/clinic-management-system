@@ -28,7 +28,6 @@ public class Patient {
         String lastname,
         String firstname,
         String middlename,
-        String name,
         Designation designation,
         Category category,
         String contact,

@@ -30,7 +30,14 @@ public class PatientRecord {
     private String diagnosis;
     private ArrayList<IssuedMedicine> medicinesIssued;
 
-    public PatientRecord(int id, int patientId, LocalDateTime date, String desc, String diagnosis, ArrayList<IssuedMedicine> medicinesIssued) {
+    public PatientRecord(
+        int id, 
+        int patientId, 
+        LocalDateTime date, 
+        String desc, 
+        String diagnosis, 
+        ArrayList<IssuedMedicine> medicinesIssued
+    ) {
         this.recordId= id;
         this.patientId = patientId;
         this.date = date;

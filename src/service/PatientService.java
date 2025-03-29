@@ -14,6 +14,19 @@ public class PatientService {
 
     // methods
 
+    public int generateId() {
+        ArrayList<Patient> patients = dao.getAll();
+        int maxId = 0;
+    
+        for (Patient patient : patients) {
+            if (patient.getId() > maxId) {
+                maxId = patient.getId();
+            }
+        }
+    
+        return maxId + 1;
+    }
+
     public void add(Patient patient) throws IllegalArgumentException{
         // Check if patient already exists
         if (dao.get(patient.getId()) != null) throw new IllegalArgumentException("This patient already exists.");

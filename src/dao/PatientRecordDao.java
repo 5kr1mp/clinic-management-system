@@ -5,6 +5,13 @@ import java.time.LocalDateTime;
 import java.util.*;
 import model.*;
 
+
+/**
+ * Changes:
+ * <ul>
+ *  <li>Changed getRecordId() to getId()</li>
+ * </ul>
+ */
 public class PatientRecordDao {
     
     /**
@@ -22,28 +29,25 @@ public class PatientRecordDao {
         //     ArrayList<PatientRecord> medicinesIssued
         // }
         new PatientRecord(
-            11,
             1,
-            new PatientDao().get(1),
+            1,
             LocalDateTime.now(),
             "a",
             "fever",
             new ArrayList<>()
         ),
         new PatientRecord(
-            12,
+            2,
             1,
-            new PatientDao().get(1),
-            LocalDateTime.of(2025, 2, 27,0,0,0),
+            LocalDateTime.of(2025, 3, 27,0,0,0),
             "b",
             "fever again",
             new ArrayList<>()
         ),
         new PatientRecord(
-            21,
+            3,
             2,
-            new PatientDao().get(2),
-            LocalDateTime.of(2025,2,25,0,0,0),
+            LocalDateTime.of(2025,3,25,0,0,0),
             "c",
             "ah",
             new ArrayList<>()
@@ -78,7 +82,7 @@ public class PatientRecordDao {
      */
     public PatientRecord get(int id){
         for (PatientRecord patientRecord : records) {
-            if (patientRecord.getRecordId() == id) return patientRecord;
+            if (patientRecord.getId() == id) return patientRecord;
         }
 
         return null;
@@ -91,7 +95,7 @@ public class PatientRecordDao {
      */
     public void update(PatientRecord record){
         for (int i = 0; i < records.size(); i++){
-            if (records.get(i).getRecordId() == record.getRecordId()){
+            if (records.get(i).getId() == record.getId()){
                 records.set(i, record);
             }
         }
@@ -104,7 +108,7 @@ public class PatientRecordDao {
      */
     public void delete(int id){
         for (int i = 0; i < records.size(); i++){
-            if (records.get(i).getRecordId() == id){
+            if (records.get(i).getId() == id){
                 records.remove(i);
             }
         }
