@@ -4,6 +4,13 @@ import java.time.*;
 import java.util.*;
 import model.*;
 
+/**
+ * Changes:
+ * <ul>
+ *  <li>changed batch.getBatchId() to batch.getId() </li>
+ * </ul>
+ */
+
 public class MedicineBatchDao {
 
     private ArrayList<MedicineBatch> batches = new ArrayList<>(List.of(
@@ -68,7 +75,7 @@ public class MedicineBatchDao {
      */
     public MedicineBatch get(int id){
         for (MedicineBatch batch : batches) {
-            if (batch.getBatchId() == id){
+            if (batch.getId() == id){
                 return batch;
             }
         }
@@ -86,7 +93,7 @@ public class MedicineBatchDao {
      */
     public void update(MedicineBatch batch){
         for (int i = 0; i < batches.size(); i++){
-            if (batches.get(i).getBatchId() == batch.getBatchId()){
+            if (batches.get(i).getId() == batch.getId()){
                 batches.set(i, batch);
             }
         }
@@ -99,7 +106,7 @@ public class MedicineBatchDao {
      */
     public void delete(int id){
         for (int i = 0; i < batches.size(); i++){
-            if (batches.get(i).getBatchId() == id){
+            if (batches.get(i).getId() == id){
                 batches.remove(i);
             }
         }
