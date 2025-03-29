@@ -6,6 +6,7 @@ import java.time.LocalDate;
  * Changes:
  * <ul>
  *  <li>added {@link #isExpired()} method</li>
+ *  <li>added {@link #decreaseStock()} method</li> 
  * </ul>
  */
 
@@ -46,5 +47,9 @@ public class MedicineBatch {
     // methods
     public boolean isExpired(){
         return LocalDate.now().isAfter(expiryDate);
+    }
+
+    public void decreaseStock(int amount){
+        stock -= amount;
     }
 }
