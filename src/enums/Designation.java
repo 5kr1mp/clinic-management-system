@@ -54,7 +54,13 @@ public enum Designation {
     BSABE_3B,
     SOM_MEDSCI1,
     SOM_MEDSCI2,
-    SOM_MEDSCI3
+    SOM_MEDSCI3;
+
+    public static Designation from(String string) throws RuntimeException{
+
+        return valueOf(string.toUpperCase());
+
+    }
     
     
 }
