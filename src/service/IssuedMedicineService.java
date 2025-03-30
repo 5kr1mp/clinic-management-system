@@ -44,9 +44,9 @@ public class IssuedMedicineService {
 
         ArrayList<IssuedMedicine> issuedMeds = new ArrayList<>();
         
-        for (IssuedMedicine issuedMed : issuedMeds) {
+        for (IssuedMedicine issuedMed : dao.getAll()) {
             if (issuedMed.getRecordId() == id){
-                issuedMeds.get(id);
+                issuedMeds.add(issuedMed);
             }
         }
 
@@ -58,9 +58,9 @@ public class IssuedMedicineService {
 
         ArrayList<IssuedMedicine> issuedMeds = new ArrayList<>();
         
-        for (IssuedMedicine issuedMed : issuedMeds) {
+        for (IssuedMedicine issuedMed : dao.getAll()) {
             if (issuedMed.getMedicineId() == id){
-                issuedMeds.get(id);
+                issuedMeds.add(issuedMed);
             }
         }
 
