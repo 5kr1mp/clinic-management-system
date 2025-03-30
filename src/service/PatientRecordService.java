@@ -40,14 +40,12 @@ public class PatientRecordService {
         if (dao.get(record.getId()) != null) throw new Exception("Record with ID " + record.getId() + " already exists.");
 
         dao.add(record);
-        System.out.println("Patient record added successfully.");
     }
 
     public void update(PatientRecord record) throws Exception{
         if (dao.get(record.getId()) == null) throw new Exception("Record with ID " + record.getId() + " not found.");
 
         dao.update(record);
-        System.out.println("Patient record updated successfully.");
     }
 
     public void delete(int id) throws Exception{
@@ -57,7 +55,6 @@ public class PatientRecordService {
         if (record == null) throw new Exception("Record with ID " + id + " not found.");
 
         dao.delete(id);
-        System.out.println("Patient record deleted successfully.");
     }
 
 
