@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import model.*;
+import service.IssuedMedicineService;
 
 
 /**
@@ -30,7 +31,7 @@ public class PatientRecordDao {
         // }
         new PatientRecord(
             1,
-            1,
+            20240143,
             LocalDateTime.now(),
             "a",
             "fever",
@@ -38,7 +39,7 @@ public class PatientRecordDao {
         ),
         new PatientRecord(
             2,
-            1,
+            20240143,
             LocalDateTime.of(2025, 3, 27,0,0,0),
             "b",
             "fever again",
@@ -46,7 +47,7 @@ public class PatientRecordDao {
         ),
         new PatientRecord(
             3,
-            2,
+            202400045,
             LocalDateTime.of(2025,3,25,0,0,0),
             "c",
             "ah",

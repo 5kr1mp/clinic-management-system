@@ -24,7 +24,7 @@ public class PatientDao {
         //     ArrayList<PatientRecord> records
         // }
         new Patient(
-            2024-0143,
+            20240143,
             "Cookie",
             "Shadow",
             "Milk",
@@ -34,7 +34,7 @@ public class PatientDao {
             new ArrayList<>() // no records
         ),
         new Patient(
-            2024-00045,
+            202400045,
             "Salada",
             "Trixy",
             "D.",
