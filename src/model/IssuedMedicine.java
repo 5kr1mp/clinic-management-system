@@ -13,7 +13,6 @@ public class IssuedMedicine {
     private int recordId;
     private int medicineId;
     private int amount;
-
     private Medicine medicine;
 
     public IssuedMedicine(

@@ -6,7 +6,7 @@ import java.time.LocalDate;
  * Changes:
  * <ul>
  *  <li>added {@link #isExpired()} method</li>
- *  <li>added {@link #decreaseStock()} method</li> 
+ *  <li>added {@link #decreaseStock(int)} method</li> 
  * </ul>
  */
 
