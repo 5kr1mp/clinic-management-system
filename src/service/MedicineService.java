@@ -65,6 +65,20 @@ public class MedicineService {
         return expiredMedicineBatches;
     }
 
+    public ArrayList<MedicineBatch> getNonExpiredMedicineBatches(){
+        ArrayList<MedicineBatch> nonExpiredMedicineBatches = new ArrayList<>();
+
+        // iterate through batches
+        for (MedicineBatch batch : batchDao.getAll()){
+            // if batch is expired
+            if (!batch.isExpired()){
+                nonExpiredMedicineBatches.add(batch);
+            }
+        }
+
+        return nonExpiredMedicineBatches;
+    }
+
     public ArrayList<MedicineBatch> getMedicineBatches(){
         return batchDao.getAll();
     }
@@ -86,6 +100,17 @@ public class MedicineService {
 
         medicineDao.update(medicine);
     
+    }
+
+    public void addBatch(MedicineBatch batch) throws Exception {
+
+        for (MedicineBatch add : batchDao.getAll()){
+            if (add.getId() == batch.getId()){
+                throw new IllegalArgumentException("Duplicate batch.");
+            }
+        }
+
+        batchDao.add(batch);
     }
     
     public void updateBatch(MedicineBatch batch) throws Exception{
@@ -115,9 +140,19 @@ public class MedicineService {
      * @param amount amount to subtract
      */
     public void decreaseStock(int batchId, int amount) throws Exception{
-        MedicineBatch batch;
+        MedicineBatch batch = batchDao.get(batchId);
 
         // Add code diri and exception handling
+        if(batch == null){
+            throw new Exception("Batch ID not found");
+        }
+        if(amount < 0){
+            throw new Exception("It must not be negative");
+        }
+        if(amount > batch.getStock()){
+            throw new Exception("not bigger daw sa current stock");
+        }
+        batch.decreaseStock(amount);
 
         batchDao.update(batch);
     }
@@ -140,7 +175,31 @@ public class MedicineService {
         return medicine;
     }
 
+    public int generateMedicineId() {
+        ArrayList<Medicine> medicines = medicineDao.getAll();
+        int maxId = 0;
 
+        for (Medicine medicine: medicines) {
+            if (medicine.getId() > maxId) {
+                maxId = medicine.getId();
+            }
+        }
+
+        return maxId + 1;
+    }
+
+    public int generateBatchId() {
+        ArrayList<MedicineBatch> batches = batchDao.getAll();
+        int maxId = 0;
+
+        for (MedicineBatch batch : batches) {
+            if (batch.getId() > maxId) {
+                maxId = batch.getId();
+            }
+        }
+
+        return maxId + 1;
+    }
 
 
 
