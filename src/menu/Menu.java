@@ -42,7 +42,7 @@ class Menu {
                 return number;
             }
             catch (Exception e){
-                System.err.println("Error: Please enter a valid number");
+                System.out.println("Error: Please enter a valid number");
                 scn.nextLine();
                 System.out.print("Enter number: ");
             }
