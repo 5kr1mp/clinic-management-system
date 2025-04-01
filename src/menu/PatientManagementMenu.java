@@ -517,59 +517,52 @@ public class PatientManagementMenu extends Menu {
             System.out.println("No records available...");
             return;
         }
+        
+        try {
 
-        System.out.printf("""
-        ------------------------------------------------------------------------ Records ------------------------------------------------------------------------
-        %-19s | %-30s | %-50s | %-30s        
-        ---------------------------------------------------------------------------------------------------------------------------------------------------------
-        ""","Date & Time","Description","Diagnosis", "Medicines Issued");
-
-        for (PatientRecord record : records) {
-
-            ArrayList<IssuedMedicine> issuedMedicines = new ArrayList<>();
-            IssuedMedicine firstIssuedMedicine = null;
-            String firstMedicineName = "";
-
-            try{
-                issuedMedicines = issuedMedicineService.getIssuedMedicinesByRecordId(record.getId());
-                firstIssuedMedicine = issuedMedicines.get(0);
-                firstMedicineName = medService.getMedicine(
-                        firstIssuedMedicine.getMedicineId()
-                    ).getName();
-            }
-            catch (Exception e){
-
-            }
-            
             System.out.printf("""
-            %-19s | %-30s | %-50s | %-30s        
-            """,
-            DateTimeFormat.formatDateTime(record.getDate()),
-            record.getDesc(),
-            record.getDiagnosis(),
-            firstMedicineName+ " x"+ firstIssuedMedicine.getAmount());
-
-            for (int i = 1; i < issuedMedicines.size(); i++) {
-                IssuedMedicine med = issuedMedicines.get(i);
-
-                String medName = "Unknown"; 
-                try {
-                    medName = medService.getMedicine(med.getMedicineId()).getName();
+                --------------------------------------------------------------------------------------------------- Records ---------------------------------------------------------------------------------------------------
+                %-19s | %-30s | %-50s | %-30s        
+                ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                ""","Date & Time","Description","Diagnosis", "Medicines Issued");
+        
+            for (PatientRecord record : records) {
+    
+                ArrayList<IssuedMedicine> issuedMedicines = issuedMedicineService.getIssuedMedicinesByRecordId(record.getId());
+    
+                String issuedMedsString = "";
+    
+                for (IssuedMedicine issuedMedicine : issuedMedicines) {
+    
+                    Medicine medicine = medService.getMedicine(issuedMedicine.getMedicineId());
+    
+    
+                    issuedMedsString = issuedMedsString.concat(String.format(
+                        "%s x%d, ",
+                        medicine.getName(),
+                        issuedMedicine.getAmount()
+                    ));
                 }
-                catch(Exception e){
-
-                }
+    
+                issuedMedsString = issuedMedsString.substring(0, issuedMedsString.length()-1);
                 
                 System.out.printf("""
-                    %-19s | %-30s | %-50s | %-30s        
-                    """,
-                    " ",
-                    " ",
-                    " ",
-                    medName + " x"+med.getAmount()
-                ); 
+                %-19s | %-30s | %-50s | %-50s
+                """,
+                DateTimeFormat.formatDateTime(record.getDate()),
+                record.getDesc(),
+                record.getDiagnosis(),
+                issuedMedsString
+                );
+    
+                
             }
+            System.out.println();
         }
+        catch (Exception e){
+
+        }
+
     }
 
 }
