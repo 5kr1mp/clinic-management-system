@@ -119,7 +119,7 @@ public class LogbookMenu extends Menu {
 
     private void searchByName() {
         while(true){
-            System.out.print("Enter Name to search: ");
+            System.out.print("Enter Name to search (Lastname, Firstname Middlename): ");
             String name = scanner.nextLine().trim();
             try {
                 ArrayList<Log> logs = logService.getLogsByName(name);
