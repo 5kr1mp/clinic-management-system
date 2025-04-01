@@ -122,6 +122,7 @@ public class InventoryMenu extends Menu{
     public void addMedicineMenu(){
         while(true){
             try {
+                System.out.println("\n========================== Add Medicine ==========================");
                 int medicineId = medicineService.generateMedicineId();
                 System.out.print("\nEnter name: ");
                 String medicineName = scn.nextLine().trim();
@@ -145,6 +146,7 @@ public class InventoryMenu extends Menu{
     public void addBatchMenu() {
         while(true){
             try {
+                System.out.println("========================== Add Batch ==========================");
                 viewMedicines();
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
                 int batchId = medicineService.generateBatchId();
