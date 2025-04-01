@@ -16,29 +16,18 @@ class Menu {
         enterToRetry();
     }
 
-    public static void confirmRetry(){
-
-    }
-
-    public static void enterToContinue(){
-        System.out.print("Press enter to continue...");
-        scn.nextLine();
-    }
     
     public static void enterToRetry(){
         System.out.print("Press enter to retry...");
         scn.nextLine();
     }
 
-    public static void patientDoesNotExist(int id){
-        System.out.println("Error: Patient with id " + id + "does not exist.");
-        enterToRetry();
+    public static String retryOrContinue(String messaage){
+        System.out.println(messaage);
+        System.out.print("[Enter 1 to retry. Enter any other key to return] ");
+        return scn.nextLine();
     }
 
-    public static void medicineDoesNotExist(String medName){
-        System.out.println("Error: " + medName + " does not exist.");
-        enterToRetry();
-    }
 
     public static int inputNumber(){
         int number;
@@ -49,6 +38,8 @@ class Menu {
             }
             catch (Exception e){
                 System.err.println("Error: Please enter a valid number");
+                scn.nextLine();
+                System.out.print("Enter number: ");
             }
         }
     }

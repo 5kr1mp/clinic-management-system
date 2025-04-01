@@ -45,7 +45,7 @@ public class MainMenu extends Menu {
                     case 3: logBookMenu.showMenu(); break;
                     case 4: reportMenu.displayMenu(); break;
                     case 5: 
-                        System.out.println("Exiting program...");
+                        System.out.print("Exiting program...");
                         scn.nextLine();
                         return;
                     default:

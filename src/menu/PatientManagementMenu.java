@@ -32,16 +32,16 @@ public class PatientManagementMenu extends Menu {
         String option;
 
         while (true) {
-            System.out.println("=======Patient Menu======");
+            System.out.println("======= Patient Menu ======");
             System.out.println("[1] Add Patient Record");
-            System.out.println("[2] View Patient");
-            System.out.println("[3] View Student Patients");
-            System.out.println("[4] View Faculty Patients");
-            System.out.println("[5] Exit");
-            System.out.print("Choose an option: ");
+            System.out.println("[2] Register Patient");
+            System.out.println("[3] View Patient");
+            System.out.println("[4] View Student Patients");
+            System.out.println("[5] View Faculty Patients");
+            System.out.println("[6] Exit");
+            System.out.print("\nChoose an option: ");
 
             option = scn.nextLine();
-            scn.nextLine(); // Fix scanner issue
 
             switch (option) {
                 case "1":
@@ -58,6 +58,7 @@ public class PatientManagementMenu extends Menu {
                     break;
                 case "5":
                     viewFacultyPatients();
+                    break;
                 case "6":
                     return; // Exit
                 default:
@@ -78,24 +79,28 @@ public class PatientManagementMenu extends Menu {
 
         while (true) {
             try{
-                System.out.println("========= Add Record =========");
+                System.out.println("\n========= Add Record =========");
 
                 System.out.print("Enter patient id: ");
                 patientId = inputNumber();
                 patient = patientService.getPatient(patientId);
 
                 if (patient == null){
-                    patientDoesNotExist(patientId);
-                    continue;
+                    System.out.println("Patient with ID " + patientId + " does not exist");
+                    System.out.print("Enter 1 to retry. Otherwise enter any key... ");
+                    if (scn.nextLine().trim().equals("1")){
+                        continue;
+                    }
+                    return;
                 }
                 
                 System.out.print("Enter notes: ");
                 desc = scn.nextLine().trim();
                 
-                System.out.print("Enter diagnosis");
+                System.out.print("Enter diagnosis: ");
                 diagnosis = scn.nextLine().trim();
 
-                System.out.println("Press 1 to enter issued medicines: ");
+                System.out.print("Press 1 to enter issued medicines: ");
                 
                 issuedMedicines = scn.nextLine().trim().equals("1") ? 
                                     inputIssuedMedicines(recordId) :
@@ -144,7 +149,6 @@ public class PatientManagementMenu extends Menu {
         Date & Time: %s
         Description: %s
         Diagnosis: %s
-        
         """,
         record.getId(),
         record.getPatientId(),
@@ -153,10 +157,17 @@ public class PatientManagementMenu extends Menu {
         record.getDiagnosis()
         );
 
+        if (record.getMedicineIssued().isEmpty()){
+            System.out.println("No medicines issued");
+            System.out.println();
+            return;
+        }
+
         System.out.printf("""
-        -------------
+
+        ------------------------------
         %-20s | %-5s 
-        -------------    
+        ------------------------------ 
         """,
         "Medicine",
         "Amount");
@@ -180,7 +191,8 @@ public class PatientManagementMenu extends Menu {
                 Medicine med;
                 String medName;
                 int amount;
-
+                
+                System.out.println("====================================");
                 // medicine not found
                 System.out.print("Enter medicine name: ");
                 medName = scn.nextLine().trim();
@@ -198,16 +210,21 @@ public class PatientManagementMenu extends Menu {
                 }
 
                 // no stock
-                System.out.print("\nEnter amount: ");
+                System.out.print("Enter amount: ");
                 amount = inputNumber();
 
                 ArrayList<MedicineBatch> batches = medService.getMedicineBatchesByMedicineId(med.getId(), false);
 
                 // if wa nastock
                 if (batches.isEmpty()){
-                    System.out.println("No available stock for " + medName);
-                    enterToRetry();
-                    continue;
+                    System.out.printf("No stock for %s. [Enter 1 to retry. Any other key to confirm and continue]",medName);
+                    String input = scn.nextLine().trim();
+    
+                    if (input.equals("1")){
+                        continue;
+                    }
+                    
+                    return issuedMedicines;
                 }
 
                 int remainingAmountNeeded = amount;
@@ -215,14 +232,17 @@ public class PatientManagementMenu extends Menu {
 
                     // if batch stock is less than amount, huruton ang stock tapos continue sa next non expired batch
                     if (nonExpiredBatch.getStock() < remainingAmountNeeded){
-                        remainingAmountNeeded -= nonExpiredBatch.getStock();
-                        medService.decreaseStock(nonExpiredBatch.getId(), nonExpiredBatch.getStock());
+
+                        int remainingStock = nonExpiredBatch.getStock();
+                        remainingAmountNeeded -= remainingStock;
+                        medService.decreaseStock(nonExpiredBatch.getId(), remainingStock);
                         continue;
                     }
 
                     // batch stock is greater than amount, diri nalang mukuha
                     if (nonExpiredBatch.getStock() >= remainingAmountNeeded){
                         medService.decreaseStock(nonExpiredBatch.getId(), remainingAmountNeeded);
+                        remainingAmountNeeded = 0;
                         break;
                     }
 
@@ -240,13 +260,14 @@ public class PatientManagementMenu extends Menu {
                     System.out.printf("Only issued %d %s\n",amount,medName);
                 }
 
+                System.out.printf("%d %s succesfully issued...\n",amount, medName);
+                
+                
                 // update stuff
-                System.out.println("Medicine succesfully issued...");
-
                 IssuedMedicine issuedMedicine = new IssuedMedicine(
                     issuedMedicineService.generateId(),
                     recordId,
-                    med.getId(),
+                    med,
                     amount
                 );
 
@@ -254,7 +275,7 @@ public class PatientManagementMenu extends Menu {
                 issuedMedicines.add(issuedMedicine);
 
                 // retry or nah
-                System.out.println("\nDo you want to add another entry? [Enter 1]");
+                System.out.print("\nDo you want to add another entry? [Enter 1] ");
                 String input = scn.nextLine().trim();
 
                 if (input.equals("1")){
@@ -281,11 +302,15 @@ public class PatientManagementMenu extends Menu {
     public void addPatientView() {
         while (true) {
             try {
-                System.out.println("\n=== Add Patient Record ===");
+                System.out.println("\n=== Add Patient ===");
 
                 System.out.print("Enter ID: ");
-                int id = scn.nextInt();
-                scn.nextLine();
+                int id = inputNumber();
+
+                if (patientService.patientExists(id)){
+                    retryOrContinue("Patient with id already exists");
+                    continue;
+                }
 
                 System.out.print("Enter Last Name: ");
                 String lastname = scn.nextLine();
@@ -296,11 +321,11 @@ public class PatientManagementMenu extends Menu {
                 System.out.print("Enter Middle Name: ");
                 String middlename = scn.nextLine();
 
-                System.out.print("Confirm Designation (STUDENT, FACULTY, etc.): ");
+                System.out.print("Confirm program and designation (e.g. BSIT-1IT, BSIT-FACULTY): ");
                 String input1 = scn.nextLine().toUpperCase();
                 Designation designation;
                 try {
-                    designation = Designation.valueOf(input1);
+                    designation = Designation.from(input1);
                     System.out.println("Designation confirmed: " + designation);
                 } catch (Exception e) {
                     System.out.println("Invalid designation. Please enter a valid one.");
@@ -326,9 +351,8 @@ public class PatientManagementMenu extends Menu {
 
                 Patient patient = new Patient(id, lastname, firstname, middlename, designation , category , contact, records);
                 patientService.add(patient);
-                System.out.println("Patient added successfully!");
-
-                patientService.add(patient);
+                System.out.println("\n==================================");
+                System.out.println("Patient added successfully!\n");
 
                 System.out.println("ID: " + patient.getId());
                 System.out.println("Name: " + patient.getLastname() + ", " + patient.getFirstname() + " " + patient.getMiddlename());
@@ -353,7 +377,7 @@ public class PatientManagementMenu extends Menu {
 
     public void viewPatient() {
         while (true) {
-            System.out.print("Enter Patient ID / Name: ");
+            System.out.print("\nEnter Patient ID / Name (Lastname, Firstname Middlename): ");
 
             Patient patient = null;
             try {
@@ -391,7 +415,7 @@ public class PatientManagementMenu extends Menu {
                     }
                 }
 
-
+                System.out.println();
                 return;
             } catch (Exception e) {
                 System.out.println("Invalid input. Please enter a valid Patient ID or Name.");
@@ -417,11 +441,11 @@ public class PatientManagementMenu extends Menu {
 
                 int count = 1;
                 for (Patient patient : studentPatients) {
-                    System.out.println(patient);
                     System.out.print(count + ". "); // Add numbering
+                    System.out.println(patient.getName());
                     count++;
                 }
-
+                System.out.println();
                 return;
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -445,11 +469,11 @@ public class PatientManagementMenu extends Menu {
 
                 int count = 1;
                 for (Patient patient : facultyPatients) {
-                    System.out.println(patient);
-                    System.out.print(count + ". "); // Add numbering
+                    System.out.print(count + ". ");
+                    System.out.println(patient.getName());
                     count++;
                 }
-
+                System.out.println();
                 return;
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -461,6 +485,10 @@ public class PatientManagementMenu extends Menu {
                 return;
             }
         }
+    }
+
+    public void viewRecords(){
+        
     }
 
 }
