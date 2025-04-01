@@ -4,7 +4,6 @@ import service.MedicineService;
 import model.MedicineBatch;
 import model.Medicine;
 import util.DateTimeFormat; // sa add batch
-import util.Sorter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

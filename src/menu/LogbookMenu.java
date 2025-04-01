@@ -7,11 +7,9 @@ import util.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import dao.PatientDao;
 
 public class LogbookMenu extends Menu {
     private LogService logService;
