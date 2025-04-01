@@ -22,6 +22,11 @@ class Menu {
         scn.nextLine();
     }
 
+    public static void enterToContinue(){
+        System.out.print("Press enter to continue...");
+        scn.nextLine();
+    }
+
     public static String retryOrContinue(String messaage){
         System.out.println(messaage);
         System.out.print("[Enter 1 to retry. Enter any other key to return] ");

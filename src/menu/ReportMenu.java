@@ -54,6 +54,7 @@ public class ReportMenu extends Menu{
         patientStatistics(report);
         diagnosisStatistics(report);
         inventoryStatistics(report);
+        issuedMedicineStatistics(report);
         
 
     }
@@ -71,6 +72,7 @@ public class ReportMenu extends Menu{
         patientStatistics(report);
         diagnosisStatistics(report);
         inventoryStatistics(report);
+        issuedMedicineStatistics(report);
         
     }
 
@@ -86,6 +88,7 @@ public class ReportMenu extends Menu{
         patientStatistics(report);
         diagnosisStatistics(report);
         inventoryStatistics(report);
+        issuedMedicineStatistics(report);
         
     }
 
@@ -166,7 +169,7 @@ public class ReportMenu extends Menu{
         ============================ Issued Medicine Statistics ============================
         %-75s | %-5s
         ====================================================================================       
-        ""","Issued Medicine","Count");
+        ""","Issued Medicine","Amount");
 
         if (uniquePrescribedMedicinesId.isEmpty()){
             System.out.println("Nothing to report");
@@ -186,27 +189,5 @@ public class ReportMenu extends Menu{
         \n\n""");
     }
 
-    public static void main(String[] args) {
-        ReportMenu menu = new ReportMenu(
-            new ReportService(
-                new MedicineService(
-                    new MedicineDao(), 
-                    new MedicineBatchDao()
-                ),
-                new PatientRecordService(
-                    new PatientRecordDao()
-                ),
-                new PatientService(
-                    new PatientDao()
-                ),
-                new IssuedMedicineService(
-                    new IssuedMedicineDao()
-                )
-            )
-        );
-
-
-        menu.displayMenu();
-    }
 
 }

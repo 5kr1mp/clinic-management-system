@@ -243,11 +243,6 @@ public class MedicineService {
     }
 
 
-
-
-
-
-
     // public void deleteMedicine(int id) throws Exception {
 
     //     for (Medicine med : medicineDao.getAll()){

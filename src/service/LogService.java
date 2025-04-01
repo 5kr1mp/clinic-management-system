@@ -14,9 +14,8 @@ public class LogService {
     }
 
     public void add(Log log) throws Exception {
-        
         if (log == null) {
-            throw new IllegalArgumentException("Please provide a valid log entry.");
+            throw new Exception("Please provide a valid log entry.");
         }
         
         if (dao.get(log.getId()) != null) {
@@ -26,65 +25,62 @@ public class LogService {
         dao.add(log);
     }
 
+    public int generateId() {
+        ArrayList<Log> logs = dao.getAll();
+        int maxId = 0;
+    
+        for (Log log : logs) {
+            if (log.getId() > maxId) {
+                maxId = log.getId();
+            }
+        }
+    
+        return maxId + 1;
+    
+
+    }
+
+    public ArrayList<Log> getLogsByPatientId(int id){
+        ArrayList<Log> filteredLogs = new ArrayList<>();
+        for (Log log : dao.getAll()) {
+            if (log.getPatientId() == id) { 
+                filteredLogs.add(log);
+            }
+        }
+        return filteredLogs;
+    }
+    
     public Log getLog(int id) throws Exception {
         Log log = dao.get(id);
-
         if (log == null) {
             throw new Exception("No log found with ID " + id + ".");
         }
-
         return log;
     }
 
     public ArrayList<Log> getLogs() throws Exception {
         ArrayList<Log> logs = dao.getAll();
-
-        if (logs.isEmpty()) {
-            throw new Exception("There are no logs available at the moment.");
-        }
-        
         return logs;
     }
 
     public ArrayList<Log> getLogsByName(String name) throws Exception {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Please provide a valid name.");
+        if (name.isEmpty()) {
+            throw new Exception("Please provide a valid name.");
         }
         
-        ArrayList<Log> filteredLogs = new ArrayList<>();
+        ArrayList<Log> logsByName = new ArrayList<>();
         for (Log log : dao.getAll()) {
-            if (log.getName().equalsIgnoreCase(name)) {
-                filteredLogs.add(log);
+            if (log.getName().equalsIgnoreCase(name)) { 
+                logsByName.add(log);
             }
         }
         
-        if (filteredLogs.isEmpty()) {
-            throw new Exception("No logs found for the name: " + name);
-        }
-        return filteredLogs;
-    }
-
-    public ArrayList<Log> getLogs(LocalDate date) throws Exception {
-        if (date == null) {
-            throw new IllegalArgumentException("Please provide a valid date.");
-        }
-        
-        ArrayList<Log> filteredLogs = new ArrayList<>();
-        for (Log log : dao.getAll()) {
-            if (log.getDate().toLocalDate().equals(date)) {
-                filteredLogs.add(log);
-            }
-        }
-        
-        if (filteredLogs.isEmpty()) {
-            throw new Exception("No logs found for the date: " + date);
-        }
-        return filteredLogs;
+        return logsByName;
     }
 
     public ArrayList<Log> getLogsByDate(LocalDate date) throws Exception {
         if (date == null) {
-            throw new IllegalArgumentException("Please provide a valid date.");
+            throw new Exception("Please provide a valid date.");
         }
         
         ArrayList<Log> filteredLogs = new ArrayList<>();
@@ -94,9 +90,6 @@ public class LogService {
             }
         }
         
-        if (filteredLogs.isEmpty()) {
-            throw new Exception("No logs found for the date: " + date);
-        }
         return filteredLogs;
     }
 
@@ -112,9 +105,6 @@ public class LogService {
             }
         }
         
-        if (filteredLogs.isEmpty()) {
-            throw new Exception("No logs recorded this week.");
-        }
         return filteredLogs;
     }
 
@@ -125,18 +115,5 @@ public class LogService {
         }
         
         dao.delete(id);
-    }
-
-    public int generateId() {
-        ArrayList<Log> logs = dao.getAll();
-        int maxId = 0;
-    
-        for (Log log : logs) {
-            if (log.getId() > maxId) {
-                maxId = log.getId();
-            }
-        }
-    
-        return maxId + 1;
     }
 }

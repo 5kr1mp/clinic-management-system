@@ -17,7 +17,7 @@ public class Log {
         setReason(reason);
     }
 
-    public String getName() {return patient.getName();}
+    public String getName() {return patient.getFullName();}
     public int getId(){return id;}
     public int getPatientId() { return patient.getId();}
     public Designation getDesignation() {return patient.getDesignation();}

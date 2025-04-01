@@ -2,6 +2,7 @@ package util;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class DateRange {
     
@@ -88,10 +89,11 @@ public class DateRange {
 
     public boolean isWithinRange(LocalDate date){
         return (
-            date.isAfter(this.lowerDateRange) &&
-            date.isBefore(this.upperDateRange)
+            date.isAfter(this.lowerDateRange) || date.equals(this.lowerDateRange) &&
+            date.isBefore(this.upperDateRange ) || date.equals(this.lowerDateRange) 
         );
     }
+
 
     public LocalDate getLowerDateRange() {
         return lowerDateRange;

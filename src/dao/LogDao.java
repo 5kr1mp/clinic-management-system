@@ -14,19 +14,19 @@ public class LogDao {
 
         new Log(
             1,
-            new PatientDao().get(1),
+            new PatientDao().get(20240143),
             LocalDateTime.now(),
             "reason 1"
         ),
         new Log(
             2,
-            new PatientDao().get(1),
+            new PatientDao().get(20240143),
             LocalDateTime.of(2025,2,27,0,0,0),
             "reason 2"
         ),
         new Log(
             3,
-            new PatientDao().get(2),
+            new PatientDao().get(202400045),
             LocalDateTime.of(2025,2,25,0,0,0),
             "reason 3"
         )

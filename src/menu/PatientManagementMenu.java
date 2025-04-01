@@ -132,7 +132,7 @@ public class PatientManagementMenu extends Menu {
                 System.out.println("Error: " + e.getMessage());
                 System.out.println("Please try again.");
 
-                System.out.println("Do you want to back to previous menu?");
+                System.out.println("Do you want to back to previous menu? [Press 1. Any other key to restart]");
                 String input = scn.nextLine();
                 if (input.trim().equals("1")) {
                     return;
@@ -275,7 +275,7 @@ public class PatientManagementMenu extends Menu {
                 issuedMedicines.add(issuedMedicine);
 
                 // retry or nah
-                System.out.print("\nDo you want to add another entry? [Enter 1] ");
+                System.out.print("\nDo you want to add another entry? [Enter 1 or any key to skip] ");
                 String input = scn.nextLine().trim();
 
                 if (input.equals("1")){
@@ -321,26 +321,31 @@ public class PatientManagementMenu extends Menu {
                 System.out.print("Enter Middle Name: ");
                 String middlename = scn.nextLine();
 
-                System.out.print("Confirm program and designation (e.g. BSIT-1IT, BSIT-FACULTY): ");
-                String input1 = scn.nextLine().toUpperCase();
                 Designation designation;
-                try {
-                    designation = Designation.from(input1);
-                    System.out.println("Designation confirmed: " + designation);
-                } catch (Exception e) {
-                    System.out.println("Invalid designation. Please enter a valid one.");
-                    continue;
+                while (true) {
+
+                    System.out.print("Confirm Designation (BSIT, BSABE, etc.): ");
+                    String input1 = scn.nextLine().toUpperCase();
+                    try {
+                        designation = Designation.from(input1);
+                        System.out.println("Designation confirmed: " + designation);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Invalid designation. Please enter a valid one.");
+                    }
                 }
 
-                System.out.print("Confirm Category (STUDENT / TEACHER): ");
-                String input2 = scn.nextLine().toUpperCase();
                 Category category;
-                try {
-                    category = Category.valueOf(input2);
-                    System.out.println("Category confirmed: " + category);
-                } catch (Exception e) {
-                    System.out.println("Invalid category. Please enter a valid one.");
-                    continue;
+                while (true) {
+                    System.out.print("Confirm Category (STUDENT / FACULTY): ");
+                    String input2 = scn.nextLine().toUpperCase();
+                    try {
+                        category = Category.valueOf(input2);
+                        System.out.println("Category confirmed: " + category);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Invalid category. Please enter a valid one.");
+                    }
                 }
 
                 System.out.print("Enter Contact Number: ");
@@ -360,7 +365,12 @@ public class PatientManagementMenu extends Menu {
                 System.out.println("Category: " + patient.getCategory());
                 System.out.println("Contact: " + patient.getContact());
 
-                return;
+                System.out.println("Do you want to go back to the previous menu? (Press 1 to return)");
+                String input = scn.nextLine();
+                if (input.trim().equals("1")) {
+                    return;
+                }
+
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
                 System.out.println("Please try again.");
@@ -394,6 +404,8 @@ public class PatientManagementMenu extends Menu {
                         System.out.println("Designation: " + patient.getDesignation());
                         System.out.println("Category: " + patient.getCategory());
                         System.out.println("Contact: " + patient.getContact());
+
+                        viewRecords(id);
                     } catch (Exception e) {
                         System.out.println("Error: Patient with ID " + id + " not found.");
                     }
@@ -410,13 +422,19 @@ public class PatientManagementMenu extends Menu {
                         System.out.println("Designation: " + patient.getDesignation());
                         System.out.println("Category: " + patient.getCategory());
                         System.out.println("Contact: " + patient.getContact());
+
+                        viewRecords(patient.getId());
                     } catch (Exception e) {
                         System.out.println("Error: Patient with name '" + name + "' not found.");
                     }
                 }
 
-                System.out.println();
-                return;
+                System.out.println("Do you want to go back to the previous menu? (Press 1 to return)");
+                String input = scn.nextLine();
+                if (input.trim().equals("1")) {
+                    return;
+                }
+
             } catch (Exception e) {
                 System.out.println("Invalid input. Please enter a valid Patient ID or Name.");
                 scn.nextLine(); // Clear scanner buffer to prevent infinite loop
@@ -434,6 +452,8 @@ public class PatientManagementMenu extends Menu {
     public void viewStudentPatients() {
         while (true) {
             try {
+
+                System.out.println("====== Student Patients List ======");
                 ArrayList<Patient> studentPatients = patientService.getStudentPatients();
 
                 // Sort alphabetically by last name
@@ -441,20 +461,20 @@ public class PatientManagementMenu extends Menu {
 
                 int count = 1;
                 for (Patient patient : studentPatients) {
-                    System.out.print(count + ". "); // Add numbering
-                    System.out.println(patient.getName());
+                    System.out.print(count + ". ");
+                    System.out.print(patient.getFullName());
+                    System.out.println();
                     count++;
                 }
-                System.out.println();
-                return;
+
+                System.out.println("Press 1 to go back to the previous menu.");
+                String input = scn.nextLine();
+                if (input.trim().equals("1")) {
+                    return;
+                }
+
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
-            }
-
-            System.out.println("Press 1 to go back to the previous menu.");
-            String input = scn.nextLine();
-            if (input.trim().equals("1")) {
-                return;
             }
         }
     }
@@ -462,6 +482,8 @@ public class PatientManagementMenu extends Menu {
     public void viewFacultyPatients() {
         while (true) {
             try {
+
+                System.out.println("====== Faculty Patients List ======");
                 ArrayList<Patient> facultyPatients = patientService.getFacultyPatients();
 
                 // Sort alphabetically by last name
@@ -470,25 +492,84 @@ public class PatientManagementMenu extends Menu {
                 int count = 1;
                 for (Patient patient : facultyPatients) {
                     System.out.print(count + ". ");
-                    System.out.println(patient.getName());
+                    System.out.print(patient.getFullName());
+                    System.out.println();
                     count++;
                 }
-                System.out.println();
-                return;
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
 
-            System.out.println("Press 1 to go back to the previous menu.");
-            String input = scn.nextLine();
-            if (input.trim().equals("1")) {
-                return;
+                System.out.println("Press 1 to go back to the previous menu.");
+                String input = scn.nextLine();
+                if (input.trim().equals("1")) {
+                    return;
+                }
+
+            } catch (Exception e) {
+                System.out.println("ERROR: Something went wrong. Please try again.");
             }
         }
     }
 
-    public void viewRecords(){
-        
+    public void viewRecords(int patientId){
+        ArrayList<PatientRecord> records = recordService.getRecordsByPatientId(patientId);
+
+        // if records are empty 
+        if (records.isEmpty()){
+            System.out.println("No records available...");
+            return;
+        }
+
+        System.out.printf("""
+        ------------------------------------------------------------------------ Records ------------------------------------------------------------------------
+        %-19s | %-30s | %-50s | %-30s        
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------
+        ""","Date & Time","Description","Diagnosis", "Medicines Issued");
+
+        for (PatientRecord record : records) {
+
+            ArrayList<IssuedMedicine> issuedMedicines = new ArrayList<>();
+            IssuedMedicine firstIssuedMedicine = null;
+            String firstMedicineName = "";
+
+            try{
+                issuedMedicines = issuedMedicineService.getIssuedMedicinesByRecordId(record.getId());
+                firstIssuedMedicine = issuedMedicines.get(0);
+                firstMedicineName = medService.getMedicine(
+                        firstIssuedMedicine.getMedicineId()
+                    ).getName();
+            }
+            catch (Exception e){
+
+            }
+            
+            System.out.printf("""
+            %-19s | %-30s | %-50s | %-30s        
+            """,
+            DateTimeFormat.formatDateTime(record.getDate()),
+            record.getDesc(),
+            record.getDiagnosis(),
+            firstMedicineName+ " x"+ firstIssuedMedicine.getAmount());
+
+            for (int i = 1; i < issuedMedicines.size(); i++) {
+                IssuedMedicine med = issuedMedicines.get(i);
+
+                String medName = "Unknown"; 
+                try {
+                    medName = medService.getMedicine(med.getMedicineId()).getName();
+                }
+                catch(Exception e){
+
+                }
+                
+                System.out.printf("""
+                    %-19s | %-30s | %-50s | %-30s        
+                    """,
+                    " ",
+                    " ",
+                    " ",
+                    medName + " x"+med.getAmount()
+                ); 
+            }
+        }
     }
 
 }

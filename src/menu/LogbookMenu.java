@@ -1,23 +1,27 @@
 package menu;
 
-import dao.*;
 import model.*;
-import service.*;
+import service.LogService;
+import service.PatientService;
+import util.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
-public class LogbookMenu extends Menu{
+import dao.PatientDao;
+
+public class LogbookMenu extends Menu {
     private LogService logService;
+    private Scanner scanner;
     private PatientService patientService;
-    private DateTimeFormatter formatter;
 
     public LogbookMenu(LogService logService, PatientService patientService) {
         this.logService = logService;
         this.patientService = patientService;
-        this.formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        this.scanner = new Scanner(System.in);
     }
 
     public void display(ArrayList<Log> logsToDisplay) {
@@ -25,43 +29,44 @@ public class LogbookMenu extends Menu{
             System.out.println("No logs available.");
             return;
         }
+    
+        System.out.println("=================================================================== Visit Records ==================================================================");
+        System.out.printf("%-20s | %-40s | %-10s | %-30s | %-15s | %-30s\n",
+                "Date", "Name", "Patient ID", "Designation", "Contact", "Purpose");
+        System.out.println("====================================================================================================================================================");
         
-        // murag header sa table
-        System.out.println("==================================================== Visit Records ====================================================");
-        System.out.printf("%-20s | %-10s | %-10s | %-15s | %-15s | %-15s%n",
-                "Date", "Name", "Patient ID", "Designation", "Category", "Contact");
-        System.out.println("====================================================================================================================");
-        
-        // code to print each row
         for (Log log : logsToDisplay) {
-            String formattedDate = (log.getDate() != null) ? log.getDate().format(formatter) : "N/A";
+            String formattedDate = (log.getDate() != null) ? DateTimeFormat.formatDateTime(log.getDate()) : "N/A";
             String patientName = (log.getName() != null) ? log.getName() : "N/A";
             String patientId = String.valueOf(log.getPatientId());
             String designation = (log.getDesignation() != null) ? log.getDesignation().toString() : "N/A";
             String category = (log.getCategory() != null) ? log.getCategory().toString() : "N/A";
-            String contact = (log.getContact() != null) ? log.getContact(): "N/A";
-            
-            // print format for each row
-            System.out.printf("%-20s | %-10s | %-10s | %-15s | %-15s | %-15s%n",
+            String contact = (log.getContact() != null) ? log.getContact() : "N/A";
+            String purpose = (log.getReason() != null) ? log.getReason() : "N/A";
+    
+            String designationAndCategory = designation + " " + category;
+    
+            System.out.printf("%-20s | %-40s | %-10s | %-30s | %-15s | %-30s\n",
                     formattedDate,
                     patientName,
                     patientId,
-                    designation,
-                    category,
-                    contact);
+                    designationAndCategory,
+                    contact,
+                    purpose
+                    );
+                    
         }
-        System.out.println("====================================================================================================================");
+        System.out.println("====================================================================================================================================================");
     }
+    
 
     public void showMenu() {
-        boolean running = true;
-
         try {
             display(logService.getLogs());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
+        boolean running = true;
         while (running) {
             try {
                 System.out.println("\n==================== Choose Action ====================");
@@ -72,7 +77,7 @@ public class LogbookMenu extends Menu{
                 System.out.println("[5] Back to Menu");
                 System.out.print("\nEnter option: ");
                 
-                String input = scn.nextLine().trim();
+                String input = scanner.nextLine().trim();
                 switch (input) {
                     case "1": addNewLog(); break;
                     case "2": searchByName(); break;
@@ -89,100 +94,88 @@ public class LogbookMenu extends Menu{
     }
 
     private void addNewLog() {
-        int id;
-        String purpose;
-
         while(true){
             try {
                 System.out.print("Enter Patient ID: ");
-                id = validateIntegerInput();
+                int id = validateIntegerInput();
     
                 System.out.print("Enter purpose: ");
-                purpose = scn.nextLine();
+                String purpose = scanner.nextLine();
     
-                // searches for the patient from the database using the input id
                 Patient patient = patientService.getPatient(id);
-        
                 Log newLog = new Log(logService.generateId(),patient, LocalDateTime.now(),purpose);
                 logService.add(newLog);
-                System.out.println("Log added successfully!\n");
                 display(logService.getLogs());
                 return;
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
-                System.out.print("Retry the kuan kana");
+                System.out.println("Press 1 to return to menu or any other key to continue.");
+                
+                String input = scanner.nextLine();
+                if (input.trim().equals("1")){
+                    return;
+                };
             }
         }
     }
 
     private void searchByName() {
-        System.out.print("Enter Name to search: ");
-        String name = scn.nextLine().trim();
-        try {
-            ArrayList<Log> nameLogs = new ArrayList<>(logService.getLogsByName(name));
-            display(nameLogs);
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
+        while(true){
+            System.out.print("Enter Name to search: ");
+            String name = scanner.nextLine().trim();
+            try {
+                ArrayList<Log> logs = logService.getLogsByName(name);
+                display(logs);
+                return;
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+                System.out.println("Name not found.");
+                e.printStackTrace();
+            }
         }
     }
 
     private void searchById() {
-        
         while(true){
             System.out.print("Enter Patient ID: ");
             int id = validateIntegerInput();
-            
             try {
-                Log log = logService.getLog(id);
-                if (log != null) {
-                    ArrayList<Log> singleLog = new ArrayList<>();
-                    singleLog.add(log);
-                    display(singleLog);
-                } else {
-                    System.out.println("No log found with that ID.");
-                }
+                ArrayList<Log> logs = logService.getLogsByPatientId(id);
+                display(logs);
+                return;
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
+                System.out.println("Press 1 to return to menu or any other key to continue.");
                 e.printStackTrace();
-
-                System.out.println("Press 1 to return to main menu");
-
-                if (scn.nextInt() == 1){
-                    return;
-                }
+                
             }
         }
     }
 
     private void filterByDate() {
-        System.out.print("Enter Date (YYYY-MM-DD): ");
-        String dateInput = scn.nextLine().trim();
-        try {
-            LocalDate date = LocalDate.parse(dateInput,formatter);
-            ArrayList<Log> filteredLogs = new ArrayList<>(logService.getLogsByDate(date));
-            display(filteredLogs);
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
+        while(true){
+            System.out.print("Enter Date (MM-DD-YYYY): ");
+            String dateInput = scanner.nextLine().trim();
+            try {
+                LocalDate date = DateTimeFormat.parseDate(dateInput);
+                ArrayList<Log> filteredLogs = new ArrayList<>(logService.getLogsByDate(date));
+                display(filteredLogs);
+                return;
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
     private int validateIntegerInput() {
         while (true) {
-            String input = scn.nextLine().trim();
+            String input = scanner.nextLine().trim();
             try {
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
                 System.out.print("Invalid input. Please enter a valid number: ");
             }
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        LogService logService = new LogService(new LogDao()); 
-        PatientService patientService = new PatientService(new PatientDao());
-        LogbookMenu menu = new LogbookMenu(logService,patientService);
-        menu.showMenu();
     }
 }

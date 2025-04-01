@@ -110,13 +110,21 @@ public class ReportService {
     }
 
     public int getMedicineIssuedCount(Report report, int medicineId){
-        int count = 0;
+        int amount = 0;
 
-        for(Integer id : getAllPrescribedMedicinesId(report)){
-            if (id.equals(medicineId)) count++;
+        // for(Integer id : getAllPrescribedMedicinesId(report)){
+        //     if (id.equals(medicineId)) count++;
+        // }
+
+        for (PatientRecord record : report.getPatientRecords()){
+            for (IssuedMedicine issuedMedicine : issuedMedicineService.getIssuedMedicinesByRecordId(record.getId())){
+                if (issuedMedicine.getMedicineId() == medicineId){
+                    amount += issuedMedicine.getAmount();
+                }
+            }
         }
 
-        return count;
+        return amount;
     }
 
     public ArrayList<Medicine> getMedicines(){
