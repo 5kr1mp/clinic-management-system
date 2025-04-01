@@ -29,40 +29,36 @@ public class PatientService {
         return maxId + 1;
     }
 
-    public void add(Patient patient) throws IllegalArgumentException{
+    public void add(Patient patient) throws Exception{
         // Check if patient already exists
-        if (dao.get(patient.getId()) != null) throw new IllegalArgumentException("This patient already exists.");
+        if (dao.get(patient.getId()) != null) throw new Exception("This patient already exists.");
 
         dao.add(patient); // Add if no exact match
-        System.out.println("Patient added successfully.");
     }
 
-    public void update(Patient patient) {
-        try {
-            if (dao.get(patient.getId()) == null) {
-                throw new IllegalArgumentException("Patient with ID " + patient.getId() + " not found.");
-            }
-            dao.update(patient);
-            System.out.println("Patient updated successfully.");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+    public void update(Patient patient) throws Exception {
+        if (dao.get(patient.getId()) == null) {
+            throw new Exception("Patient with ID " + patient.getId() + " not found.");
         }
+
+        dao.update(patient);
     }
 
-    public void delete(int id) {
-        try {
-            Patient patient = dao.get(id); // Get the patient
-
-            if (patient == null) {
-                throw new IllegalArgumentException("Patient with ID " + id + " not found.");
-            }
-
-            dao.delete(id); // Delete by ID
-            System.out.println("Patient with ID " + id + " deleted successfully.");
-
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+    public boolean patientExists(int id){
+        if (dao.get(id) == null){
+            return false;
         }
+        return true;
+    }
+
+    public void delete(int id) throws Exception {
+        Patient patient = dao.get(id); // Get the patient
+
+        if (patient == null) {
+            throw new Exception("Patient with ID " + id + " not found.");
+        }
+
+        dao.delete(id); // Delete by ID
     }
 
     public ArrayList<Patient> getPatients() {
@@ -74,10 +70,9 @@ public class PatientService {
         Patient patient = dao.get(id);
         
         if (patient == null) {
-            throw new IllegalArgumentException("Patient with ID " + id + " not found.");
+            throw new Exception("Patient with ID " + id + " not found.");
         }
 
-        System.out.println("Patient found.");
         return patient;
     }
 
@@ -96,7 +91,7 @@ public class PatientService {
     public Patient getPatientByName(String name){
 
         for (Patient patient : dao.getAll()){
-            if (patient.getName().equalsIgnoreCase(name.trim())) return patient;
+            if (patient.getFullName().equalsIgnoreCase(name.trim())) return patient;
         }
 
         return null;
