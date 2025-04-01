@@ -25,9 +25,9 @@ public class PatientDao {
         // }
         new Patient(
             20240143,
-            "Cookie",
-            "Shadow",
-            "Milk",
+            "Singh",
+            "Ravi",
+            "Covey",
             Designation.BSIT_1IT,
             Category.STUDENT,
             "09123124234",

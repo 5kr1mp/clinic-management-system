@@ -7,13 +7,13 @@ public class MainMenu extends Menu {
 
     InventoryMenu inventoryMenu;
     LogBookMenu logBookMenu;
-    PatientMenu patientMenu;
+    PatientManagementMenu patientMenu;
     ReportMenu reportMenu;
 
-    MainMenu(
+    public MainMenu(
         InventoryMenu inventoryMenu,
         LogBookMenu logBookMenu,
-        PatientMenu patientMenu,
+        PatientManagementMenu patientMenu,
         ReportMenu reportMenu
     ){
         this.inventoryMenu = inventoryMenu;
@@ -41,7 +41,7 @@ public class MainMenu extends Menu {
                 option = scn.nextInt();scn.nextLine();
 
                 switch (option) {
-                    case 1: patientMenu.displayMenu(); break;
+                    case 1: patientMenu.mainMenu(); break;
                     case 2: inventoryMenu.displayMenu(); break;
                     case 3: logBookMenu.showMenu(); break;
                     case 4: reportMenu.displayMenu(); break;

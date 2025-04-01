@@ -2,6 +2,7 @@ package service;
 
 import java.util.ArrayList;
 import model.*;
+import util.Sorter;
 import dao.*;
 
 /**
@@ -76,8 +77,32 @@ public class MedicineService {
             }
         }
 
+        // sort from oldest to earliest
+        nonExpiredMedicineBatches = Sorter.sortBatchByExpiryDate(nonExpiredMedicineBatches, true);
+
         return nonExpiredMedicineBatches;
     }
+
+    public ArrayList<MedicineBatch> getMedicineBatchesByMedicineId(int medId, boolean includeExpired){
+        ArrayList<MedicineBatch> batches = new ArrayList<>();
+
+        
+        // iterate through batches
+        for (MedicineBatch batch : batchDao.getAll()){
+            boolean condition = includeExpired ? batch.getMedicineId() == medId : batch.getMedicineId() == medId && !batch.isExpired();
+            
+            if (condition){
+                batches.add(batch);
+            }
+        }
+
+        // sort from oldest to earliest
+        batches = Sorter.sortBatchByExpiryDate(batches, true);
+
+        return batches;
+    }
+
+
 
     public ArrayList<MedicineBatch> getMedicineBatches(){
         return batchDao.getAll();
@@ -201,6 +226,19 @@ public class MedicineService {
         return maxId + 1;
     }
 
+    public Medicine getMedicineByName(String name){
+
+        for (Medicine med : medicineDao.getAll()) {
+            
+            if (med.getName().equalsIgnoreCase(name.trim())){
+                return med;
+            }
+
+        }
+
+        return null;
+
+    }
 
 
 

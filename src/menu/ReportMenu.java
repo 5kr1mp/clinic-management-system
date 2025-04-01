@@ -49,7 +49,7 @@ public class ReportMenu extends Menu{
     public void dailyReport(){
         Report report = service.generateDailyReport();
 
-        System.out.printf("Report for date: %s", DateTimeFormat.formatDate(report.getDate()));
+        System.out.printf("Report for date: %s\n", DateTimeFormat.formatDate(report.getDate()));
 
         patientStatistics(report);
         diagnosisStatistics(report);
@@ -63,7 +63,7 @@ public class ReportMenu extends Menu{
 
         DateRange range = report.getDateRange();
 
-        System.out.printf("Report for date: %s - %s", 
+        System.out.printf("Report for date: %s - %s\n", 
             DateTimeFormat.formatDate(range.getLowerDateRange()),
             DateTimeFormat.formatDate(range.getUpperDateRange()));
 
@@ -79,7 +79,7 @@ public class ReportMenu extends Menu{
 
         DateRange range = report.getDateRange();
 
-        System.out.printf("Report for date: %s - %s", 
+        System.out.printf("Report for date: %s - %s\n", 
             DateTimeFormat.formatDate(range.getLowerDateRange()),
             DateTimeFormat.formatDate(range.getUpperDateRange()));
 
@@ -205,9 +205,6 @@ public class ReportMenu extends Menu{
             )
         );
 
-
-
-        Report report = menu.service.generateMonthlyReport();
 
         menu.displayMenu();
     }

@@ -2,9 +2,9 @@ package util;
 import model.*;
 import java.util.ArrayList;
 
-class Sorter {
+public class Sorter {
 
-    static ArrayList<Log> sortLogsByDate(ArrayList<Log> logs, boolean ascending) {
+    public static ArrayList<Log> sortLogsByDate(ArrayList<Log> logs, boolean ascending) {
         
         ArrayList<Log> sortedLogs = new ArrayList<>(logs);
         
@@ -26,7 +26,7 @@ class Sorter {
     }
     
 
-    static ArrayList<Medicine> sortMedicinesByName(ArrayList<Medicine> medicines, boolean ascending) {
+    public static ArrayList<Medicine> sortMedicinesByName(ArrayList<Medicine> medicines, boolean ascending) {
         
         ArrayList<Medicine> sortedMedicinesByName = new ArrayList<>(medicines);
 
@@ -47,30 +47,30 @@ class Sorter {
         return sortedMedicinesByName;
     }
 
-    static ArrayList<Medicine> sortMedicinesByStock(ArrayList<Medicine> medicines, boolean ascending) {
+    // public static ArrayList<Medicine> sortMedicinesByStock(ArrayList<Medicine> medicines, boolean ascending) {
         
-        ArrayList<Medicine> sortedMedicinesByStock = new ArrayList<>(medicines);
+    //     ArrayList<Medicine> sortedMedicinesByStock = new ArrayList<>(medicines);
         
-        int n = sortedMedicinesByStock.size();
+    //     int n = sortedMedicinesByStock.size();
 
-        for (int i = 0; i < n - 1; i++) {
-            int minIdx = i;
-            for (int j = i + 1; j < n; j++) {
-                if ((ascending && sortedMedicinesByStock.get(j).getStock() < sortedMedicinesByStock.get(minIdx).getStock()) ||
-                    (!ascending && sortedMedicinesByStock.get(j).getStock() > sortedMedicinesByStock.get(minIdx).getStock())) {
-                    minIdx = j;
-                }
-            }
-            Medicine temp = sortedMedicinesByStock.get(i);
-            sortedMedicinesByStock.set(i, sortedMedicinesByStock.get(minIdx));
-            sortedMedicinesByStock.set(minIdx, temp);
-        }
+    //     for (int i = 0; i < n - 1; i++) {
+    //         int minIdx = i;
+    //         for (int j = i + 1; j < n; j++) {
+    //             if ((ascending && sortedMedicinesByStock.get(j).getStock() < sortedMedicinesByStock.get(minIdx).getStock()) ||
+    //                 (!ascending && sortedMedicinesByStock.get(j).getStock() > sortedMedicinesByStock.get(minIdx).getStock())) {
+    //                 minIdx = j;
+    //             }
+    //         }
+    //         Medicine temp = sortedMedicinesByStock.get(i);
+    //         sortedMedicinesByStock.set(i, sortedMedicinesByStock.get(minIdx));
+    //         sortedMedicinesByStock.set(minIdx, temp);
+    //     }
 
-        return sortedMedicinesByStock;
+    //     return sortedMedicinesByStock;
 
-    }
+    // }
 
-    static ArrayList<Patient> sortPatientsByName(ArrayList<Patient> patients, boolean ascending) {
+    public static ArrayList<Patient> sortPatientsByLastName(ArrayList<Patient> patients, boolean ascending) {
         
         ArrayList<Patient> sortedPatientsByName = new ArrayList<>(patients);
         
@@ -79,8 +79,8 @@ class Sorter {
         for (int i = 0; i < n - 1; i++) {
             int minIdx = i;
             for (int j = i + 1; j < n; j++) {
-                if ((ascending && sortedPatientsByName.get(j).getName().compareTo(sortedPatientsByName.get(minIdx).getName()) < 0) ||
-                    (!ascending && sortedPatientsByName.get(j).getName().compareTo(sortedPatientsByName.get(minIdx).getName()) > 0)) {
+                if ((ascending && sortedPatientsByName.get(j).getLastname().compareTo(sortedPatientsByName.get(minIdx).getLastname()) < 0) ||
+                    (!ascending && sortedPatientsByName.get(j).getLastname().compareTo(sortedPatientsByName.get(minIdx).getLastname()) > 0)) {
                     minIdx = j;
                 }
             }
@@ -92,7 +92,7 @@ class Sorter {
         return sortedPatientsByName;
     }
 
-    static ArrayList<Patient> sortPatientsById(ArrayList<Patient> patients, boolean ascending) {
+    public static ArrayList<Patient> sortPatientsById(ArrayList<Patient> patients, boolean ascending) {
         
         ArrayList<Patient> sortedPatientsById = new ArrayList<>(patients);
         
@@ -114,10 +114,9 @@ class Sorter {
         return sortedPatientsById;
     }
 
-    static ArrayList<PatientRecord> sortPatientRecordsByDate(ArrayList<PatientRecord> records, boolean ascending) {
+    public static ArrayList<PatientRecord> sortPatientRecordsByDate(ArrayList<PatientRecord> records, boolean ascending) {
 
         ArrayList<PatientRecord> sortedPatientRecordsByDate = new ArrayList<>(records);
-
 
         int n = sortedPatientRecordsByDate.size();
         for (int i = 0; i < n - 1; i++) {
@@ -134,5 +133,26 @@ class Sorter {
         }
 
         return sortedPatientRecordsByDate;
+    }
+
+    public static ArrayList<MedicineBatch> sortBatchByExpiryDate(ArrayList<MedicineBatch> batches, boolean ascending){
+
+        ArrayList<MedicineBatch> sortedBatches = new ArrayList<>(batches);
+
+        int n = sortedBatches.size();
+        for (int i = 0; i < n - 1; i++) {
+            int minIdx = i;
+            for (int j = i + 1; j < n; j++) {
+                if ((ascending && sortedBatches.get(j).getExpiryDate().isBefore(sortedBatches.get(minIdx).getExpiryDate())) ||
+                    (!ascending && sortedBatches.get(j).getExpiryDate().isAfter(sortedBatches.get(minIdx).getExpiryDate()))) {
+                    minIdx = j;
+                }
+            }
+            MedicineBatch temp = sortedBatches.get(i);
+            sortedBatches.set(i, sortedBatches.get(minIdx));
+            sortedBatches.set(minIdx, temp);
+        }
+
+        return sortedBatches;
     }
 }
