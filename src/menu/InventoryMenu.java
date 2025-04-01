@@ -130,7 +130,7 @@ public class InventoryMenu extends Menu{
                 String medicineManufacturer = scn.nextLine().trim();
                 Medicine medicine = new Medicine(medicineId, medicineName, medicineManufacturer);
                 medicineService.addMedicine(medicine);
-                System.out.println("Medicine " + medicineName + medicineId + " added successfully!");
+                System.out.println("Medicine " + medicineName +" with ID:"+ medicineId + " added successfully!");
 
                 return;
             } catch (Exception e) {
