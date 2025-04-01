@@ -457,7 +457,7 @@ public class PatientManagementMenu extends Menu {
                 ArrayList<Patient> studentPatients = patientService.getStudentPatients();
 
                 // Sort alphabetically by last name
-                studentPatients.sort(Comparator.comparing(Patient::getLastname));
+                studentPatients.sort(Comparator.comparing(Patient::getFullName));
 
                 int count = 1;
                 for (Patient patient : studentPatients) {
@@ -487,7 +487,7 @@ public class PatientManagementMenu extends Menu {
                 ArrayList<Patient> facultyPatients = patientService.getFacultyPatients();
 
                 // Sort alphabetically by last name
-                facultyPatients.sort(Comparator.comparing(Patient::getLastname));
+                facultyPatients.sort(Comparator.comparing(Patient::getFullName));
 
                 int count = 1;
                 for (Patient patient : facultyPatients) {
