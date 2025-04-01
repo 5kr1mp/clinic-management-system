@@ -33,7 +33,7 @@ public class IssuedMedicineService {
 
         if (dao.get(issuedMed.getId()) != null) throw new Exception("Record already exists");
 
-        add(issuedMed);
+        dao.add(issuedMed);
     }
 
     public ArrayList<IssuedMedicine> getAll(){
