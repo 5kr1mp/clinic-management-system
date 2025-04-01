@@ -51,6 +51,7 @@ public class Patient {
     public String getFirstname() {return firstname;}
     public String getMiddlename() {return middlename;}
     public String getName() {return firstname + " " + middlename + " " + lastname;}
+    public String getFullName() {return lastname + ", " + firstname + " " + middlename;};
     public List<PatientRecord> getRecords() {return records;}
     public void setCategory(Category category) {this.category = category;}
     public void setContact(String contact) {this.contact = contact;}
