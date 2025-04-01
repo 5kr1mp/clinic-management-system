@@ -1,18 +1,17 @@
 package menu;
 
 import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class MainMenu extends Menu {
 
     InventoryMenu inventoryMenu;
-    LogBookMenu logBookMenu;
+    LogbookMenu logBookMenu;
     PatientManagementMenu patientMenu;
     ReportMenu reportMenu;
 
     public MainMenu(
         InventoryMenu inventoryMenu,
-        LogBookMenu logBookMenu,
+        LogbookMenu logBookMenu,
         PatientManagementMenu patientMenu,
         ReportMenu reportMenu
     ){

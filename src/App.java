@@ -33,7 +33,7 @@ public class App {
 
         // init menu
         InventoryMenu inventoryMenu = new InventoryMenu(medicineService);
-        LogBookMenu logBookMenu = new LogBookMenu(logService, patientService);
+        LogbookMenu logBookMenu = new LogbookMenu(logService, patientService);
         PatientManagementMenu patientManagementMenu = new PatientManagementMenu(recordService, patientService, medicineService, issuedMedicineService);
         ReportMenu reportMenu = new ReportMenu(reportService);
 

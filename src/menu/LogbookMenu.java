@@ -8,14 +8,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class LogBookMenu extends Menu{
+public class LogbookMenu extends Menu{
     private LogService logService;
     private PatientService patientService;
     private DateTimeFormatter formatter;
 
-    public LogBookMenu(LogService logService, PatientService patientService) {
+    public LogbookMenu(LogService logService, PatientService patientService) {
         this.logService = logService;
         this.patientService = patientService;
         this.formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
@@ -183,7 +182,7 @@ public class LogBookMenu extends Menu{
     public static void main(String[] args) throws Exception {
         LogService logService = new LogService(new LogDao()); 
         PatientService patientService = new PatientService(new PatientDao());
-        LogBookMenu menu = new LogBookMenu(logService,patientService);
+        LogbookMenu menu = new LogbookMenu(logService,patientService);
         menu.showMenu();
     }
 }
