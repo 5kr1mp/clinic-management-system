@@ -89,7 +89,9 @@ public class MedicineService {
         
         // iterate through batches
         for (MedicineBatch batch : batchDao.getAll()){
-            boolean condition = includeExpired ? batch.getMedicineId() == medId : batch.getMedicineId() == medId && !batch.isExpired();
+            boolean condition = includeExpired ? 
+                                    batch.getMedicineId() == medId && batch.getStock() > 0 :
+                                    batch.getMedicineId() == medId && !batch.isExpired() && batch.getStock() > 0;
             
             if (condition){
                 batches.add(batch);
@@ -169,13 +171,13 @@ public class MedicineService {
 
         // Add code diri and exception handling
         if(batch == null){
-            throw new Exception("Batch ID not found");
+            throw new Exception("Error: Batch ID not found");
         }
         if(amount < 0){
-            throw new Exception("It must not be negative");
+            throw new Exception("Error: Invalid amount");
         }
         if(amount > batch.getStock()){
-            throw new Exception("not bigger daw sa current stock");
+            throw new Exception("Error: Invalid amount");
         }
         batch.decreaseStock(amount);
 
