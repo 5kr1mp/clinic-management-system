@@ -58,7 +58,9 @@ public enum Designation {
 
     public static Designation from(String string) throws RuntimeException{
 
-        return valueOf(string.toUpperCase());
+        String designation = string.replace("-","_");
+
+        return valueOf(designation.toUpperCase());
 
     }
     
