@@ -324,7 +324,7 @@ public class PatientManagementMenu extends Menu {
                 Designation designation;
                 while (true) {
 
-                    System.out.print("Confirm Designation (BSIT, BSABE, etc.): ");
+                    System.out.print("Confirm Program & Designation (BSIT-1IT, BSIT-Faculty, etc.): ");
                     String input1 = scn.nextLine().toUpperCase();
                     try {
                         designation = Designation.from(input1);
