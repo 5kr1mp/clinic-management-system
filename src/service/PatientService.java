@@ -1,23 +1,32 @@
 package service;
 
 import dao.PatientDao;
+import dao.PatientRecordDao;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 
-import enums.Category;
 import model.*;
+import util.DateRange;
 
 public class PatientService {
 
-    private PatientDao dao;
+    private PatientDao patientDao;
+    private PatientRecordDao recordDao;
 
-    public PatientService(PatientDao patientDao){
-        this.dao = patientDao;
+    public PatientService(
+        PatientDao patientDao,
+        PatientRecordDao recordDao
+    ){
+        this.patientDao = patientDao;
+        this.recordDao = recordDao;
     }
 
     // methods
 
-    public int generateId() {
-        ArrayList<Patient> patients = dao.getAll();
+
+    public int generatePatientId() {
+        ArrayList<Patient> patients = patientDao.getAll();
         int maxId = 0;
     
         for (Patient patient : patients) {
@@ -29,98 +38,129 @@ public class PatientService {
         return maxId + 1;
     }
 
-    public void add(Patient patient) throws Exception{
-        // Check if patient already exists
-        if (dao.get(patient.getId()) != null) throw new Exception("This patient already exists.");
-
-        dao.add(patient); // Add if no exact match
-    }
-
-    public void update(Patient patient) throws Exception {
-        if (dao.get(patient.getId()) == null) {
-            throw new Exception("Patient with ID " + patient.getId() + " not found.");
+    public int generateRecordId() {
+        ArrayList<PatientRecord> records = recordDao.getAll();
+        int maxId = 0;
+    
+        for (PatientRecord record : records) {
+            if (record.getId() > maxId) {
+                maxId = record.getId();
+            }
         }
-
-        dao.update(patient);
+    
+        return maxId + 1;
     }
 
     public boolean patientExists(int id){
-        if (dao.get(id) == null){
+        if (patientDao.get(id) == null){
             return false;
         }
         return true;
     }
 
-    public void delete(int id) throws Exception {
-        Patient patient = dao.get(id); // Get the patient
+    // CREATE
+    public void add(Patient patient) throws Exception{
+        // Check if patient already exists
+        if (patientDao.get(patient.getId()) != null) throw new DuplicateEntityException("This patient already exists.");
 
-        if (patient == null) {
-            throw new Exception("Patient with ID " + id + " not found.");
-        }
-
-        dao.delete(id); // Delete by ID
+        patientDao.add(patient); // Add if no exact match
     }
 
+    public void add(PatientRecord record) throws Exception{
+
+        if (recordDao.get(record.getId()) != null) throw new DuplicateEntityException("Record with ID " + record.getId() + " already exists.");
+
+        recordDao.add(record);
+    }
+
+
+    // RETRIEVE
     public ArrayList<Patient> getPatients() {
-        return dao.getAll();
+        return patientDao.getAll();
     }
 
-    public Patient getPatient(int id) throws Exception {
-
-        Patient patient = dao.get(id);
-        
-        if (patient == null) {
-            throw new Exception("Patient with ID " + id + " not found.");
-        }
-
-        return patient;
+    public Patient getPatient(int id) {
+        return patientDao.get(id);
     }
 
-    public ArrayList<Patient> getPatientByLastName(String name) {
-        ArrayList<Patient> patientNames = new ArrayList<>();
-
-        for (Patient patient : dao.getAll()) {
-            if (patient.getLastname().equalsIgnoreCase(name)) { /* kani ako gi gamit kay mao ako kabalo
-            og d ko nahan magpa tabang chat gpt mag away rami kay lisodon niya! -_- */
-                patientNames.add(patient);
-            }
-        }
-        return patientNames;
+    public ArrayList<Patient> getPatientsByName(String name){
+        return patientDao.getPatientsByName(name);
     }
-
-    public Patient getPatientByName(String name){
-
-        for (Patient patient : dao.getAll()){
-            if (patient.getFullName().equalsIgnoreCase(name.trim())) return patient;
-        }
-
-        return null;
-
-    }
-
 
     public ArrayList<Patient> getFacultyPatients(){
-        ArrayList<Patient> facultyPatients = new ArrayList<>();
-
-        for (Patient patient : getPatients()) {
-            if (patient.getCategory() == Category.FACULTY){
-                facultyPatients.add(patient);
-            }
-        }
-
-        return facultyPatients;
+        return patientDao.getFacultyPatients();
     }
 
     public ArrayList<Patient> getStudentPatients(){
-        ArrayList<Patient> studentPatients = new ArrayList<>();
+        return patientDao.getStudentPatients();
+    }
 
-        for (Patient patient : getPatients()) {
-            if (patient.getCategory() == Category.STUDENT){
-                studentPatients.add(patient);
-            }
+    public PatientRecord getRecord(int recordId) {
+        return recordDao.get(recordId);
+    }
+
+    public ArrayList<PatientRecord> getRecords() {
+        return recordDao.getAll();
+    }
+
+    public ArrayList<PatientRecord> getRecords(DateRange range){
+
+        ArrayList<PatientRecord> filteredRecords = new ArrayList<>();
+
+        for (PatientRecord record : recordDao.getAll()) {
+            if (range.isWithinRange(record.getDate().toLocalDate())) filteredRecords.add(record);
         }
 
-        return studentPatients;
+        return filteredRecords;
+    }
+
+    public ArrayList<PatientRecord> getRecords(LocalDate date){
+        ArrayList<PatientRecord> filteredRecords = new ArrayList<>();
+
+        for (PatientRecord record : recordDao.getAll()){
+            if (date.equals(record.getDate().toLocalDate())) filteredRecords.add(record);
+        }
+
+        return filteredRecords;
+    }
+
+    public ArrayList<PatientRecord> getRecordsByPatientId(int patientId) {
+        return recordDao.getRecordsByPatientId(patientId);
+    }
+
+    // UPDATE
+    public void update(PatientRecord record) throws Exception{
+        if (recordDao.get(record.getId()) == null) throw new Exception("Record with ID " + record.getId() + " not found.");
+
+        recordDao.update(record);
+    }
+
+    public void update(Patient patient) throws Exception {
+        if (patientDao.get(patient.getId()) == null) {
+            throw new Exception("Patient with ID " + patient.getId() + " not found.");
+        }
+
+        patientDao.update(patient);
+    }
+
+    //  DELETE
+    public void delete(int id) throws Exception {
+        Patient patient = patientDao.get(id); // Get the patient
+
+        if (patient == null) {
+            throw new Exception("Patient with ID " + id + " not found.");
+        }
+
+        patientDao.delete(id); // Delete by ID
+    }
+
+    public void deleteRecord(int id) throws Exception{
+
+        PatientRecord record = recordDao.get(id);
+
+        if (record == null) throw new Exception("Record with ID " + id + " not found.");
+
+        recordDao.delete(id);
     }
 
 }

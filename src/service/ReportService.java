@@ -9,26 +9,20 @@ import util.*;
 public class ReportService {
     
     private MedicineService medicineService;
-    private PatientRecordService recordService;
     private PatientService patientService;
-    private IssuedMedicineService issuedMedicineService;
 
     public ReportService(
         MedicineService medicineService, 
-        PatientRecordService recordService,
-        PatientService patientService,
-        IssuedMedicineService issuedMedicineService
+        PatientService patientService
     ){
         this.medicineService = medicineService;
-        this.recordService = recordService;
         this.patientService = patientService;
-        this.issuedMedicineService = issuedMedicineService;
     }
 
     public Report generateMonthlyReport(){
         DateRange dateRange = DateRange.ofMonth();
         ArrayList<MedicineBatch> medicines = medicineService.getMedicineBatches();
-        ArrayList<PatientRecord> records = recordService.getRecords(dateRange);
+        ArrayList<PatientRecord> records = patientService.getRecords(dateRange);
 
         return new Report(dateRange,records,medicines);
     }
@@ -36,7 +30,7 @@ public class ReportService {
     public Report generateWeeklyReport(){
         DateRange dateRange = DateRange.ofWeek();
         ArrayList<MedicineBatch> medicines = medicineService.getMedicineBatches();
-        ArrayList<PatientRecord> records = recordService.getRecords(dateRange);
+        ArrayList<PatientRecord> records = patientService.getRecords(dateRange);
         
         return new Report(dateRange,records,medicines);
     }
@@ -45,7 +39,7 @@ public class ReportService {
         LocalDate date = LocalDate.now();
         
         ArrayList<MedicineBatch> medicines = medicineService.getMedicineBatches();
-        ArrayList<PatientRecord> records = recordService.getRecords(date);
+        ArrayList<PatientRecord> records = patientService.getRecords(date);
 
         return new Report(date, records, medicines);
     }
@@ -88,7 +82,7 @@ public class ReportService {
         ArrayList<Integer> prescriptionsId = new ArrayList<>();
 
         for (PatientRecord record : report.getPatientRecords()){
-           for (IssuedMedicine issuedMedicine : issuedMedicineService.getIssuedMedicinesByRecordId(record.getId())){
+           for (IssuedMedicine issuedMedicine : patientService.getIssuedMedicinesByRecordId(record.getId())){
             prescriptionsId.add(issuedMedicine.getMedicineId());
            }
         }
@@ -117,7 +111,7 @@ public class ReportService {
         // }
 
         for (PatientRecord record : report.getPatientRecords()){
-            for (IssuedMedicine issuedMedicine : issuedMedicineService.getIssuedMedicinesByRecordId(record.getId())){
+            for (IssuedMedicine issuedMedicine : patientService.getIssuedMedicinesByRecordId(record.getId())){
                 if (issuedMedicine.getMedicineId() == medicineId){
                     amount += issuedMedicine.getAmount();
                 }
