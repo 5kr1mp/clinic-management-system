@@ -6,11 +6,11 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
     
-    private final String URL = "jdbc:mysql://localhost:3306/clinic";
-    private final String USER = "host";
-    private final String PASSWORD = "arst1234";
+    private static final String URL = "jdbc:mysql://localhost:3306/clinic";
+    private static final String USER = "host";
+    private static final String PASSWORD = "";
 
-    public Connection getConnection(String url, String user, String password){
+    public static Connection getConnection(String url, String user, String password){
         try {
             return DriverManager.getConnection(url, user, password);
         }
@@ -20,9 +20,14 @@ public class DatabaseConnection {
         }
     }
 
-    public Connection getConnection(){
+    public static Connection getConnection(){
         return getConnection(URL,USER,PASSWORD);
     }
 
+    public static void displaySQLErrors(SQLException e){
+        System.out.println("SQLException: " + e.getMessage());
+        System.out.println("SQLState: " + e.getSQLState());
+        System.out.println("VendorError: " + e.getErrorCode());
+    }
 
 }
