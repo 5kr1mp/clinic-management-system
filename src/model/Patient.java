@@ -3,14 +3,6 @@ package model;
 import java.util.*;
 import enums.*;
 
-/**
- * Changes:
- * <ul>
- *  <li>Removed String name attribute</li>
- *  <li>Modified constructors; removed name</li>
- *  <li>Modified {@link #getName()} method</li>
- * </ul>
- */
 
 public class Patient {
 
@@ -18,7 +10,7 @@ public class Patient {
     private String firstname;
     private String lastname;
     private String middlename;
-    private Designation designation;
+    private String designation;
     private Category category;
     private String contact;
     private ArrayList<PatientRecord> records;
@@ -28,7 +20,7 @@ public class Patient {
         String lastname,
         String firstname,
         String middlename,
-        Designation designation,
+        String designation,
         Category category,
         String contact,
         ArrayList<PatientRecord> records
@@ -45,7 +37,7 @@ public class Patient {
 
     public Category getCategory() {return category;}
     public String getContact() {return contact;}
-    public Designation getDesignation() {return designation;}
+    public String getDesignation() {return designation;}
     public int getId() {return id;}
     public String getLastname() {return lastname;}
     public String getFirstname() {return firstname;}
@@ -55,7 +47,7 @@ public class Patient {
     public List<PatientRecord> getRecords() {return records;}
     public void setCategory(Category category) {this.category = category;}
     public void setContact(String contact) {this.contact = contact;}
-    public void setDesignation(Designation designation) {this.designation = designation; }
+    public void setDesignation(String designation) {this.designation = designation; }
     public void setId(int id) {this.id = id;}
     public void setLastname(String lastname) {this.lastname = lastname;}
     public void setFirstname(String firstname) {this.firstname = firstname;}

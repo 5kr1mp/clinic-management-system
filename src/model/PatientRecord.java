@@ -3,24 +3,6 @@ package model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-/**
- * 
- * Changes
- *  <ul>
- *      <li>Removed Patient patient attribute</li>
- *      <li>Modified {@link #medicinesIssued}; it now contains IssuedMedicine objects instead of Medicine objects</li>
- *      <li>Added new constructors:</li>
- *      <li>
- *          <ul>
- *              <li>{@link #PatientRecord(int, Patient, LocalDateTime, String, String)}</li>
- *              <li>{@link #PatientRecord(int, Patient, LocalDateTime, String, String, ArrayList)}</li>
- *          </ul>
- *      </li>
- *  </ul>
- *  
- * 
- */
-
 public class PatientRecord {
 
     private int recordId;

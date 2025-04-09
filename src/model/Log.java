@@ -20,7 +20,7 @@ public class Log {
     public String getName() {return patient.getFullName();}
     public int getId(){return id;}
     public int getPatientId() { return patient.getId();}
-    public Designation getDesignation() {return patient.getDesignation();}
+    public String getDesignation() {return patient.getDesignation();}
     public Category getCategory() {return patient.getCategory();}
     public String getContact() {return patient.getContact();}
     
