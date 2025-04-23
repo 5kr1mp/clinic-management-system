@@ -7,9 +7,19 @@ import java.util.ArrayList;
 
 public class LogService {
     
+
+    private static LogService instance;
     private LogDao dao;
 
-    public LogService(LogDao dao) {
+    public static LogService getInstance(){
+        if (instance == null){
+            instance = new LogService(new LogDao());
+        }
+
+        return instance;
+    }
+
+    private LogService(LogDao dao) {
         this.dao = dao;
     }
 

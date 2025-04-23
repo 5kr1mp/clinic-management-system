@@ -2,21 +2,27 @@ package com.prog.service;
 
 import java.time.LocalDate;
 import java.util.*;
+
+import com.prog.dao.ReportDao;
 import com.prog.model.*;
 import com.prog.model.enums.*;
 import com.prog.util.*;
 
 public class ReportService {
     
-    private MedicineService medicineService;
-    private PatientService patientService;
+    private static ReportService instance;
+    private ReportDao dao;
 
-    public ReportService(
-        MedicineService medicineService, 
-        PatientService patientService
-    ){
-        this.medicineService = medicineService;
-        this.patientService = patientService;
+    public static ReportService getInstance(){
+        if (instance == null){
+            instance = new ReportService(new ReportDao());
+        }
+
+        return instance;
+    }
+
+    private ReportService( ReportDao dao ){
+        this.dao = dao;
     }
 
     public Report generateMonthlyReport(){

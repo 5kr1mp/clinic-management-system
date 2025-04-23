@@ -7,11 +7,21 @@ import com.prog.dao.*;
 
 public class MedicineService {
 
+    private static MedicineService instance;
+
     private MedicineDao medicineDao;
     private MedicineBatchDao batchDao;
     private IssuedMedicineDao issuedMedicineDao;
 
-    public MedicineService(MedicineDao dao, MedicineBatchDao batchDao, IssuedMedicineDao issuedMedicineDao){
+    public static MedicineService getInstance(){
+        if (instance == null){
+            instance = new MedicineService(new MedicineDao(), new MedicineBatchDao(), new IssuedMedicineDao());
+        }
+
+        return instance;
+    }
+
+    private MedicineService(MedicineDao dao, MedicineBatchDao batchDao, IssuedMedicineDao issuedMedicineDao){
         this.medicineDao = dao;
         this.batchDao = batchDao;
         this.issuedMedicineDao = issuedMedicineDao;

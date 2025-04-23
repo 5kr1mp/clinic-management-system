@@ -7,10 +7,20 @@ import com.prog.util.Hash;
 
 public class AuthService {
     
+    private static AuthService instance;
+    
     private User currentUser;
     private UserDao dao;
 
-    public AuthService(UserDao dao){
+    public static AuthService getInstance(){
+        if (instance == null){
+            instance = new AuthService(new UserDao());
+        }
+
+        return instance;
+    } 
+
+    private AuthService(UserDao dao){
         this.dao = dao;
     }
     

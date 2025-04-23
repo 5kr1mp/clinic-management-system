@@ -9,10 +9,19 @@ import java.util.ArrayList;
 
 public class PatientService {
 
+    private static PatientService instance;
     private PatientDao patientDao;
     private PatientRecordDao recordDao;
 
-    public PatientService(
+    public static PatientService getInstance(){
+        if (instance == null){
+            instance = new PatientService(new PatientDao(), new PatientRecordDao());
+        }
+
+        return instance;
+    }
+
+    private PatientService(
         PatientDao patientDao,
         PatientRecordDao recordDao
     ){
