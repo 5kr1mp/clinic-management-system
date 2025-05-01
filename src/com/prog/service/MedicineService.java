@@ -1,12 +1,10 @@
 package com.prog.service;
 
-import java.util.ArrayList;
+import java.util.*;
 import com.prog.model.*;
-import com.prog.util.Sorter;
 import com.prog.dao.*;
 
 public class MedicineService {
-
     private static MedicineService instance;
 
     private MedicineDao medicineDao;
@@ -202,8 +200,8 @@ public class MedicineService {
         }
 
         // sort from oldest to earliest
-        nonExpiredMedicineBatches = Sorter.sortBatchByExpiryDate(nonExpiredMedicineBatches, true);
-
+        nonExpiredMedicineBatches.sort((a,b) -> a.getExpiryDate().compareTo(b.getExpiryDate()));
+        
         return nonExpiredMedicineBatches;
     }
 
@@ -262,7 +260,7 @@ public class MedicineService {
         }
 
         // sort from oldest to earliest
-        batches = Sorter.sortBatchByExpiryDate(batches, true);
+        batches.sort((a,b) -> a.getExpiryDate().compareTo(b.getExpiryDate()));
 
         return batches;
     }

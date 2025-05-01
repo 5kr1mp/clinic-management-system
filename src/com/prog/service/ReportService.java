@@ -3,7 +3,7 @@ package com.prog.service;
 import java.time.LocalDate;
 import java.util.*;
 
-import com.prog.dao.ReportDao;
+import com.prog.AppContext;
 import com.prog.model.*;
 import com.prog.model.enums.*;
 import com.prog.util.*;
@@ -11,32 +11,32 @@ import com.prog.util.*;
 public class ReportService {
     
     private static ReportService instance;
-    private ReportDao dao;
 
     public static ReportService getInstance(){
         if (instance == null){
-            instance = new ReportService(new ReportDao());
+            instance = new ReportService();
         }
 
         return instance;
     }
 
-    private ReportService( ReportDao dao ){
-        this.dao = dao;
-    }
+    /**
+     * Empty private constructor to prevent instantiation
+     */
+    private ReportService(){}
 
     public Report generateMonthlyReport(){
         DateRange dateRange = DateRange.ofMonth();
-        ArrayList<MedicineBatch> medicines = medicineService.getMedicineBatches();
-        ArrayList<PatientRecord> records = patientService.getRecords(dateRange);
+        ArrayList<MedicineBatch> medicines = AppContext.getMedicineService().getMedicineBatches();
+        ArrayList<PatientRecord> records = AppContext.getPatientService().getRecords(dateRange);
 
         return new Report(dateRange,records,medicines);
     }
 
     public Report generateWeeklyReport(){
         DateRange dateRange = DateRange.ofWeek();
-        ArrayList<MedicineBatch> medicines = medicineService.getMedicineBatches();
-        ArrayList<PatientRecord> records = patientService.getRecords(dateRange);
+        ArrayList<MedicineBatch> medicines = AppContext.getMedicineService().getMedicineBatches();
+        ArrayList<PatientRecord> records = AppContext.getPatientService().getRecords(dateRange);
         
         return new Report(dateRange,records,medicines);
     }
@@ -44,8 +44,8 @@ public class ReportService {
     public Report generateDailyReport(){
         LocalDate date = LocalDate.now();
         
-        ArrayList<MedicineBatch> medicines = medicineService.getMedicineBatches();
-        ArrayList<PatientRecord> records = patientService.getRecords(date);
+        ArrayList<MedicineBatch> medicines = AppContext.getMedicineService().getMedicineBatches();
+        ArrayList<PatientRecord> records = AppContext.getPatientService().getRecords(date);
 
         return new Report(date, records, medicines);
     }
@@ -88,7 +88,7 @@ public class ReportService {
         ArrayList<Integer> prescriptionsId = new ArrayList<>();
 
         for (PatientRecord record : report.getPatientRecords()){
-           for (IssuedMedicine issuedMedicine : medicineService.getIssuedMedicinesByRecordId(record.getId())){
+           for (IssuedMedicine issuedMedicine : AppContext.getMedicineService().getIssuedMedicinesByRecordId(record.getId())){
             prescriptionsId.add(issuedMedicine.getMedicineId());
            }
         }
@@ -113,7 +113,7 @@ public class ReportService {
         int amount = 0;
 
         for (PatientRecord record : report.getPatientRecords()){
-            for (IssuedMedicine issuedMedicine : medicineService.getIssuedMedicinesByRecordId(record.getId())){
+            for (IssuedMedicine issuedMedicine : AppContext.getMedicineService().getIssuedMedicinesByRecordId(record.getId())){
                 if (issuedMedicine.getMedicineId() == medicineId){
                     amount += issuedMedicine.getAmount();
                 }
@@ -124,13 +124,13 @@ public class ReportService {
     }
 
     public ArrayList<Medicine> getMedicines(){
-        return medicineService.getMedicines();
+        return AppContext.getMedicineService().getMedicines();
     }
 
     public Medicine getMedicine(int id){
 
         try{
-            return medicineService.getMedicine(id);
+            return AppContext.getMedicineService().getMedicine(id);
         }
         catch (Exception e) {
             return null;
@@ -139,7 +139,7 @@ public class ReportService {
     }
 
     public int getTotalStock(Medicine medicine){
-        return medicineService.getTotalStock(medicine.getId());
+        return AppContext.getMedicineService().getTotalStock(medicine.getId());
     }
 
     public int getFacultyPatientsCount(Report report){
@@ -151,7 +151,7 @@ public class ReportService {
 
             // retrieve patient
             try {
-                patient = patientService.getPatient(record.getPatientId());
+                patient = AppContext.getPatientService().getPatient(record.getPatientId());
 
                 if (
                     patient.getCategory() == Category.FACULTY
@@ -175,7 +175,7 @@ public class ReportService {
 
             // retrieve patient
             try {
-                patient = patientService.getPatient(record.getPatientId());
+                patient = AppContext.getPatientService().getPatient(record.getPatientId());
                 if (
                     patient.getCategory() == Category.STUDENT
                 ){

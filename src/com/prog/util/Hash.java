@@ -12,7 +12,7 @@ public class Hash {
      * Hashes the password to securely store the password
      * to the database using PBKDF2WithHmacSHA256 algorithm
      * 
-     * The bit length of the hash is 256 bits, and encoded
+     * The bit length of the hash is 128 bits, and encoded
      * to String using Base64 encoder.
      * 
      * @param password the password to hash

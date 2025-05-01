@@ -1,8 +1,8 @@
 package com.prog.gui;
 
 import java.util.List;
-
 import javax.swing.*;
+import com.prog.model.enums.Role;
 import java.awt.*;
 
 public class Sidebar extends JPanel{
@@ -14,7 +14,7 @@ public class Sidebar extends JPanel{
         new JButton("Logs")
     );
 
-    public Sidebar(){
+    public Sidebar(Role role){
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setSize(200,500);

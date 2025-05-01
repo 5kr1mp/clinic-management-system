@@ -121,14 +121,14 @@ public class PatientDao {
             while (rs.next()) {
                 patients.add(
                         new Patient(
-                                rs.getInt("id"),
-                                rs.getString("firstname"),
-                                rs.getString("lastname"),
-                                rs.getString("middlename"),
-                                rs.getString("designation"),
-                                Category.valueOf(rs.getString("category")),
-                                rs.getString("contact"),
-                                null
+                            rs.getInt("id"),
+                            rs.getString("firstname"),
+                            rs.getString("lastname"),
+                            rs.getString("middlename"),
+                            rs.getString("designation"),
+                            Category.valueOf(rs.getString("category")),
+                            rs.getString("contact"),
+                            null
                         )
                 );
             }
@@ -159,16 +159,27 @@ public class PatientDao {
         try {
             conn = DatabaseConnection.getConnection();
 
-            String query = "SELECT firstname, middlename, lastname FROM patients WHERE designation = ?";
+            String query = "SELECT * FROM patients WHERE category = ?";
             statement = conn.prepareStatement(query);
 
-            statement.setString(6, "Faculty");
+            statement.setString(6, "FACULTY");
             rs = statement.executeQuery();
 
             while (rs.next()) {
-                String fullName = rs.getString("firstname") + " " +
-                        rs.getString("middlename") + " " +
-                        rs.getString("lastname");
+
+                patients.add(
+                    new Patient(
+                        rs.getInt("patient_id"),
+                        rs.getString("lastname"),
+                        rs.getString("firstname"),
+                        rs.getString("middlename"),
+                        rs.getString("designation"),
+                        Category.valueOf(rs.getString("category")),
+                        rs.getString("contact"),
+                        null
+                    )
+                );
+
             }
 
         } catch (SQLException e) {
@@ -198,16 +209,27 @@ public class PatientDao {
         try {
             conn = DatabaseConnection.getConnection();
 
-            String query = "SELECT firstname, middlename, lastname FROM patients WHERE designation = ?";
+            String query = "SELECT * FROM patients WHERE category = ?";
             statement = conn.prepareStatement(query);
 
-            statement.setString(6, "Student");
+            statement.setString(6, "STUDENT");
             rs = statement.executeQuery();
 
             while (rs.next()) {
-                String fullName = rs.getString("firstname") + " " +
-                        rs.getString("middlename") + " " +
-                        rs.getString("lastname");
+
+                patients.add(
+                    new Patient(
+                        rs.getInt("patient_id"),
+                        rs.getString("lastname"),
+                        rs.getString("firstname"),
+                        rs.getString("middlename"),
+                        rs.getString("designation"),
+                        Category.valueOf(rs.getString("category")),
+                        rs.getString("contact"),
+                        null
+                    )
+                );
+
             }
 
         } catch (SQLException e) {
