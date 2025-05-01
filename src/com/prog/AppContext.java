@@ -2,7 +2,6 @@ package com.prog;
 
 import javax.swing.ImageIcon;
 
-import com.prog.dao.*;
 import com.prog.service.*;
 
 public interface AppContext{
