@@ -20,7 +20,7 @@ public class PatientRecordDao {
             statement = conn.prepareStatement(query);
 
             statement.setInt(1, record.getPatientId());
-            statement.setString(2, String.valueOf(record.getDate()));
+            statement.setString(2, String.valueOf(record.getDateTime()));
             statement.setString(3, record.getDesc());
             statement.setString(4, record.getDiagnosis());
 
@@ -214,7 +214,7 @@ public class PatientRecordDao {
             statement = conn.prepareStatement(query);
 
             statement.setInt(1, record.getPatientId());
-            statement.setString(2, String.valueOf(record.getDate()));
+            statement.setString(2, String.valueOf(record.getDateTime()));
             statement.setString(3, record.getDesc());
             statement.setString(4, record.getDiagnosis());
             statement.setInt(5, record.getId());

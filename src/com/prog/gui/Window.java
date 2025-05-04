@@ -4,11 +4,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import com.prog.*;
+import com.prog.model.enums.Role;
+
 import javax.swing.*;
 import com.formdev.flatlaf.*;
 
 public class Window extends JFrame{
 
+    
     public Window(){
 
         style();
@@ -25,6 +28,33 @@ public class Window extends JFrame{
 
     public void style(){
         FlatLightLaf.setup();
+    }
+
+    public void initSidebar(){
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+
+        switch (AppContext.getCurrentUser().getRole()) {
+            case Role.ADMIN:{
+                
+
+                break;
+            }
+            case Role.DOCTOR:{
+
+                
+                break;
+            }
+            case Role.PATIENT:{
+
+                break;
+            }
+            case Role.NURSE:{
+
+                break;
+            }
+        }
     }
 
 }

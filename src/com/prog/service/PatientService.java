@@ -115,7 +115,7 @@ public class PatientService {
         ArrayList<PatientRecord> filteredRecords = new ArrayList<>();
 
         for (PatientRecord record : recordDao.getAll()) {
-            if (range.isWithinRange(record.getDate().toLocalDate())) filteredRecords.add(record);
+            if (range.isWithinRange(record.getDateTime().toLocalDate())) filteredRecords.add(record);
         }
 
         return filteredRecords;
@@ -125,7 +125,7 @@ public class PatientService {
         ArrayList<PatientRecord> filteredRecords = new ArrayList<>();
 
         for (PatientRecord record : recordDao.getAll()){
-            if (date.equals(record.getDate().toLocalDate())) filteredRecords.add(record);
+            if (date.equals(record.getDateTime().toLocalDate())) filteredRecords.add(record);
         }
 
         return filteredRecords;
