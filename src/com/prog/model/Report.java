@@ -30,6 +30,5 @@ public class Report {
     public LocalDate getDate() {return date;}
     public ArrayList<MedicineBatch> getMedicineBatches() {return medicineBatches;}
     public ArrayList<PatientRecord> getPatientRecords() {return patientRecords;}
-    public PatientRecord getPatientRecord(int index){return patientRecords.get(index);}
 
 }

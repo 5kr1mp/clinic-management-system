@@ -15,7 +15,7 @@ public class UserDao {
             conn = DatabaseConnection.getConnection();
 
             statement = conn.prepareStatement("INSERT INTO users (username,password,role,salt) VALUES (?,?,?,?)");
-            statement.setString(1, user.getUserName());
+            statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getRole().toString());
             statement.setBytes(4, salt);

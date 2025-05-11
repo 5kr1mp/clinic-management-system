@@ -9,9 +9,10 @@ import com.prog.model.enums.Role;
 import javax.swing.*;
 import com.formdev.flatlaf.*;
 
-public class Window extends JFrame{
+public class Window extends JFrame implements ActionListener{
 
-    
+    final JButton patientMgmt, inventory, 
+
     public Window(){
 
         style();

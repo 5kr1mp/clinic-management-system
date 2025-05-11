@@ -50,7 +50,6 @@ public class MedicineBatchDao {
         }
     }
 
-
     public ArrayList<MedicineBatch> getAll(){
         ArrayList<MedicineBatch> medicineBatch = new ArrayList<>();
         Connection conn = null;
@@ -176,7 +175,6 @@ public class MedicineBatchDao {
         return medicineBatch;
     }
 
-
     public void update(MedicineBatch batch){
         Connection conn = null;
         PreparedStatement statement = null;
@@ -207,7 +205,6 @@ public class MedicineBatchDao {
             }
         }
     }
-
 
     public void delete(int id){
         Connection conn = null;

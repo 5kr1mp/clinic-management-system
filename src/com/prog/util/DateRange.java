@@ -89,7 +89,7 @@ public class DateRange {
     public boolean isWithinRange(LocalDate date){
         return (
             date.isAfter(this.lowerDateRange) || date.equals(this.lowerDateRange) &&
-            date.isBefore(this.upperDateRange ) || date.equals(this.lowerDateRange) 
+            date.isBefore(this.upperDateRange ) || date.equals(this.upperDateRange) 
         );
     }
 

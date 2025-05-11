@@ -100,7 +100,7 @@ public class MedicineService {
         
         for (Medicine med : medicineDao.getAll()){
             if (med.getId() == medicine.getId()){
-                throw new IllegalArgumentException("Duplicate medicine.");
+                throw new DuplicateEntityException("Duplicate medicine.");
             }
         }
 
@@ -111,7 +111,7 @@ public class MedicineService {
 
         for (MedicineBatch add : batchDao.getAll()){
             if (add.getId() == batch.getId()){
-                throw new IllegalArgumentException("Duplicate batch.");
+                throw new DuplicateEntityException("Duplicate batch.");
             }
         }
 
@@ -277,7 +277,9 @@ public class MedicineService {
      * @param batchId id of batch of which to decrease stock.
      * @param amount amount to subtract
      */
-    public void decreaseStock(int batchId, int amount) throws Exception{
+    public void decreaseStock(int batchId, int amount) throws EntityNotFoundException, 
+                                                              InvalidAmountException, 
+                                                              InsufficientStockException{
         MedicineBatch batch = batchDao.get(batchId);
 
         if(batch == null) throw new EntityNotFoundException(String.format("Batch with id %d not found.",batchId));

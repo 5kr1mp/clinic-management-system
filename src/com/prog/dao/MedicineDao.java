@@ -8,9 +8,6 @@ import com.prog.util.DatabaseConnection;
 
 public class MedicineDao {
     
-//private int id;
-//    private String name;
-//    private String manufacturer;
 
     public void add(Medicine medicine){
         Connection conn = null;
@@ -40,8 +37,6 @@ public class MedicineDao {
         }
 
     }
-
-    // hheehe kepoy na
 
     public ArrayList<Medicine> getAll(){
         ArrayList<Medicine> medicines = new ArrayList<>();

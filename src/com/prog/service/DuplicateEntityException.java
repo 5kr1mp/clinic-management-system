@@ -2,7 +2,7 @@ package com.prog.service;
 
 public class DuplicateEntityException extends Exception {
 
-    DuplicateEntityException(String message){
+    public DuplicateEntityException(String message){
         super(message);
     }
     
