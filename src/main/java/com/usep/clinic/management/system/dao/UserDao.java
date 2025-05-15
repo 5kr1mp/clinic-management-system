@@ -56,8 +56,8 @@ public class UserDao {
             rs = statement.executeQuery();
 
             if (rs.next()) user = new User(
-                rs.getString("name"),
-                rs.getString("hashed_password"),
+                rs.getString("username"),
+                rs.getString("password"),
                 Role.valueOf(rs.getString("role"))
             );
 

@@ -36,6 +36,8 @@ public class AuthService {
 
         if(dao.getUser(username) != null) throw new DuplicateEntityException("Username already exists.");
         
+        if(password.length() < 8) throw new InvalidPasswordLengthException();
+        
         byte[] salt = Hash.generateSalt();
         String hashedPassword = Hash.hashPassword(password, salt);
 
@@ -43,7 +45,17 @@ public class AuthService {
 
         dao.addUser(user,salt);
     }
-
+    
+    /**
+     * Attempts login and returns a {@code boolean} value to indicate if the
+     * operation is successful. If user is successfully logged in, sets {@link
+     * #currentUser} to the retrieved user.
+     * 
+     * @param username the username
+     * @param password the un-hashed password
+     * @return true if login is successful
+     * @throws Exception thrown when hash algorithm is not found.
+     */
     public boolean attemptLogin(String username, String password) throws Exception{
 
         User user = dao.getUser(username); 
@@ -57,6 +69,9 @@ public class AuthService {
 
         // if input password does not match the user's password
         if (!hashedInputPassword.equals(user.getPassword())) return false;
+        
+        // set user to currentUser
+        currentUser = user;
 
         return true;
     }

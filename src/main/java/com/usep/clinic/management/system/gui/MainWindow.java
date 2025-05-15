@@ -13,11 +13,17 @@ import com.usep.clinic.management.system.AppContext;
  */
 public class MainWindow extends javax.swing.JFrame {
 
+    
+    
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
+        
+        
+        
+        setVisible(true);
     }
 
     /**
@@ -36,10 +42,11 @@ public class MainWindow extends javax.swing.JFrame {
         rightPanel = new javax.swing.JPanel();
         logoutBtn = new javax.swing.JButton();
         sidebar = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 8));
+        patientRecordsBtn = new javax.swing.JButton();
+        inventoryBtn = new javax.swing.JButton();
+        logbookBtn = new javax.swing.JButton();
+        reportsBtn = new javax.swing.JButton();
         mainContent = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -48,16 +55,19 @@ public class MainWindow extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(1012, 720));
         setPreferredSize(new java.awt.Dimension(1012, 720));
         setSize(new java.awt.Dimension(1012, 720));
-        getContentPane().setLayout(new java.awt.BorderLayout(5, 5));
+        getContentPane().setLayout(new java.awt.BorderLayout(2, 0));
 
+        header.setBackground(new java.awt.Color(112, 164, 216));
         header.setMinimumSize(new java.awt.Dimension(237, 50));
         header.setPreferredSize(new java.awt.Dimension(612, 50));
         header.setRequestFocusEnabled(false);
         header.setLayout(new java.awt.BorderLayout());
 
         leftPanel.setBackground(new java.awt.Color(255, 255, 255));
+        leftPanel.setOpaque(false);
         leftPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 20, 5));
 
+        sidebarControl.setBackground(new java.awt.Color(112, 164, 216));
         sidebarControl.setIcon(AppContext.BAR_ICON);
         sidebarControl.setBorderPainted(false);
         sidebarControl.setFocusPainted(false);
@@ -77,10 +87,12 @@ public class MainWindow extends javax.swing.JFrame {
 
         rightPanel.setBackground(new java.awt.Color(255, 255, 255));
         rightPanel.setMinimumSize(new java.awt.Dimension(116, 50));
+        rightPanel.setOpaque(false);
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 20, 5);
         flowLayout1.setAlignOnBaseline(true);
         rightPanel.setLayout(flowLayout1);
 
+        logoutBtn.setBackground(new java.awt.Color(112, 164, 216));
         logoutBtn.setIcon(AppContext.LOGOUT_ICON);
         logoutBtn.setAlignmentY(0.0F);
         logoutBtn.setBorderPainted(false);
@@ -93,67 +105,69 @@ public class MainWindow extends javax.swing.JFrame {
         });
         rightPanel.add(logoutBtn);
 
-        header.add(rightPanel, java.awt.BorderLayout.LINE_END);
+        header.add(rightPanel, java.awt.BorderLayout.EAST);
 
-        getContentPane().add(header, java.awt.BorderLayout.PAGE_START);
+        getContentPane().add(header, java.awt.BorderLayout.NORTH);
 
-        sidebar.setBackground(new java.awt.Color(255, 255, 255));
+        sidebar.setBackground(new java.awt.Color(201, 220, 238));
         sidebar.setMaximumSize(new java.awt.Dimension(200, 81));
         sidebar.setMinimumSize(new java.awt.Dimension(200, 81));
         sidebar.setPreferredSize(new java.awt.Dimension(200, 394));
+        sidebar.setVerifyInputWhenFocusTarget(false);
         sidebar.setLayout(new javax.swing.BoxLayout(sidebar, javax.swing.BoxLayout.Y_AXIS));
+        sidebar.add(filler1);
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(0, 0, 0));
-        jButton2.setText("Patient Records");
-        jButton2.setAlignmentX(0.5F);
-        jButton2.setBorderPainted(false);
-        jButton2.setMaximumSize(new java.awt.Dimension(500, 50));
-        jButton2.setPreferredSize(new java.awt.Dimension(79, 50));
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        patientRecordsBtn.setBackground(new java.awt.Color(201, 220, 238));
+        patientRecordsBtn.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        patientRecordsBtn.setText("Patient Records");
+        patientRecordsBtn.setAlignmentX(0.5F);
+        patientRecordsBtn.setBorderPainted(false);
+        patientRecordsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        patientRecordsBtn.setMaximumSize(new java.awt.Dimension(500, 50));
+        patientRecordsBtn.setPreferredSize(new java.awt.Dimension(79, 50));
+        patientRecordsBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                patientRecordsBtnActionPerformed(evt);
             }
         });
-        sidebar.add(jButton2);
+        sidebar.add(patientRecordsBtn);
 
-        jButton3.setBackground(new java.awt.Color(255, 255, 255));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(0, 0, 0));
-        jButton3.setText("Inventory");
-        jButton3.setAlignmentX(0.5F);
-        jButton3.setBorderPainted(false);
-        jButton3.setMaximumSize(new java.awt.Dimension(500, 50));
-        jButton3.setPreferredSize(new java.awt.Dimension(79, 50));
-        sidebar.add(jButton3);
+        inventoryBtn.setBackground(new java.awt.Color(201, 220, 238));
+        inventoryBtn.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        inventoryBtn.setText("Inventory");
+        inventoryBtn.setAlignmentX(0.5F);
+        inventoryBtn.setBorderPainted(false);
+        inventoryBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        inventoryBtn.setMaximumSize(new java.awt.Dimension(500, 50));
+        inventoryBtn.setPreferredSize(new java.awt.Dimension(79, 50));
+        sidebar.add(inventoryBtn);
 
-        jButton4.setBackground(new java.awt.Color(255, 255, 255));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(0, 0, 0));
-        jButton4.setText("Logbook");
-        jButton4.setAlignmentX(0.5F);
-        jButton4.setBorderPainted(false);
-        jButton4.setMaximumSize(new java.awt.Dimension(500, 50));
-        jButton4.setPreferredSize(new java.awt.Dimension(79, 50));
-        sidebar.add(jButton4);
+        logbookBtn.setBackground(new java.awt.Color(201, 220, 238));
+        logbookBtn.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        logbookBtn.setText("Logbook");
+        logbookBtn.setAlignmentX(0.5F);
+        logbookBtn.setBorderPainted(false);
+        logbookBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        logbookBtn.setMaximumSize(new java.awt.Dimension(500, 50));
+        logbookBtn.setPreferredSize(new java.awt.Dimension(79, 50));
+        sidebar.add(logbookBtn);
 
-        jButton5.setBackground(new java.awt.Color(255, 255, 255));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(0, 0, 0));
-        jButton5.setText("Reports");
-        jButton5.setAlignmentX(0.5F);
-        jButton5.setBorderPainted(false);
-        jButton5.setMaximumSize(new java.awt.Dimension(500, 50));
-        jButton5.setPreferredSize(new java.awt.Dimension(79, 50));
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        reportsBtn.setBackground(new java.awt.Color(201, 220, 238));
+        reportsBtn.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        reportsBtn.setText("Reports");
+        reportsBtn.setAlignmentX(0.5F);
+        reportsBtn.setBorderPainted(false);
+        reportsBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        reportsBtn.setMaximumSize(new java.awt.Dimension(500, 50));
+        reportsBtn.setPreferredSize(new java.awt.Dimension(79, 50));
+        reportsBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                reportsBtnActionPerformed(evt);
             }
         });
-        sidebar.add(jButton5);
+        sidebar.add(reportsBtn);
 
-        getContentPane().add(sidebar, java.awt.BorderLayout.LINE_START);
+        getContentPane().add(sidebar, java.awt.BorderLayout.WEST);
 
         mainContent.setBackground(new java.awt.Color(255, 255, 255));
         mainContent.setLayout(new java.awt.CardLayout());
@@ -170,15 +184,17 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         // TODO add your handling code here:
+        dispose();
+        new LoginWindow();
     }//GEN-LAST:event_logoutBtnActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void patientRecordsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientRecordsBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_patientRecordsBtnActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void reportsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportsBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_reportsBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -211,22 +227,25 @@ public class MainWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainWindow().setVisible(true);
+                new MainWindow();
             }
         });
        
         
     }
 
+    //
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.Box.Filler filler1;
     private javax.swing.JPanel header;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton inventoryBtn;
     private javax.swing.JPanel leftPanel;
+    private javax.swing.JButton logbookBtn;
     private javax.swing.JButton logoutBtn;
     private javax.swing.JPanel mainContent;
+    private javax.swing.JButton patientRecordsBtn;
+    private javax.swing.JButton reportsBtn;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JPanel sidebar;
     private javax.swing.JButton sidebarControl;
