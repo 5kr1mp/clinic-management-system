@@ -124,11 +124,6 @@ public class IssuedMedicineDao {
 
             // Step 5: executeQuery()
             rs = statement.executeQuery();
-
-            // Step 6: get the values from result set and create an object (I run jud una ang rs.next() 
-            // since mao nay mu move sa "imaginary cursor" from row 0 to row 1 sa table na result. Ang kaning
-            // "imaginary cursor" ang magdetermine which row ta magkuha ug data
-            // )
             if (rs.next()){
                 issuedMedicine = new IssuedMedicine(
                     rs.getInt("id"),

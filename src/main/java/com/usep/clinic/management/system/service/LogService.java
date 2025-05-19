@@ -95,7 +95,7 @@ public class LogService {
         
         ArrayList<Log> filteredLogs = new ArrayList<>();
         for (Log log : dao.getAll()) {
-            if (log.getDate().toLocalDate().isEqual(date)) {
+            if (log.getDateTime().toLocalDate().isEqual(date)) {
                 filteredLogs.add(log);
             }
         }
@@ -109,7 +109,7 @@ public class LogService {
         LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
         
         for (Log log : dao.getAll()) {
-            LocalDate logDate = log.getDate().toLocalDate();
+            LocalDate logDate = log.getDateTime().toLocalDate();
             if (!logDate.isBefore(startOfWeek) && !logDate.isAfter(today)) {
                 filteredLogs.add(log);
             }

@@ -15,12 +15,28 @@ public class LogDao {
         try {
             connect = DatabaseConnection.getConnection();
 
-            String query = "INSERT INTO logs (patient_id, date_time, purpose) VALUES (?, ?, ?)";
+            String query = """
+            INSERT INTO logs (
+                patient_id,
+                name,
+                designation,
+                category,
+                purpose,
+                contact,
+                date_time
+            )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """;
             statement = connect.prepareStatement(query);
 
-            statement.setInt(1, log.getId());
-            statement.setTimestamp(2, Timestamp.valueOf(log.getDate()));
-            statement.setString(3, log.getReason());
+            statement.setInt(1, log.getPatientId());
+            statement.setString(2, log.getName());
+            statement.setString(3, log.getDesignation());
+            statement.setString(4, log.getCategory().toString());
+            statement.setString(5, log.getReason());
+            statement.setString(6, log.getReason());
+            statement.setString(7, log.getContact());
+            statement.setTimestamp(8, Timestamp.valueOf(log.getDateTime()));
 
             statement.executeUpdate();
 
@@ -48,19 +64,10 @@ public class LogDao {
         try {
             connect = DatabaseConnection.getConnection();
 
+            // TODO : FIX QUERY
             String query = """
-            SELECT logs.id,
-                logs.date_time,
-                logs.purpose,
-                logs.patient_id,
-                patients.firstname,
-                patients.lastname,
-                patients.middlename,
-                patients.designation,
-                patients.category,
-                patients.contact
-            FROM logs
-		    INNER JOIN patients ON logs.patient_id = patients.id;        
+                SELECT *
+                FROM logs
             """;
             statement = connect.prepareStatement(query);
 
@@ -68,23 +75,17 @@ public class LogDao {
 
             while (rs.next()) {
 
-                Patient patient = new Patient(
-                    rs.getInt("patient_id"),
-                    rs.getString("lastname"),
-                    rs.getString("firstname"),
-                    rs.getString("middlename"),
-                    rs.getString("designation"),
-                    Category.valueOf(rs.getString("category")),
-                    rs.getString("contact"),
-                    null
-                );
-
                 logs.add(new Log(
                     rs.getInt("id"),
-                    patient,
                     rs.getTimestamp("date_time").toLocalDateTime(),
-                    rs.getString("reason")
+                    rs.getString("reason"),
+                    rs.getInt("patient_id"),
+                    rs.getString("name"),
+                    rs.getString("designation"),
+                    Category.valueOf(rs.getString("category")),
+                    rs.getString("contact")
                 ));
+
             }
         } catch (SQLException e) {
             DatabaseConnection.displaySQLErrors(e);
@@ -111,21 +112,11 @@ public class LogDao {
 
         try {
             connect = DatabaseConnection.getConnection();
-
+            // TODO : Fix query
             String query = """
-                SELECT logs.id,
-                    logs.date_time,
-                    logs.purpose,
-                    logs.patient_id,
-                    patients.firstname,
-                    patients.lastname,
-                    patients.middlename,
-                    patients.designation,
-                    patients.category,
-                    patients.contact
+                SELECT *
                 FROM logs
-		        INNER JOIN patients ON logs.patient_id = patients.id
-                WHERE logs.id = ?        
+                WHERE id = ?        
             """;
             statement = connect.prepareStatement(query);
             statement.setInt(1, id);
@@ -134,22 +125,15 @@ public class LogDao {
 
             if (rs.next()) {
 
-                Patient patient = new Patient(
-                    rs.getInt("patient_id"),
-                    rs.getString("lastname"),
-                    rs.getString("firstname"),
-                    rs.getString("middlename"),
-                    rs.getString("designation"),
-                    Category.valueOf(rs.getString("category")),
-                    rs.getString("contact"),
-                    null
-                );
-
                 log = new Log(
                     rs.getInt("id"),
-                    patient,
                     rs.getTimestamp("date_time").toLocalDateTime(),
-                    rs.getString("reason")
+                    rs.getString("reason"),
+                    rs.getInt("patient_id"),
+                    rs.getString("name"),
+                    rs.getString("designation"),
+                    Category.valueOf(rs.getString("category")),
+                    rs.getString("contact")
                 );
             }
         } catch (SQLException e) {
