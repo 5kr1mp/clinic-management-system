@@ -72,7 +72,7 @@ public class AppConfig {
             );""");
 
             conn.createStatement().execute("""
-            CREATE TABLE logs(
+            CREATE TABLE IF NOT EXISTS logs(
                 id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 name VARCHAR(50) NOT NULL,
                 designation VARCHAR(20),
@@ -83,7 +83,7 @@ public class AppConfig {
             );""");
 
             conn.createStatement().execute("""
-            CREATE TABLE users (
+            CREATE TABLE IF NOT EXISTS users (
                 username VARCHAR(25) PRIMARY KEY,
                 password CHAR(44) NOT NULL,
                 role ENUM('ADMIN','DOCTOR','NURSE','PATIENT') NOT NULL,
