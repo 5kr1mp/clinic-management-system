@@ -140,6 +140,11 @@ public class MainWindow extends javax.swing.JFrame {
         inventoryBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         inventoryBtn.setMaximumSize(new java.awt.Dimension(500, 50));
         inventoryBtn.setPreferredSize(new java.awt.Dimension(79, 50));
+        inventoryBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inventoryBtnActionPerformed(evt);
+            }
+        });
         sidebar.add(inventoryBtn);
 
         logbookBtn.setBackground(new java.awt.Color(201, 220, 238));
@@ -150,6 +155,11 @@ public class MainWindow extends javax.swing.JFrame {
         logbookBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         logbookBtn.setMaximumSize(new java.awt.Dimension(500, 50));
         logbookBtn.setPreferredSize(new java.awt.Dimension(79, 50));
+        logbookBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logbookBtnActionPerformed(evt);
+            }
+        });
         sidebar.add(logbookBtn);
 
         reportsBtn.setBackground(new java.awt.Color(201, 220, 238));
@@ -195,6 +205,14 @@ public class MainWindow extends javax.swing.JFrame {
     private void reportsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportsBtnActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_reportsBtnActionPerformed
+
+    private void inventoryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inventoryBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inventoryBtnActionPerformed
+
+    private void logbookBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logbookBtnActionPerformed
+
+    }//GEN-LAST:event_logbookBtnActionPerformed
 
     /**
      * @param args the command line arguments

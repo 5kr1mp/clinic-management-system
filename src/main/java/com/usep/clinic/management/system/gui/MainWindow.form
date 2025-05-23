@@ -312,6 +312,9 @@
               <Dimension value="[79, 50]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inventoryBtnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="logbookBtn">
           <Properties>
@@ -332,6 +335,9 @@
               <Dimension value="[79, 50]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logbookBtnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="reportsBtn">
           <Properties>

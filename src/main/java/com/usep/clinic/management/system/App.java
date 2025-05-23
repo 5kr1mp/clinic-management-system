@@ -7,6 +7,8 @@ public class App {
 
     public static void main(String[] args) {
         
+        new AppConfig();
+
         SwingUtilities.invokeLater(new Runnable(){
             @Override
             public void run() {
