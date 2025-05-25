@@ -4,6 +4,7 @@
  */
 package com.usep.clinic.management.system.gui.model;
 
+import com.usep.clinic.management.system.AppContext;
 import com.usep.clinic.management.system.model.Medicine;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
@@ -16,7 +17,7 @@ public class MedicineTableModel extends AbstractTableModel {
     
     private ArrayList<Medicine> medicines = new ArrayList<>();
     private Object[] columnNames = {
-        "ID","Name","Manufacturer"
+        "ID","Name","Manufacturer","Total Stock"
     };
     
     @Override
@@ -36,6 +37,7 @@ public class MedicineTableModel extends AbstractTableModel {
             case 0 -> medicines.get(rowIndex).getId();
             case 1 -> medicines.get(rowIndex).getName();
             case 2 -> medicines.get(rowIndex).getManufacturer();
+            case 3 -> AppContext.getMedicineService().getTotalStock(medicines.get(rowIndex).getId());
             default -> throw new ArrayIndexOutOfBoundsException(columnIndex);
         };
         
