@@ -26,7 +26,7 @@ public interface AppContext{
     public static final ImageIcon SEARCH_ICON = new ImageIcon(
        new ImageIcon("assets/search.png")
             .getImage()
-            .getScaledInstance(25,25, Image.SCALE_SMOOTH)
+            .getScaledInstance(20,20, Image.SCALE_SMOOTH)
     );
 
     // user

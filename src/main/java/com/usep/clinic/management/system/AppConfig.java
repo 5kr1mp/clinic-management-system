@@ -1,5 +1,7 @@
 package com.usep.clinic.management.system;
 
+import com.usep.clinic.management.system.model.enums.Role;
+import com.usep.clinic.management.system.service.AuthService;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -31,12 +33,12 @@ public class AppConfig {
 
             conn.createStatement().execute("""
             CREATE TABLE IF NOT EXISTS medicine_batch(
-                id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                batch_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 medicine_id INT NOT NULL,
                 stock INT NOT NULL, 
                 quantity INT NOT NULL,
                 expiry_date DATE,
-                stocked_date DATE,
+                stock_date DATE,
                 FOREIGN KEY(medicine_id) REFERENCES medicines(id)
             );""");
 
@@ -91,8 +93,13 @@ public class AppConfig {
             );
             """);
             
+            AuthService.getInstance().registerUser("admin", "admin123", Role.ADMIN);
+            AuthService.getInstance().registerUser("USeP-Clinic-Patient", "USeP-Clinic-Patient-Role", Role.PATIENT);
+            
         } catch( SQLException ex){
             DatabaseConnection.displaySQLErrors(ex);
+        } catch (Exception ex){
+            System.out.println(ex.getMessage());
         }
 
     }
