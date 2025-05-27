@@ -33,10 +33,8 @@ public class LogDao {
             statement.setString(2, log.getName());
             statement.setString(3, log.getDesignation());
             statement.setString(4, log.getCategory().toString());
-            statement.setString(5, log.getReason());
-            statement.setString(6, log.getReason());
-            statement.setString(7, log.getContact());
-            statement.setTimestamp(8, Timestamp.valueOf(log.getDateTime()));
+            statement.setString(6, log.getContact());
+            statement.setTimestamp(7, Timestamp.valueOf(log.getDateTime()));
 
             statement.executeUpdate();
 

@@ -76,6 +76,7 @@ public class AppConfig {
             conn.createStatement().execute("""
             CREATE TABLE IF NOT EXISTS logs(
                 id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                patient_id INT NOT NULL,
                 name VARCHAR(50) NOT NULL,
                 designation VARCHAR(20),
                 category ENUM('STUDENT','FACULTY') NOT NULL,
