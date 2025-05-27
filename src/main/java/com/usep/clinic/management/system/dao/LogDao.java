@@ -42,7 +42,10 @@ public class LogDao {
 
         } catch (SQLException e) {
             DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try {
                 if (statement != null) {
                     statement.close();
@@ -88,8 +91,10 @@ public class LogDao {
 
             }
         } catch (SQLException e) {
-            DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            DatabaseConnection.displaySQLErrors(e);e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try {
                 if (statement != null) {
                     statement.close();
@@ -137,8 +142,10 @@ public class LogDao {
                 );
             }
         } catch (SQLException e) {
-            DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            DatabaseConnection.displaySQLErrors(e);e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try {
                 if (statement != null) {
                     statement.close();
@@ -166,7 +173,7 @@ public class LogDao {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            DatabaseConnection.displaySQLErrors(e);
+            DatabaseConnection.displaySQLErrors(e);e.printStackTrace();
         } finally {
             try {
                 if (statement != null) {

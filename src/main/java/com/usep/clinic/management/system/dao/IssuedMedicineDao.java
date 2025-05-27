@@ -34,6 +34,9 @@ public class IssuedMedicineDao {
 
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         } finally {
             // Step 5: close connections
             try{
@@ -83,8 +86,11 @@ public class IssuedMedicineDao {
         }
         catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
         }
-        finally {
+         catch (Exception e){
+            e.printStackTrace();
+        }finally {
 
             // Step 7: close connections
             try{
@@ -134,9 +140,10 @@ public class IssuedMedicineDao {
             }
         }        
         catch (SQLException e){
-            DatabaseConnection.displaySQLErrors(e);
-        }
-        finally {
+            DatabaseConnection.displaySQLErrors(e);e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
 
             // Step 7: close connections
             try{
@@ -191,9 +198,10 @@ public class IssuedMedicineDao {
             }
         }
         catch (SQLException e){
-            DatabaseConnection.displaySQLErrors(e);
-        }
-        finally {
+            DatabaseConnection.displaySQLErrors(e); e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
 
             // Step 8: close connections
             try{
@@ -248,9 +256,10 @@ public class IssuedMedicineDao {
             }
         }
         catch (SQLException e){
-            DatabaseConnection.displaySQLErrors(e);
-        }
-        finally {
+            DatabaseConnection.displaySQLErrors(e);e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
 
             // Step 8: close connections
             try{
@@ -290,7 +299,9 @@ public class IssuedMedicineDao {
             statement.executeUpdate();
 
         } catch (SQLException e){
-            DatabaseConnection.displaySQLErrors(e);
+            DatabaseConnection.displaySQLErrors(e);e.printStackTrace();
+        }  catch (Exception e){
+            e.printStackTrace();
         } finally {
             // Step 5: close connections
             try{
@@ -325,7 +336,9 @@ public class IssuedMedicineDao {
             statement.executeUpdate();
 
         } catch (SQLException e){
-            DatabaseConnection.displaySQLErrors(e);
+            DatabaseConnection.displaySQLErrors(e);e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         } finally {
             // Step 5: close connections
             try{

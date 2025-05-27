@@ -23,7 +23,10 @@ public class MedicineDao {
             statement.executeUpdate();
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            e.printStackTrace();
+        }  catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try {
                 if (statement != null) {
                     statement.close();
@@ -53,7 +56,7 @@ public class MedicineDao {
             while (rs.next()){
                 medicines.add(
                         new Medicine(
-                                rs.getInt("medicine_id"),
+                                rs.getInt("id"),
                                 rs.getString("name"),
                                 rs.getString("manufacturer")
                         )
@@ -61,7 +64,10 @@ public class MedicineDao {
             }
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            e.printStackTrace();
+        }  catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try{
                 if (statement != null){
                     statement.close();
@@ -86,20 +92,23 @@ public class MedicineDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String query = "SELECT * FROM medicines WHERE medicine_id = ?";
+            String query = "SELECT * FROM medicines WHERE id = ?";
             statement = conn.prepareStatement(query);
             statement.setInt(1, id);
             rs = statement.executeQuery();
             rs.next();
 
             medicine = new Medicine(
-                            rs.getInt("medicine_id"),
+                            rs.getInt("id"),
                             rs.getString("name"),
                             rs.getString("manufacturer")
             );
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            e.printStackTrace();
+        }  catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try{
                 if (statement != null){
                     statement.close();
@@ -131,7 +140,7 @@ public class MedicineDao {
             while (rs.next()){
                 medicines.add(
                         new Medicine(
-                                rs.getInt("medicine_id"),
+                                rs.getInt("id"),
                                 rs.getString("name"),
                                 rs.getString("manufacturer")
                         )
@@ -139,7 +148,10 @@ public class MedicineDao {
             }
         } catch (SQLException e) {
             DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            e.printStackTrace();
+        }  catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try{
                 if (statement != null){
                     statement.close();
@@ -160,14 +172,17 @@ public class MedicineDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String query = "UPDATE medicines SET medicine_id = ?, manufacturer = ? WHERE name = ?";
+            String query = "UPDATE medicines SET id = ?, manufacturer = ? WHERE name = ?";
             statement = conn.prepareStatement(query);
             statement.setInt(1, medicine.getId());
             statement.setString(2, medicine.getManufacturer());
             statement.executeUpdate();
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try{
                 if (statement != null){
                     statement.close();
@@ -194,6 +209,9 @@ public class MedicineDao {
             statement.executeUpdate();
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
+        }  catch (Exception e){
+            e.printStackTrace();
         } finally {
             try{
                 if (statement != null){

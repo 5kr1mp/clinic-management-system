@@ -31,8 +31,10 @@ public class PatientDao {
 
         } catch (SQLException e) {
             DatabaseConnection.displaySQLErrors(e);
-        }
-        finally {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try {
                 if (statement != null){
                     statement.close();
@@ -77,8 +79,10 @@ public class PatientDao {
             }
         } catch (SQLException e) {
             DatabaseConnection.displaySQLErrors(e);
-        }
-        finally {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try {
                 if (statement != null){
                     statement.close();
@@ -134,8 +138,10 @@ public class PatientDao {
             }
         } catch (SQLException e) {
             DatabaseConnection.displaySQLErrors(e);
-        }
-        finally {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try {
                 if (statement != null){
                     statement.close();
@@ -184,8 +190,10 @@ public class PatientDao {
 
         } catch (SQLException e) {
             DatabaseConnection.displaySQLErrors(e);
-        }
-        finally {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try {
                 if (statement != null){
                     statement.close();
@@ -234,8 +242,10 @@ public class PatientDao {
 
         } catch (SQLException e) {
             DatabaseConnection.displaySQLErrors(e);
-        }
-        finally {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try {
                 if (statement != null){
                     statement.close();
@@ -278,7 +288,10 @@ public class PatientDao {
             }
         } catch (SQLException e) {
             DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try {
                 if (rs != null) rs.close();
                 if (statement != null) statement.close();
@@ -311,6 +324,9 @@ public class PatientDao {
 
         } catch (SQLException e) {
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         } finally {
             try {
                 if (statement != null) {
@@ -345,7 +361,10 @@ public class PatientDao {
 
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            e.printStackTrace();
+        }  catch (Exception e){
+            e.printStackTrace();
+        }finally {
             try{
                 if (statement != null){
                     statement.close();

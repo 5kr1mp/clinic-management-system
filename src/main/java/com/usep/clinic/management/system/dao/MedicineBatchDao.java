@@ -36,6 +36,9 @@ public class MedicineBatchDao {
             statement.executeUpdate();
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         } finally {
             try {
                 if (statement != null) {
@@ -75,8 +78,11 @@ public class MedicineBatchDao {
                 );
             }
         } catch (SQLException e){
-            DatabaseConnection.displaySQLErrors(e);
-        } finally {
+            DatabaseConnection.displaySQLErrors(e);e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
             try{
                 if (statement != null){
                     statement.close();
@@ -86,8 +92,7 @@ public class MedicineBatchDao {
                     conn.close();
                 }
             }
-            catch (Exception e){
-            }
+            catch (Exception e){}
         }
         return medicineBatch;
     }
@@ -115,7 +120,9 @@ public class MedicineBatchDao {
                 rs.getDate("stock_date").toLocalDate()
             );
         } catch (SQLException e){
-            DatabaseConnection.displaySQLErrors(e);
+            DatabaseConnection.displaySQLErrors(e);e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         } finally {
             try{
                 if (statement != null){
@@ -159,7 +166,9 @@ public class MedicineBatchDao {
                 );
             }
         } catch (SQLException e) {
-            DatabaseConnection.displaySQLErrors(e);
+            DatabaseConnection.displaySQLErrors(e);e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         } finally {
             try{
                 if (statement != null){
@@ -192,6 +201,9 @@ public class MedicineBatchDao {
             statement.executeUpdate();
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
+        }  catch (Exception e){
+            e.printStackTrace();
         } finally {
             try{
                 if (statement != null){
@@ -218,6 +230,9 @@ public class MedicineBatchDao {
             statement.executeUpdate();
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
+        }  catch (Exception e){
+            e.printStackTrace();
         } finally {
             try{
                 if (statement != null){

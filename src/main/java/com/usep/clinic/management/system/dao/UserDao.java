@@ -24,10 +24,10 @@ public class UserDao {
 
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
         } catch (Exception e){
-            System.out.println("Error: "+ e.getMessage());
-        }
-        finally {
+            e.printStackTrace();
+        } finally {
             try{
                 if (statement != null){
                     statement.close();
@@ -63,10 +63,10 @@ public class UserDao {
 
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
         } catch (Exception e){
-            System.out.println("Error: "+ e.getMessage());
-        }
-        finally {
+            e.printStackTrace();
+        }finally {
             try{
                 if (statement != null){
                     statement.close();
@@ -100,10 +100,10 @@ public class UserDao {
 
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
         } catch (Exception e){
-            System.out.println("Error: "+ e.getMessage());
-        }
-        finally {
+            e.printStackTrace();
+        }finally {
             try{
                 if (statement != null){
                     statement.close();
@@ -136,10 +136,10 @@ public class UserDao {
             
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
         } catch (Exception e){
-            System.out.println("Error: "+ e.getMessage());
-        }
-        finally {
+            e.printStackTrace();
+        }finally {
             try{
                 if (statement != null){
                     statement.close();
@@ -165,10 +165,10 @@ public class UserDao {
             
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);
+            e.printStackTrace();
         } catch (Exception e){
-            System.out.println("Error: "+ e.getMessage());
-        }
-        finally {
+            e.printStackTrace();
+        }finally {
             try{
                 if (statement != null){
                     statement.close();
