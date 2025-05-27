@@ -46,6 +46,16 @@ public class AuthService {
         dao.addUser(user,salt);
     }
     
+    public boolean patientLogin() throws Exception{
+        String username = "USeP-Clinic-Patient";
+        String pw = "USeP-Clinic-Patient-Role";
+        if (!attemptLogin(username, pw)){
+            registerUser(username, pw, Role.PATIENT);
+        }
+        
+        return true;
+    }
+    
     /**
      * Attempts login and returns a {@code boolean} value to indicate if the
      * operation is successful. If user is successfully logged in, sets {@link
