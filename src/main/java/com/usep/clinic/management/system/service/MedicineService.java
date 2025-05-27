@@ -188,6 +188,10 @@ public class MedicineService {
 
     }
 
+    public ArrayList<Medicine> getMedicinesByName(String name){
+        return medicineDao.getMedicinesByName(name);
+    }
+
     public ArrayList<MedicineBatch> getNonExpiredMedicineBatches(){
         ArrayList<MedicineBatch> nonExpiredMedicineBatches = new ArrayList<>();
 
