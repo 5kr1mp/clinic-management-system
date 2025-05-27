@@ -6,6 +6,9 @@ package com.usep.clinic.management.system.gui;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.usep.clinic.management.system.AppContext;
+import com.usep.clinic.management.system.model.User;
+import com.usep.clinic.management.system.model.enums.Role;
+import java.awt.CardLayout;
 
 /**
  *
@@ -21,11 +24,51 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {
         initComponents();
         
+        authorizeUser();
         
+        ReportsPanel reportsPanel = new ReportsPanel(); // katong inyong panel diri i instantiate
+        CardLayout layout = (CardLayout) mainContent.getLayout();
+        mainContent.add(reportsPanel); // i add tung object sa panel
+        layout.addLayoutComponent(reportsPanel, "Report"); // ang string ani kay anything
+        layout.show(mainContent, "Report");
         
         setVisible(true);
     }
 
+    private void authorizeUser(){
+        User user = AppContext.getCurrentUser();
+        
+        switch(user.getRole()){
+            
+            case Role.NURSE -> { 
+                patientRecordsBtn.setVisible(true);
+                inventoryBtn.setVisible(true);
+                logbookBtn.setVisible(true);
+                reportsBtn.setVisible(false);
+            }
+            case Role.DOCTOR -> {
+                patientRecordsBtn.setVisible(true);
+                inventoryBtn.setVisible(true);
+                logbookBtn.setVisible(false);
+                reportsBtn.setVisible(false);
+            }
+            case Role.PATIENT -> {
+                patientRecordsBtn.setVisible(false);
+                inventoryBtn.setVisible(false);
+                logbookBtn.setVisible(true);
+                reportsBtn.setVisible(false);
+            }
+            case Role.ADMIN -> {
+                patientRecordsBtn.setVisible(true);
+                inventoryBtn.setVisible(true);
+                logbookBtn.setVisible(true);
+                reportsBtn.setVisible(true);
+            }
+        }
+        
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -57,17 +100,17 @@ public class MainWindow extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(1012, 720));
         getContentPane().setLayout(new java.awt.BorderLayout(2, 0));
 
-        header.setBackground(new java.awt.Color(112, 164, 216));
+        header.setBackground(new java.awt.Color(143, 186, 229));
         header.setMinimumSize(new java.awt.Dimension(237, 50));
         header.setPreferredSize(new java.awt.Dimension(612, 50));
         header.setRequestFocusEnabled(false);
         header.setLayout(new java.awt.BorderLayout());
 
-        leftPanel.setBackground(new java.awt.Color(255, 255, 255));
+        leftPanel.setBackground(new java.awt.Color(143, 186, 229));
         leftPanel.setOpaque(false);
         leftPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 20, 5));
 
-        sidebarControl.setBackground(new java.awt.Color(112, 164, 216));
+        sidebarControl.setBackground(new java.awt.Color(143, 186, 229));
         sidebarControl.setIcon(AppContext.BAR_ICON);
         sidebarControl.setBorderPainted(false);
         sidebarControl.setFocusPainted(false);
@@ -80,19 +123,20 @@ public class MainWindow extends javax.swing.JFrame {
         leftPanel.add(sidebarControl);
 
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        title.setForeground(new java.awt.Color(255, 255, 255));
         title.setText("Clinic Management System");
         leftPanel.add(title);
 
         header.add(leftPanel, java.awt.BorderLayout.CENTER);
 
-        rightPanel.setBackground(new java.awt.Color(255, 255, 255));
+        rightPanel.setBackground(new java.awt.Color(143, 186, 229));
         rightPanel.setMinimumSize(new java.awt.Dimension(116, 50));
         rightPanel.setOpaque(false);
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 20, 5);
         flowLayout1.setAlignOnBaseline(true);
         rightPanel.setLayout(flowLayout1);
 
-        logoutBtn.setBackground(new java.awt.Color(112, 164, 216));
+        logoutBtn.setBackground(new java.awt.Color(143, 186, 229));
         logoutBtn.setIcon(AppContext.LOGOUT_ICON);
         logoutBtn.setAlignmentY(0.0F);
         logoutBtn.setBorderPainted(false);
@@ -109,7 +153,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         getContentPane().add(header, java.awt.BorderLayout.NORTH);
 
-        sidebar.setBackground(new java.awt.Color(201, 220, 238));
+        sidebar.setBackground(new java.awt.Color(255, 255, 255));
         sidebar.setMaximumSize(new java.awt.Dimension(200, 81));
         sidebar.setMinimumSize(new java.awt.Dimension(200, 81));
         sidebar.setPreferredSize(new java.awt.Dimension(200, 394));
@@ -117,7 +161,6 @@ public class MainWindow extends javax.swing.JFrame {
         sidebar.setLayout(new javax.swing.BoxLayout(sidebar, javax.swing.BoxLayout.Y_AXIS));
         sidebar.add(filler1);
 
-        patientRecordsBtn.setBackground(new java.awt.Color(201, 220, 238));
         patientRecordsBtn.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         patientRecordsBtn.setText("Patient Records");
         patientRecordsBtn.setAlignmentX(0.5F);
@@ -132,7 +175,6 @@ public class MainWindow extends javax.swing.JFrame {
         });
         sidebar.add(patientRecordsBtn);
 
-        inventoryBtn.setBackground(new java.awt.Color(201, 220, 238));
         inventoryBtn.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         inventoryBtn.setText("Inventory");
         inventoryBtn.setAlignmentX(0.5F);
@@ -147,7 +189,6 @@ public class MainWindow extends javax.swing.JFrame {
         });
         sidebar.add(inventoryBtn);
 
-        logbookBtn.setBackground(new java.awt.Color(201, 220, 238));
         logbookBtn.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         logbookBtn.setText("Logbook");
         logbookBtn.setAlignmentX(0.5F);
@@ -162,7 +203,6 @@ public class MainWindow extends javax.swing.JFrame {
         });
         sidebar.add(logbookBtn);
 
-        reportsBtn.setBackground(new java.awt.Color(201, 220, 238));
         reportsBtn.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         reportsBtn.setText("Reports");
         reportsBtn.setAlignmentX(0.5F);
@@ -179,7 +219,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         getContentPane().add(sidebar, java.awt.BorderLayout.WEST);
 
-        mainContent.setBackground(new java.awt.Color(255, 255, 255));
+        mainContent.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         mainContent.setLayout(new java.awt.CardLayout());
         getContentPane().add(mainContent, java.awt.BorderLayout.CENTER);
 
@@ -213,44 +253,6 @@ public class MainWindow extends javax.swing.JFrame {
     private void logbookBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logbookBtnActionPerformed
 
     }//GEN-LAST:event_logbookBtnActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        FlatLightLaf.setup();
-        
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainWindow();
-            }
-        });
-       
-        
-    }
 
     //
     

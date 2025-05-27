@@ -66,6 +66,8 @@ public class LoginWindow extends javax.swing.JFrame {
         roleCombobox = new javax.swing.JComboBox<>();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         loginBtn = new javax.swing.JButton();
+        filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        logbookBtn = new javax.swing.JButton();
         footerPanel = new javax.swing.JPanel();
         footerTxt = new javax.swing.JLabel();
         footerTxtBtn = new javax.swing.JButton();
@@ -88,17 +90,20 @@ public class LoginWindow extends javax.swing.JFrame {
         title.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 10, 20, 10));
         title.setLayout(new javax.swing.BoxLayout(title, javax.swing.BoxLayout.Y_AXIS));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI Semilight", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Clinic");
         jLabel1.setAlignmentX(0.5F);
         title.add(jLabel1);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI Semilight", 1, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Management");
         jLabel2.setAlignmentX(0.5F);
         title.add(jLabel2);
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI Semilight", 1, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("System");
         jLabel3.setAlignmentX(0.5F);
         title.add(jLabel3);
@@ -255,6 +260,27 @@ public class LoginWindow extends javax.swing.JFrame {
         });
         loginFormPanel.add(loginBtn);
 
+        filler3.setVisible(false);
+        loginFormPanel.add(filler7);
+
+        logbookBtn.setForeground(new java.awt.Color(51, 51, 255));
+        logbookBtn.setText("Go to Logbooks");
+        logbookBtn.setAlignmentX(0.5F);
+        logbookBtn.setAlignmentY(0.0F);
+        logbookBtn.setContentAreaFilled(false);
+        logbookBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        logbookBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                logbookBtnMouseEntered(evt);
+            }
+        });
+        logbookBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logbookBtnActionPerformed(evt);
+            }
+        });
+        loginFormPanel.add(logbookBtn);
+
         loginForm.add(loginFormPanel, java.awt.BorderLayout.CENTER);
 
         footerPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -375,6 +401,22 @@ public class LoginWindow extends javax.swing.JFrame {
         footerTxtBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }//GEN-LAST:event_footerTxtBtnMouseEntered
 
+    private void logbookBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logbookBtnActionPerformed
+        // TODO add your handling code here:
+        try {
+            if (AppContext.getAuthService().patientLogin()){
+                dispose();
+                new MainWindow();
+            }
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(null,e.getMessage(), "An Error Occured",JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_logbookBtnActionPerformed
+
+    private void logbookBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logbookBtnMouseEntered
+        logbookBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_logbookBtnMouseEntered
+
     private void switchForm(){
         usernameField.setText("");
         passwordField.setText("");
@@ -386,6 +428,7 @@ public class LoginWindow extends javax.swing.JFrame {
             
             rolePanel.setVisible(false);
             filler3.setVisible(false);
+            logbookBtn.setVisible(true);
             return;
                     
         }
@@ -395,6 +438,7 @@ public class LoginWindow extends javax.swing.JFrame {
         footerTxt.setText("Already have an account?");
         footerTxtBtn.setText("Sign in here");
         rolePanel.setVisible(true);
+        logbookBtn.setVisible(false);
         filler3.setVisible(true);
         
     }
@@ -411,6 +455,7 @@ public class LoginWindow extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
     private javax.swing.Box.Filler filler6;
+    private javax.swing.Box.Filler filler7;
     private javax.swing.JPanel footerPanel;
     private javax.swing.JLabel footerTxt;
     private javax.swing.JButton footerTxtBtn;
@@ -418,6 +463,7 @@ public class LoginWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton logbookBtn;
     private javax.swing.JButton loginBtn;
     private javax.swing.JPanel loginForm;
     private javax.swing.JPanel loginFormPanel;

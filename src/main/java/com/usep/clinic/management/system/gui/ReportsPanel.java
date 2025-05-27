@@ -4,9 +4,11 @@
  */
 package com.usep.clinic.management.system.gui;
 
+import com.formdev.flatlaf.ui.FlatRoundBorder;
 import com.usep.clinic.management.system.AppContext;
 import com.usep.clinic.management.system.model.Report;
 import com.usep.clinic.management.system.service.ReportService;
+import com.usep.clinic.management.system.gui.model.LogTableModel;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
@@ -20,6 +22,7 @@ public class ReportsPanel extends javax.swing.JPanel {
     PatientStatsTableModel patientStatsTableModel;
     DiagnosesStatsTableModel diagnosesStatsTableModel;
     InventoryStatsTableModel inventoryStatsTableModel;
+    Report report;
     
     /**
      * Creates new form java
@@ -27,11 +30,49 @@ public class ReportsPanel extends javax.swing.JPanel {
     public ReportsPanel() {
         initComponents();
         
-        Report report = AppContext.getReportService().generateWeeklyReport();
+        report = AppContext.getReportService().generateWeeklyReport();
         patientStatsTableModel = new PatientStatsTableModel(report);
+        diagnosesStatsTableModel = new DiagnosesStatsTableModel(report);
+        inventoryStatsTableModel = new InventoryStatsTableModel(report);
         jTable1.setModel(patientStatsTableModel);
-
         setVisible(true);
+
+    }
+    
+    private void updateModel(){
+        patientStatsTableModel.replaceAll(report);
+        diagnosesStatsTableModel.replaceAll(report);
+        inventoryStatsTableModel.replaceAll(report);
+    }
+    
+    private void weeklyReport(){
+        report = AppContext.getReportService().generateWeeklyReport();
+        updateModel();
+    }
+    
+    private void monthlyReport(){
+        report = AppContext.getReportService().generateMonthlyReport();
+        updateModel();
+    }
+    
+    private void dailyReport(){
+        report = AppContext.getReportService().generateDailyReport();
+        updateModel();
+    }
+    
+    private void switchToPatientStats(){
+        jTable1.setModel(patientStatsTableModel);
+        jLabel2.setText("Patient Statistics");
+    }
+    
+    private void switchToDiagnosesStats(){
+        jTable1.setModel(diagnosesStatsTableModel);
+        jLabel2.setText("Diagnoses Statistics"); 
+    }
+    
+    private void switchToInventoryStats(){
+        jTable1.setModel(inventoryStatsTableModel);
+        jLabel2.setText("Inventory");        
     }
     
     
@@ -48,10 +89,12 @@ public class ReportsPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         centerPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 0));
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(20, 0), new java.awt.Dimension(0, 0));
+        filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 20));
         changeTablePanel = new javax.swing.JPanel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         patientStatsBtn = new javax.swing.JButton();
@@ -61,8 +104,6 @@ public class ReportsPanel extends javax.swing.JPanel {
         inventoryBtn = new javax.swing.JButton();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         controlPanel = new javax.swing.JPanel();
-        leftPanel = new javax.swing.JPanel();
-        jSpinner1 = new javax.swing.JSpinner();
         jPanel1 = new javax.swing.JPanel();
         dailyRepBtn = new javax.swing.JButton();
         weeklyRepBtn = new javax.swing.JButton();
@@ -70,9 +111,12 @@ public class ReportsPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        header.setBackground(new java.awt.Color(143, 186, 229));
+        header.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(242, 242, 242), 5));
         header.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Reports");
         header.add(jLabel1);
 
@@ -82,10 +126,17 @@ public class ReportsPanel extends javax.swing.JPanel {
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
-        jLabel2.setText("jLabel2");
-        jPanel4.add(jLabel2);
-
-        jPanel3.add(jPanel4, java.awt.BorderLayout.NORTH);
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Patient Statistics");
+        jLabel2.setAlignmentX(1.0F);
+        jLabel2.setAlignmentY(0.0F);
+        jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabel2.setMaximumSize(new java.awt.Dimension(37, 30));
+        jLabel2.setMinimumSize(new java.awt.Dimension(37, 30));
+        jLabel2.setPreferredSize(new java.awt.Dimension(37, 36));
+        jPanel3.add(jLabel2, java.awt.BorderLayout.NORTH);
+        jPanel3.add(filler6, java.awt.BorderLayout.WEST);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -101,6 +152,8 @@ public class ReportsPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTable1);
 
         jPanel3.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        jPanel3.add(filler4, java.awt.BorderLayout.EAST);
+        jPanel3.add(filler7, java.awt.BorderLayout.SOUTH);
 
         centerPanel.add(jPanel3, java.awt.BorderLayout.CENTER);
 
@@ -112,6 +165,11 @@ public class ReportsPanel extends javax.swing.JPanel {
         patientStatsBtn.setAlignmentX(0.5F);
         patientStatsBtn.setMaximumSize(new java.awt.Dimension(150, 35));
         patientStatsBtn.setPreferredSize(new java.awt.Dimension(150, 35));
+        patientStatsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                patientStatsBtnActionPerformed(evt);
+            }
+        });
         changeTablePanel.add(patientStatsBtn);
         changeTablePanel.add(filler5);
 
@@ -119,6 +177,11 @@ public class ReportsPanel extends javax.swing.JPanel {
         diagnosisStatsBtn.setAlignmentX(0.5F);
         diagnosisStatsBtn.setMaximumSize(new java.awt.Dimension(150, 35));
         diagnosisStatsBtn.setPreferredSize(new java.awt.Dimension(150, 35));
+        diagnosisStatsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                diagnosisStatsBtnActionPerformed(evt);
+            }
+        });
         changeTablePanel.add(diagnosisStatsBtn);
         changeTablePanel.add(filler3);
 
@@ -126,6 +189,11 @@ public class ReportsPanel extends javax.swing.JPanel {
         inventoryBtn.setAlignmentX(0.5F);
         inventoryBtn.setMaximumSize(new java.awt.Dimension(150, 35));
         inventoryBtn.setPreferredSize(new java.awt.Dimension(150, 35));
+        inventoryBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inventoryBtnActionPerformed(evt);
+            }
+        });
         changeTablePanel.add(inventoryBtn);
         changeTablePanel.add(filler2);
 
@@ -133,22 +201,47 @@ public class ReportsPanel extends javax.swing.JPanel {
 
         add(centerPanel, java.awt.BorderLayout.CENTER);
 
+        controlPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 1, 5, 1));
         controlPanel.setLayout(new java.awt.BorderLayout());
 
-        leftPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        jSpinner1.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1748134358012L), null, null, java.util.Calendar.DAY_OF_MONTH));
-        leftPanel.add(jSpinner1);
-
-        controlPanel.add(leftPanel, java.awt.BorderLayout.WEST);
-
+        dailyRepBtn.setBackground(new java.awt.Color(143, 186, 229));
+        dailyRepBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        dailyRepBtn.setForeground(new java.awt.Color(255, 255, 255));
         dailyRepBtn.setText("Daily");
+        dailyRepBtn.setBorderPainted(false);
+        dailyRepBtn.setMaximumSize(new java.awt.Dimension(90, 30));
+        dailyRepBtn.setMinimumSize(new java.awt.Dimension(90, 30));
+        dailyRepBtn.setPreferredSize(new java.awt.Dimension(90, 30));
+        dailyRepBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dailyRepBtnActionPerformed(evt);
+            }
+        });
         jPanel1.add(dailyRepBtn);
 
+        weeklyRepBtn.setBackground(new java.awt.Color(143, 186, 229));
+        weeklyRepBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        weeklyRepBtn.setForeground(new java.awt.Color(255, 255, 255));
         weeklyRepBtn.setText("Weekly");
+        weeklyRepBtn.setBorderPainted(false);
+        weeklyRepBtn.setMaximumSize(new java.awt.Dimension(90, 30));
+        weeklyRepBtn.setMinimumSize(new java.awt.Dimension(90, 30));
+        weeklyRepBtn.setPreferredSize(new java.awt.Dimension(90, 30));
+        weeklyRepBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                weeklyRepBtnActionPerformed(evt);
+            }
+        });
         jPanel1.add(weeklyRepBtn);
 
+        monthlyRepBtn.setBackground(new java.awt.Color(143, 186, 229));
+        monthlyRepBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        monthlyRepBtn.setForeground(new java.awt.Color(255, 255, 255));
         monthlyRepBtn.setText("Monthly");
+        monthlyRepBtn.setBorderPainted(false);
+        monthlyRepBtn.setMaximumSize(new java.awt.Dimension(90, 30));
+        monthlyRepBtn.setMinimumSize(new java.awt.Dimension(90, 30));
+        monthlyRepBtn.setPreferredSize(new java.awt.Dimension(90, 30));
         monthlyRepBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 monthlyRepBtnActionPerformed(evt);
@@ -162,8 +255,28 @@ public class ReportsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void monthlyRepBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monthlyRepBtnActionPerformed
-        // TODO add your handling code here:
+        monthlyReport();
     }//GEN-LAST:event_monthlyRepBtnActionPerformed
+
+    private void dailyRepBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dailyRepBtnActionPerformed
+        dailyReport();
+    }//GEN-LAST:event_dailyRepBtnActionPerformed
+
+    private void patientStatsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientStatsBtnActionPerformed
+        switchToPatientStats();
+    }//GEN-LAST:event_patientStatsBtnActionPerformed
+
+    private void diagnosisStatsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_diagnosisStatsBtnActionPerformed
+        switchToDiagnosesStats();
+    }//GEN-LAST:event_diagnosisStatsBtnActionPerformed
+
+    private void inventoryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inventoryBtnActionPerformed
+        switchToInventoryStats();
+    }//GEN-LAST:event_inventoryBtnActionPerformed
+
+    private void weeklyRepBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_weeklyRepBtnActionPerformed
+        weeklyReport();
+    }//GEN-LAST:event_weeklyRepBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -175,18 +288,18 @@ public class ReportsPanel extends javax.swing.JPanel {
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
+    private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
+    private javax.swing.Box.Filler filler6;
+    private javax.swing.Box.Filler filler7;
     private javax.swing.JPanel header;
     private javax.swing.JButton inventoryBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JPanel leftPanel;
     private javax.swing.JButton monthlyRepBtn;
     private javax.swing.JButton patientStatsBtn;
     private javax.swing.JButton weeklyRepBtn;
@@ -233,6 +346,12 @@ public class ReportsPanel extends javax.swing.JPanel {
             return columnNames[column];
         }
         
+        public void replaceAll(Report report){
+            patientStats.clear();
+            patientStats.addAll(AppContext.getReportService().getPatientStats(report));
+            fireTableDataChanged();
+        }
+        
     }
     
     private class DiagnosesStatsTableModel extends AbstractTableModel{
@@ -273,6 +392,12 @@ public class ReportsPanel extends javax.swing.JPanel {
         @Override
         public String getColumnName(int column) {
             return columnNames[column];
+        }
+        
+        public void replaceAll(Report report){
+            diagnosisStats.clear();
+            diagnosisStats.addAll(AppContext.getReportService().getDiagnosisStats(report));
+            fireTableDataChanged();
         }
     }
     
@@ -316,6 +441,12 @@ public class ReportsPanel extends javax.swing.JPanel {
         @Override
         public String getColumnName(int column) {
             return columnNames[column];
+        }
+        
+        public void replaceAll(Report report){
+            inventoryStats.clear();
+            inventoryStats.addAll(AppContext.getReportService().getInventoryStats(report));
+            fireTableDataChanged();
         }
     }
 }
