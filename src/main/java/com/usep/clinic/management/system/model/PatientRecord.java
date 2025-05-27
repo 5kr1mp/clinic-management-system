@@ -29,6 +29,7 @@ public class PatientRecord {
     }
 
     public PatientRecord(int id, int patientId, LocalDateTime date, String desc, String diagnosis) {
+        this.id = id;
         this.patientId = patientId;
         this.dateTime = date;
         this.desc = desc;
