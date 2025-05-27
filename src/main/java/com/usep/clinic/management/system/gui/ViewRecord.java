@@ -8,12 +8,12 @@ package com.usep.clinic.management.system.gui;
  *
  * @author Krizia Faye
  */
-public class viewRecord extends javax.swing.JDialog {
+public class ViewRecord extends javax.swing.JDialog {
 
     /**
      * Creates new form viewRecord
      */
-    public viewRecord(java.awt.Frame parent, boolean modal) {
+    public ViewRecord(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -171,20 +171,20 @@ public class viewRecord extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(viewRecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewRecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(viewRecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewRecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(viewRecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewRecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(viewRecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewRecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                viewRecord dialog = new viewRecord(new javax.swing.JFrame(), true);
+                ViewRecord dialog = new ViewRecord(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

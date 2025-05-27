@@ -60,6 +60,11 @@ public class ReportsPanel extends javax.swing.JPanel {
         updateModel();
     }
     
+    private void annualReport(){
+        report = AppContext.getReportService().generateAnnualReport();
+        updateModel();
+    }
+    
     private void switchToPatientStats(){
         jTable1.setModel(patientStatsTableModel);
         jLabel2.setText("Patient Statistics");
@@ -108,6 +113,7 @@ public class ReportsPanel extends javax.swing.JPanel {
         dailyRepBtn = new javax.swing.JButton();
         weeklyRepBtn = new javax.swing.JButton();
         monthlyRepBtn = new javax.swing.JButton();
+        yearlyRepBtn = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -249,6 +255,21 @@ public class ReportsPanel extends javax.swing.JPanel {
         });
         jPanel1.add(monthlyRepBtn);
 
+        yearlyRepBtn.setBackground(new java.awt.Color(143, 186, 229));
+        yearlyRepBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        yearlyRepBtn.setForeground(new java.awt.Color(255, 255, 255));
+        yearlyRepBtn.setText("Annual");
+        yearlyRepBtn.setBorderPainted(false);
+        yearlyRepBtn.setMaximumSize(new java.awt.Dimension(90, 30));
+        yearlyRepBtn.setMinimumSize(new java.awt.Dimension(90, 30));
+        yearlyRepBtn.setPreferredSize(new java.awt.Dimension(90, 30));
+        yearlyRepBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yearlyRepBtnActionPerformed(evt);
+            }
+        });
+        jPanel1.add(yearlyRepBtn);
+
         controlPanel.add(jPanel1, java.awt.BorderLayout.EAST);
 
         add(controlPanel, java.awt.BorderLayout.SOUTH);
@@ -278,6 +299,10 @@ public class ReportsPanel extends javax.swing.JPanel {
         weeklyReport();
     }//GEN-LAST:event_weeklyRepBtnActionPerformed
 
+    private void yearlyRepBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearlyRepBtnActionPerformed
+        annualReport();
+    }//GEN-LAST:event_yearlyRepBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel centerPanel;
@@ -303,6 +328,7 @@ public class ReportsPanel extends javax.swing.JPanel {
     private javax.swing.JButton monthlyRepBtn;
     private javax.swing.JButton patientStatsBtn;
     private javax.swing.JButton weeklyRepBtn;
+    private javax.swing.JButton yearlyRepBtn;
     // End of variables declaration//GEN-END:variables
 
     

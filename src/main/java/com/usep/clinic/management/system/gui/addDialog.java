@@ -4,17 +4,20 @@
  */
 package com.usep.clinic.management.system.gui;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 /**
  *
  * @author Krizia Faye
  */
-public class addDialog extends javax.swing.JDialog {
+public class AddDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form addDialog
      */
-    public addDialog(java.awt.Frame parent, boolean modal) {
+    public AddDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        FlatLightLaf.setup();
         initComponents();
     }
 
@@ -293,13 +296,13 @@ public class addDialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(addDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(addDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(addDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(addDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -309,7 +312,7 @@ public class addDialog extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                addDialog dialog = new addDialog(new javax.swing.JFrame(), true);
+                AddDialog dialog = new AddDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

@@ -16,6 +16,7 @@ public class DatabaseConnection {
         }
         catch (SQLException e){
             System.err.println(e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }

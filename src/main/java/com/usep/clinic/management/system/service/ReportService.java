@@ -103,6 +103,14 @@ public class ReportService {
         return new Report(date, records, medicines);
     }
     
+    public Report generateAnnualReport(){
+        DateRange dateRange = DateRange.ofYear();
+        ArrayList<MedicineBatch> medicines = AppContext.getMedicineService().getMedicineBatches();
+        ArrayList<PatientRecord> records = AppContext.getPatientService().getRecords(dateRange);
+        
+        return new Report(dateRange,records,medicines);
+    }
+    
     public ArrayList<PatientStat> getPatientStats(Report report){
         ArrayList<PatientStat> patientStats = new ArrayList<>();
         
@@ -196,6 +204,7 @@ public class ReportService {
         return prescriptionsId;
     }
 
+    @Deprecated
     private ArrayList<Integer> getUniquePrescribedMedicinesId(Report report){
         ArrayList<Integer> prescriptionsId = getAllPrescribedMedicinesId(report);
         ArrayList<Integer> uniquePrescriptionsId = new ArrayList<>();
