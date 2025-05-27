@@ -3,7 +3,6 @@ package com.usep.clinic.management.system.util;
 import java.time.*;
 import java.time.format.*;
 
-@Deprecated
 public class DateTimeFormat {
     
     static DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
