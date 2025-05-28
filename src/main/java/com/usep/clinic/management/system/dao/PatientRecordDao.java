@@ -16,7 +16,7 @@ public class PatientRecordDao {
         try {
             conn = DatabaseConnection.getConnection();
 
-            String query = "INSERT INTO patients (patient_id, date_time, description, diagnosis) VALUES(?,?,?,?,?)";
+            String query = "INSERT INTO patients (patient_id, date_time, description, diagnosis) VALUES(?,?,?,?)";
             statement = conn.prepareStatement(query);
 
             statement.setInt(1, record.getPatientId());

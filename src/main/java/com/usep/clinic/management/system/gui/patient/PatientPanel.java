@@ -5,27 +5,26 @@ import com.usep.clinic.management.system.gui.model.PatientTableModel;
 import com.usep.clinic.management.system.model.Patient;
 import com.usep.clinic.management.system.model.enums.Role;
 import com.usep.clinic.management.system.service.AuthService;
-import com.usep.clinic.management.system.service.EntityNotFoundException;
 import com.usep.clinic.management.system.service.PatientService;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class PatientPanel extends JPanel implements ActionListener {
+public class PatientPanel extends JPanel implements java.awt.event.ActionListener {
 
     private PatientTableModel patientModel;
     private JTable patientTable;
 
     private RecordsPanel recordsPanel;
-    NavigationManager navigationManager;
+    private NavigationManager navigationManager;
 
     private RoundedTextField searchPatients;
     private JButton patientAddButton, patientViewButton, patientUpdateButton, patientSearchButton, patientDeleteButton;
+
+    // Patient details fields
+    private JTextField patientIdField, patientNameField, patientContactField, patientDesignationField, patientCategoryField;
 
     public PatientPanel() {
         super();
@@ -37,7 +36,8 @@ public class PatientPanel extends JPanel implements ActionListener {
         navigationManager = NavigationManager.getInstance();
         navigationManager.registerPanel(recordsPanel, "Records");
 
-        JPanel header = new JPanel(new BorderLayout(10,0));
+        // HEADER
+        JPanel header = new JPanel(new BorderLayout(10, 0));
         header.setBorder(BorderFactory.createLineBorder(new Color(242, 242, 242), 4));
         JLabel patientHeader = new JLabel("PATIENTS");
         patientHeader.setForeground(Color.WHITE);
@@ -50,12 +50,12 @@ public class PatientPanel extends JPanel implements ActionListener {
         JPanel searchPanel = new JPanel(new BorderLayout());
         searchPatients = new RoundedTextField(15);
         searchPatients.setFont(new Font("Arial", Font.PLAIN, 12));
-        searchPatients.setPreferredSize(new Dimension(25,25));
+        searchPatients.setPreferredSize(new Dimension(150, 25));  // increased width for usability
         searchPanel.add(searchPatients, BorderLayout.CENTER);
 
         patientSearchButton = new JButton("🔍");
         patientSearchButton.setFocusable(false);
-        patientSearchButton.setPreferredSize(new Dimension(30,30));
+        patientSearchButton.setPreferredSize(new Dimension(30, 30));
         patientSearchButton.setBackground(new Color(143, 186, 229));
         patientSearchButton.setHorizontalAlignment(SwingConstants.CENTER);
         patientSearchButton.setVerticalAlignment(SwingConstants.CENTER);
@@ -68,21 +68,25 @@ public class PatientPanel extends JPanel implements ActionListener {
         header.add(searchPanel, BorderLayout.EAST);
         add(header, BorderLayout.NORTH);
 
+        // CENTER PANEL with TABLE
         JPanel centerPanel = new JPanel(new BorderLayout());
         patientModel = new PatientTableModel();
         patientTable = new JTable(patientModel);
         patientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         patientTable.getSelectionModel().addListSelectionListener(e -> {
-            if (patientTable.getSelectedRow() == -1) {
+            int selectedRow = patientTable.getSelectedRow();
+            if (selectedRow == -1) {
                 patientViewButton.setEnabled(false);
                 patientDeleteButton.setEnabled(false);
                 patientUpdateButton.setEnabled(false);
-
+                populatePatientDetails(null);
             } else {
                 patientDeleteButton.setEnabled(true);
                 patientViewButton.setEnabled(true);
                 patientUpdateButton.setEnabled(true);
+                Patient patient = patientModel.getRow(selectedRow);
+                populatePatientDetails(patient);
             }
         });
 
@@ -92,8 +96,39 @@ public class PatientPanel extends JPanel implements ActionListener {
                 patientTableScrollPane.getBorder()
         ));
         centerPanel.add(patientTableScrollPane, BorderLayout.CENTER);
+
+        // DETAILS PANEL on the right
+        JPanel detailsPanel = new JPanel(new GridLayout(5, 2, 5, 5));
+        detailsPanel.setBorder(BorderFactory.createTitledBorder("Patient Details"));
+
+        detailsPanel.add(new JLabel("ID:"));
+        patientIdField = new JTextField();
+        patientIdField.setEditable(false);
+        detailsPanel.add(patientIdField);
+
+        detailsPanel.add(new JLabel("Name:"));
+        patientNameField = new JTextField();
+        patientNameField.setEditable(false);
+        detailsPanel.add(patientNameField);
+
+        detailsPanel.add(new JLabel("Contact:"));
+        patientContactField = new JTextField();
+        patientContactField.setEditable(false);
+        detailsPanel.add(patientContactField);
+
+        detailsPanel.add(new JLabel("Designation:"));
+        patientDesignationField = new JTextField();
+        patientDesignationField.setEditable(false);
+        detailsPanel.add(patientDesignationField);
+
+        detailsPanel.add(new JLabel("Category:"));
+        patientCategoryField = new JTextField();
+        patientCategoryField.setEditable(false);
+        detailsPanel.add(patientCategoryField);
+
         add(centerPanel, BorderLayout.CENTER);
 
+        // CONTROL PANEL with buttons
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         patientAddButton = new RoundedButton("ADD PATIENT");
@@ -141,6 +176,26 @@ public class PatientPanel extends JPanel implements ActionListener {
         patientModel.replaceAll(patients);
     }
 
+    public void populatePatientDetails(Patient patient) {
+        if (patient != null) {
+            patientIdField.setText(String.valueOf(patient.getId()));
+
+            String fullName = patient.getFirstname()
+                    + (patient.getMiddlename() != null && !patient.getMiddlename().isEmpty() ? " " + patient.getMiddlename() + "." : "")
+                    + " " + patient.getLastname();
+            patientNameField.setText(fullName);
+
+            patientContactField.setText(patient.getContact());
+            patientDesignationField.setText(patient.getDesignation());
+            patientCategoryField.setText(String.valueOf(patient.getCategory()));
+        } else {
+            patientIdField.setText("");
+            patientNameField.setText("");
+            patientContactField.setText("");
+            patientDesignationField.setText("");
+            patientCategoryField.setText("");
+        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -163,7 +218,10 @@ public class PatientPanel extends JPanel implements ActionListener {
             if (selectedRowIndex >= 0) {
                 Patient patient = patientModel.getRow(selectedRowIndex);
                 recordsPanel.setPatient(patient);
+                recordsPanel.populatePatientDetails(patient); // ensure details populate
                 navigationManager.show("Records");
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a patient to view.", "No Patient Selected", JOptionPane.WARNING_MESSAGE);
             }
 
         } else if (source == patientSearchButton) {
@@ -180,10 +238,14 @@ public class PatientPanel extends JPanel implements ActionListener {
 
             ArrayList<Patient> matchedPatients = new ArrayList<>();
             for (Patient patient : patients) {
+                String fullName = (patient.getFirstname() + " "
+                        + (patient.getMiddlename() != null ? patient.getMiddlename() + " " : "")
+                        + patient.getLastname()).toLowerCase();
+
                 if (searchingPatient.isEmpty() ||
-                        patient.getName().toLowerCase().contains(searchingPatient) ||
+                        fullName.contains(searchingPatient) ||
                         String.valueOf(patient.getId()).contains(searchingPatient) ||
-                        patient.getContact().toLowerCase().contains(searchingPatient)) {
+                        (patient.getContact() != null && patient.getContact().toLowerCase().contains(searchingPatient))) {
                     matchedPatients.add(patient);
                 }
             }
@@ -225,21 +287,20 @@ public class PatientPanel extends JPanel implements ActionListener {
         );
     }
 
-
-
-static class RoundedButton extends JButton {
-    public RoundedButton(String label) {
-        super(label);
-        setFocusPainted(false);
-        setContentAreaFilled(false);
-        setBorderPainted(false);
-        setOpaque(false);
-        setForeground(Color.WHITE);
-        setFont(new Font("Arial", Font.BOLD, 14));
-        setMargin(new Insets(0, 0, 0, 0));
-        setHorizontalAlignment(SwingConstants.CENTER);
-        setVerticalAlignment(SwingConstants.CENTER);
-    }
+    // --- RoundedButton class ---
+    static class RoundedButton extends JButton {
+        public RoundedButton(String label) {
+            super(label);
+            setFocusPainted(false);
+            setContentAreaFilled(false);
+            setBorderPainted(false);
+            setOpaque(false);
+            setForeground(Color.WHITE);
+            setFont(new Font("Arial", Font.BOLD, 14));
+            setMargin(new Insets(0, 0, 0, 0));
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setVerticalAlignment(SwingConstants.CENTER);
+        }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -256,15 +317,17 @@ static class RoundedButton extends JButton {
             g2.setColor(new Color(100, 100, 100));
         }
 
-        FontMetrics fm = g2.getFontMetrics();
-        int stringWidth = fm.stringWidth(getText());
-        int stringHeight = fm.getAscent();
-        g2.drawString(getText(), (getWidth() - stringWidth) / 2, (getHeight() + stringHeight) / 2 - 2);
+            FontMetrics fm = g2.getFontMetrics();
+            int stringWidth = fm.stringWidth(getText());
+            int stringHeight = fm.getAscent();
+            g2.setColor(getForeground());
+            g2.drawString(getText(), (getWidth() - stringWidth) / 2, (getHeight() + stringHeight) / 2 - 2);
 
-        g2.dispose();
+            g2.dispose();
+        }
     }
-}
 
+    // --- RoundedTextField class ---
     static class RoundedTextField extends JTextField {
         public RoundedTextField(int size) {
             super(size);
