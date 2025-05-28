@@ -4,12 +4,10 @@
  */
 package com.usep.clinic.management.system.gui;
 
-import com.formdev.flatlaf.FlatLightLaf;
 import com.usep.clinic.management.system.AppContext;
 import com.usep.clinic.management.system.gui.inventory.MedicinePanel;
 import com.usep.clinic.management.system.gui.logbook.LogBookPanel;
 import com.usep.clinic.management.system.gui.patient.PatientPanel;
-import com.usep.clinic.management.system.gui.patient.RecordsPanel;
 import com.usep.clinic.management.system.gui.reports.ReportsPanel;
 import com.usep.clinic.management.system.model.User;
 import com.usep.clinic.management.system.model.enums.Role;
@@ -250,28 +248,23 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void sidebarControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sidebarControlActionPerformed
-        // TODO add your handling code here:
         sidebar.setVisible(!sidebar.isVisible());
     }//GEN-LAST:event_sidebarControlActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
-        // TODO add your handling code here:
         dispose();
         new LoginWindow();
     }//GEN-LAST:event_logoutBtnActionPerformed
 
     private void patientRecordsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientRecordsBtnActionPerformed
-        // TODO add your handling code here:
         navigationManager.show("Patients");
     }//GEN-LAST:event_patientRecordsBtnActionPerformed
 
     private void reportsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportsBtnActionPerformed
-        // TODO add your handling code here:
         navigationManager.show("Reports");
     }//GEN-LAST:event_reportsBtnActionPerformed
 
     private void inventoryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inventoryBtnActionPerformed
-        // TODO add your handling code here:
         navigationManager.show("Medicines");
     }//GEN-LAST:event_inventoryBtnActionPerformed
 

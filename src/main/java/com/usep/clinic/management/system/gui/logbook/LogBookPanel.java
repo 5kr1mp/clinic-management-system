@@ -4,14 +4,20 @@
  */
 package com.usep.clinic.management.system.gui.logbook;
 
-import com.usep.clinic.management.system.AppConfig;
 import com.usep.clinic.management.system.AppContext;
+import com.usep.clinic.management.system.dao.LogDao;
+import com.usep.clinic.management.system.gui.model.LogTableModel;
 import com.usep.clinic.management.system.model.Log;
 import com.usep.clinic.management.system.model.enums.Category;
+import com.usep.clinic.management.system.model.enums.Role;
+import com.usep.clinic.management.system.service.AuthService;
 import com.usep.clinic.management.system.service.LogService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,27 +28,103 @@ import java.util.ArrayList;
  */
 public class LogBookPanel extends javax.swing.JPanel {
     private LogService logService;
+    private LogTableModel tableModel;
+
+
     /**
      * Creates new form java
      */
     public LogBookPanel() {
-    initComponents();
-    logService = LogService.getInstance();
+        tableModel = new LogTableModel();
+        logService = LogService.getInstance();
+
+        initComponents();
+
         addListeners();
         loadLogs();
 
         jButton2.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-            jButton2ActionPerformed(evt);
+            public void actionPerformed(ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+    }
+
+    private boolean isAdmin(){
+        return AuthService.getInstance().getLoggedInUserRole() == Role.ADMIN;
+    }
+
+    private void addListeners() {
+        jButton2.addActionListener(evt -> jButton2ActionPerformed(evt));
+        jButton1.addActionListener(evt -> jButton1ActionPerformed(evt));
+        jTextField1.addActionListener(evt -> jTextField1ActionPerformed(evt));
+        deleteBtn.addActionListener(evt -> deleteBtnActionPerformed(evt));
+        jTable1.getSelectionModel().addListSelectionListener(evt -> {
+
+            if (jTable1.getSelectedRowCount() == 0){
+                deleteBtn.setEnabled(false);
+            }
+            else {
+                deleteBtn.setEnabled(true);
+            }
+
+        });
+    }
+
+    private int confirmDelete(int count){
+        return JOptionPane.showConfirmDialog(
+            null,
+            "Confirm deletion of " + count + (count == 1 ? " log" : " logs."),
+            "Confirm Delete",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+    }
+
+    private void deleteLogs(ArrayList<Log> logs){
+        for (Log log : logs) {
+            deleteLog(log);
         }
-    });
-}
-   private void addListeners() {
-    jButton2.addActionListener(evt -> jButton2ActionPerformed(evt));
-    jButton1.addActionListener(evt -> jButton1ActionPerformed(evt));
-    jTextField1.addActionListener(evt -> jTextField1ActionPerformed(evt));
-}
+    }
+
+    private void deleteLog(Log log){
+        try {
+            logService.delete(log.getId());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     
+    private void deleteBtnActionPerformed(ActionEvent evt) {
+        
+        if (jTable1.getSelectedRowCount() == 1){
+
+            if (confirmDelete(1) == JOptionPane.YES_OPTION){
+                deleteLog(
+                    tableModel.getRow(
+                        jTable1.getSelectedRow()
+                    )
+                );
+            }
+        }
+
+        if (jTable1.getSelectedRowCount() > 1){
+            ArrayList<Log> logs = new ArrayList<>();
+
+            int[] selectedRowIndices = jTable1.getSelectedRows();
+
+            for (int index : selectedRowIndices) {
+                logs.add(
+                    tableModel.getRow(index)
+                );
+            }
+
+            if (confirmDelete(selectedRowIndices.length) == JOptionPane.YES_OPTION){
+                deleteLogs(logs);
+            }
+        }
+    }
+
     private void loadLogs() {
         try {
             ArrayList<Log> logs = logService.getLogs();
@@ -54,19 +136,7 @@ public class LogBookPanel extends javax.swing.JPanel {
 
     
     private void updateTable(ArrayList<Log> logs) {
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-
-        for (Log log : logs) {
-            model.addRow(new Object[]{
-                log.getPatientId(),
-                log.getName(),
-                log.getDesignation(),
-                log.getReason(),
-                log.getContact(),
-                log.getDateTime().toLocalDate()
-            });
-        }
+        tableModel.replaceAll(logs);
     }
 
 
@@ -95,8 +165,16 @@ public class LogBookPanel extends javax.swing.JPanel {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setText("Logs");
-        jPanel1.add(jLabel1, java.awt.BorderLayout.WEST);
+        JPanel jpanelLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        jpanelLeft.setBackground(new Color(143, 186, 229));
+        jpanelLeft.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(242, 242, 242), 5));
+
+            jLabel1.setText("LOGS");
+            jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+            jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+            jpanelLeft.add(jLabel1);
+        jPanel1.add(jpanelLeft, java.awt.BorderLayout.CENTER);
 
         jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
@@ -123,22 +201,38 @@ public class LogBookPanel extends javax.swing.JPanel {
 
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {},
-            new String [] {
-                "Patient ID", "Name", "Designation", "Purpose", "Contact", "Date"
-            }
-        ));
+        jTable1.setModel(tableModel);
         jScrollPane1.setViewportView(jTable1);
 
         jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
+        deleteBtn = new JButton("Delete");
+        deleteBtn.setBackground(new java.awt.Color(143, 186, 229));
+        deleteBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        deleteBtn.setForeground(new java.awt.Color(255, 255, 255));
+        deleteBtn.setPreferredSize(new java.awt.Dimension(90, 30));
+        deleteBtn.setEnabled(false);
+        jPanel3.add(deleteBtn);
+        if (isAdmin()){
+            deleteBtn.setVisible(true);
+        } else{
+            deleteBtn.setVisible(false);
+        }
+
         jButton2.setText("Add");
+        jButton2.setBackground(new java.awt.Color(143, 186, 229));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setPreferredSize(new java.awt.Dimension(90, 30));
         jPanel3.add(jButton2);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Filter", "ID", "Category", "Date" }));
+        jComboBox1.setBackground(new java.awt.Color(143, 186, 229));
+        jComboBox1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
+        jComboBox1.setPreferredSize(new java.awt.Dimension(90, 30));
         jPanel3.add(jComboBox1);
 
         jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_END);
@@ -151,8 +245,8 @@ public class LogBookPanel extends javax.swing.JPanel {
         String filter = (String) jComboBox1.getSelectedItem();
         
         if (keyword.isEmpty() || filter.equals("Filter")) {
-        loadLogs();
-        return;
+            loadLogs();
+            return;
         }
         
         try {
@@ -227,6 +321,7 @@ public class LogBookPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
