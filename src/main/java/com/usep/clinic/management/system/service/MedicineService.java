@@ -61,7 +61,7 @@ public class MedicineService {
         return maxId + 1;
     }
 
-    public void issueMedicine(int medicineId, int amount) throws Exception{
+    public void issueMedicine(int recordId, int medicineId, int amount) throws Exception{
 
         int remainingAmountNeeded = amount;
 
@@ -90,8 +90,26 @@ public class MedicineService {
         }
 
         if (remainingAmountNeeded > 0){
+            IssuedMedicine issuedMed = new IssuedMedicine(
+                generateIssuedMedicineId(), 
+                recordId,
+                medicineId,
+                amount - remainingAmountNeeded
+            );
+
+            issuedMedicineDao.add(issuedMed);
+
             throw new InsufficientStockException();
         }
+
+        IssuedMedicine issuedMed = new IssuedMedicine(
+            generateIssuedMedicineId(), 
+            recordId,
+            medicineId,
+            amount
+        );
+
+        issuedMedicineDao.add(issuedMed);
 
     }
     // CREATE

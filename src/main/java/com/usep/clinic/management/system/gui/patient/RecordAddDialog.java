@@ -256,9 +256,10 @@ public class RecordAddDialog extends JDialog implements ActionListener {
 
             if (choice == JOptionPane.YES_OPTION) {
                 try {
+                    int recordId = PatientService.getInstance().generateRecordId();
 
                     PatientRecord record = new PatientRecord(
-                        PatientService.getInstance().generateRecordId(),
+                        recordId,
                         patientToUpdate.getId(),
                         LocalDateTime.now(),
                         description,
@@ -266,11 +267,12 @@ public class RecordAddDialog extends JDialog implements ActionListener {
                     );
 
                     PatientService.getInstance().add(record);
-
+                    
                     for (IssuedMedicine issuedMedicine : issuedMedicines) {
-                        MedicineService.getInstance().issueMedicine(issuedMedicine.getMedicineId(), choice);
+                        MedicineService.getInstance().issueMedicine(recordId, issuedMedicine.getMedicineId(), issuedMedicine.getAmount());
                     }
 
+                    
                     JOptionPane.showMessageDialog(this, "Record saved.", "", JOptionPane.INFORMATION_MESSAGE);
                     recordModel.replaceAll(
                         PatientService.getInstance().getRecordsByPatientId(patientToUpdate.getId())

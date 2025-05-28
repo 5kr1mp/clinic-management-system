@@ -81,6 +81,7 @@ public class RecordsPanel extends JPanel implements ActionListener {
         recordModel = new PatientRecordTableModel();
         recordTable = new JTable(recordModel);
         recordTable.setRowHeight(25);
+        recordTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         recordTable.getSelectionModel().addListSelectionListener(e -> {
             int selectedRow = recordTable.getSelectedRow();
             if (selectedRow == -1) {
@@ -110,7 +111,9 @@ public class RecordsPanel extends JPanel implements ActionListener {
 
         addButton = new RoundedButton("ADD RECORD");
         viewButton = new RoundedButton("VIEW");
+        viewButton.setEnabled(false);
         updateButton = new RoundedButton("UPDATE");
+        updateButton.setVisible(false);
         backbutton = new RoundedButton("BACK");
 
         RoundedButton[] buttons = {addButton, viewButton, updateButton, backbutton};
@@ -140,7 +143,8 @@ public class RecordsPanel extends JPanel implements ActionListener {
         Object source = e.getSource();
 
         if (source == viewButton) {
-            // new RecordPatientView();
+            System.out.println("ha");
+            new RecordPatientView(null, recordModel.getRow(recordTable.getSelectedRow()));
         } else if (source == addButton) {
             new RecordAddDialog(recordModel,patient);
         } else if (source == updateButton) {
@@ -170,6 +174,7 @@ public class RecordsPanel extends JPanel implements ActionListener {
     }
 
 
+    // --- RoundedButton class ---
     static class RoundedButton extends JButton {
         public RoundedButton(String label) {
             super(label);
@@ -188,14 +193,23 @@ public class RecordsPanel extends JPanel implements ActionListener {
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(getBackground());
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+
+            if (isEnabled()) {
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                g2.setColor(getForeground());
+            } else {
+                g2.setColor(new Color(180, 180, 180));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                g2.setColor(new Color(100, 100, 100));
+            }
 
             FontMetrics fm = g2.getFontMetrics();
             int stringWidth = fm.stringWidth(getText());
             int stringHeight = fm.getAscent();
             g2.setColor(getForeground());
             g2.drawString(getText(), (getWidth() - stringWidth) / 2, (getHeight() + stringHeight) / 2 - 2);
+
             g2.dispose();
         }
     }
