@@ -2,6 +2,8 @@ package com.usep.clinic.management.system.service;
 
 import com.usep.clinic.management.system.dao.LogDao;
 import com.usep.clinic.management.system.model.Log;
+import com.usep.clinic.management.system.model.enums.Category;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -102,6 +104,16 @@ public class LogService {
         
         return filteredLogs;
     }
+    
+    public ArrayList<Log> getLogsByCategory(Category category) {
+    ArrayList<Log> filteredLogs = new ArrayList<>();
+    for (Log log : dao.getAll()) {
+        if (log.getCategory() == category) {
+            filteredLogs.add(log);
+        }
+    }
+    return filteredLogs;
+}
 
     public ArrayList<Log> getLogsThisWeek() throws Exception {
         ArrayList<Log> filteredLogs = new ArrayList<>();

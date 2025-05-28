@@ -1,6 +1,7 @@
 package com.usep.clinic.management.system.gui.patient;
 
 import com.usep.clinic.management.system.gui.NavigationManager;
+import com.usep.clinic.management.system.gui.inventory.MedicinePanel;
 import com.usep.clinic.management.system.gui.model.PatientTableModel;
 import com.usep.clinic.management.system.model.Patient;
 import com.usep.clinic.management.system.service.EntityNotFoundException;
@@ -21,7 +22,8 @@ public class PatientPanel extends JPanel implements ActionListener {
     private JTable patientTable;
 
     private RecordsPanel recordsPanel;
-    NavigationManager navigationManager;
+    private MedicinePanel medicinePanel;
+    private NavigationManager navigationManager;
 
     private RoundedTextField searchPatients;
     private JButton patientAddButton, patientViewButton, patientUpdateButton, patientSearchButton;
@@ -32,8 +34,10 @@ public class PatientPanel extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
 
         recordsPanel = new RecordsPanel();
+        medicinePanel = new MedicinePanel();
 
         navigationManager = NavigationManager.getInstance();
+        navigationManager.registerPanel(medicinePanel, "Medicines");
         navigationManager.registerPanel(recordsPanel, "Records");
 
         JPanel header = new JPanel(new BorderLayout(10,0));
@@ -126,7 +130,7 @@ public class PatientPanel extends JPanel implements ActionListener {
         Object source = e.getSource();
 
         if (source == patientAddButton) {
-            // new PatientAddDialog();
+            new PatientAddDialog(patientModel);
         } else if (source == patientUpdateButton) {
            // new PatientUpdateDialog(); // boist d matawag
         } else if (source == patientViewButton) {

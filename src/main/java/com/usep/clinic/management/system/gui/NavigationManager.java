@@ -25,8 +25,12 @@ public class NavigationManager extends CardLayout{
      * @param name the name of the panel
      */
     public void registerPanel(JPanel panel, String name){
-        container.add(panel);
-        addLayoutComponent(panel, name);
+        try {
+            container.add(panel);
+            addLayoutComponent(panel, name);
+        } catch (NullPointerException ex){
+            throw new NullPointerException("Container is null. Make sure to call setContainer() to set the container.");
+        }
     }
 
     /**

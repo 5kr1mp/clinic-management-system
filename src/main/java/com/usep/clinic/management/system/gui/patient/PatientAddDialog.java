@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import com.usep.clinic.management.system.gui.model.PatientTableModel;
 import com.usep.clinic.management.system.model.Patient;
 import com.usep.clinic.management.system.model.enums.Category;
 import java.util.ArrayList;
@@ -18,11 +20,14 @@ public class PatientAddDialog extends JDialog implements ActionListener {
     private JComboBox<String> DesignationBox;
     private RoundedButton AddPatientButton, CancelPatientButton, BackButton;
 
-    public PatientAddDialog(JFrame parent) {
-        super(parent, "ADD PATIENTS", true);
+    private PatientTableModel tableModel;
+
+    public PatientAddDialog(PatientTableModel tableModel) {
+        super((Frame) null,"ADD PATIENTS", true);
+        this.tableModel = tableModel;
         setSize(415, 400);
         setLayout(null);
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(null);
 
         JLabel AddPatientheader = new JLabel("  ADD PATIENT");
         AddPatientheader.setOpaque(true);

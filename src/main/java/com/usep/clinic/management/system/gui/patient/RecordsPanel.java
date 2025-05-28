@@ -19,7 +19,8 @@ public class RecordsPanel extends JPanel implements ActionListener {
 
     private RoundedButton addButton, viewButton, updateButton;
 
-    private Patient patient;// private Medicine medicine;
+    private Patient patient;
+
 
     public RecordsPanel() {
         setLayout(null);

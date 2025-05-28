@@ -6,6 +6,8 @@ package com.usep.clinic.management.system.gui;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.usep.clinic.management.system.AppContext;
+import com.usep.clinic.management.system.gui.inventory.MedicinePanel;
+import com.usep.clinic.management.system.gui.logbook.LogBookPanel;
 import com.usep.clinic.management.system.gui.patient.PatientPanel;
 import com.usep.clinic.management.system.gui.patient.RecordsPanel;
 import com.usep.clinic.management.system.gui.reports.ReportsPanel;
@@ -22,6 +24,8 @@ public class MainWindow extends javax.swing.JFrame {
 
     PatientPanel patientPanel;
     ReportsPanel reportsPanel;
+    LogBookPanel logBookPanel;
+    MedicinePanel medicinePanel;
 
     /**
      * Creates new form MainWindow
@@ -36,8 +40,12 @@ public class MainWindow extends javax.swing.JFrame {
 
         patientPanel = new PatientPanel();
         reportsPanel = new ReportsPanel();
+        medicinePanel = new MedicinePanel();
+        logBookPanel = new LogBookPanel();
         
         // register panels
+        navigationManager.registerPanel(logBookPanel, "Logbook");
+        navigationManager.registerPanel(medicinePanel, "Medicines");
         navigationManager.registerPanel(patientPanel, "Patients");
         navigationManager.registerPanel(reportsPanel, "Reports");
                 
@@ -264,7 +272,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void inventoryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inventoryBtnActionPerformed
         // TODO add your handling code here:
-        navigationManager.show("Inventory");
+        navigationManager.show("Medicines");
     }//GEN-LAST:event_inventoryBtnActionPerformed
 
     private void logbookBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logbookBtnActionPerformed

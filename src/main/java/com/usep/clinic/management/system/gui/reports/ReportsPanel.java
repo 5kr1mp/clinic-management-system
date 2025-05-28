@@ -22,15 +22,19 @@ public class ReportsPanel extends javax.swing.JPanel {
     PatientStatsTableModel patientStatsTableModel;
     DiagnosesStatsTableModel diagnosesStatsTableModel;
     InventoryStatsTableModel inventoryStatsTableModel;
+    String stats, period;
     Report report;
     
     /**
      * Creates new form java
      */
     public ReportsPanel() {
-        initComponents();
+        stats = "Patient Statistics";
+        period = "Daily";
         
-        report = AppContext.getReportService().generateWeeklyReport();
+        initComponents();
+
+        report = AppContext.getReportService().generateDailyReport();
         patientStatsTableModel = new PatientStatsTableModel(report);
         diagnosesStatsTableModel = new DiagnosesStatsTableModel(report);
         inventoryStatsTableModel = new InventoryStatsTableModel(report);
@@ -43,41 +47,49 @@ public class ReportsPanel extends javax.swing.JPanel {
         patientStatsTableModel.replaceAll(report);
         diagnosesStatsTableModel.replaceAll(report);
         inventoryStatsTableModel.replaceAll(report);
+        jLabel2.setText(stats + " - " + period);
     }
     
     private void weeklyReport(){
         report = AppContext.getReportService().generateWeeklyReport();
+        period = "Weekly";
         updateModel();
     }
     
     private void monthlyReport(){
         report = AppContext.getReportService().generateMonthlyReport();
+        period = "Monthly";
         updateModel();
     }
     
     private void dailyReport(){
         report = AppContext.getReportService().generateDailyReport();
+        period = "Daily";
         updateModel();
     }
     
     private void annualReport(){
         report = AppContext.getReportService().generateAnnualReport();
+        period = "Annual";
         updateModel();
     }
     
     private void switchToPatientStats(){
         jTable1.setModel(patientStatsTableModel);
-        jLabel2.setText("Patient Statistics");
+        stats = "Patient Statistics";
+        jLabel2.setText(stats + " - " + period);
     }
     
     private void switchToDiagnosesStats(){
         jTable1.setModel(diagnosesStatsTableModel);
-        jLabel2.setText("Diagnoses Statistics"); 
+        stats = "Diagnoses Statistics";
+        jLabel2.setText(stats + " - " + period);
     }
     
     private void switchToInventoryStats(){
         jTable1.setModel(inventoryStatsTableModel);
-        jLabel2.setText("Inventory");        
+        stats = "Inventory Statistics";
+        jLabel2.setText(stats + " - " + period);      
     }
     
     
@@ -134,7 +146,7 @@ public class ReportsPanel extends javax.swing.JPanel {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Patient Statistics");
+        jLabel2.setText(String.format("%s - %s", stats, period));
         jLabel2.setAlignmentX(1.0F);
         jLabel2.setAlignmentY(0.0F);
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

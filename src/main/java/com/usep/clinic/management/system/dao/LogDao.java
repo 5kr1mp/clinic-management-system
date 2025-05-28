@@ -33,8 +33,9 @@ public class LogDao {
             statement.setString(2, log.getName());
             statement.setString(3, log.getDesignation());
             statement.setString(4, log.getCategory().toString());
-            statement.setString(6, log.getContact());
-            statement.setTimestamp(7, Timestamp.valueOf(log.getDateTime()));
+            statement.setString(5, log.getReason());  
+            statement.setString(6, log.getContact());      
+            statement.setTimestamp(7, Timestamp.valueOf(log.getDateTime())); 
 
             statement.executeUpdate();
 
@@ -79,7 +80,7 @@ public class LogDao {
                 logs.add(new Log(
                     rs.getInt("id"),
                     rs.getTimestamp("date_time").toLocalDateTime(),
-                    rs.getString("reason"),
+                    rs.getString("purpose"),
                     rs.getInt("patient_id"),
                     rs.getString("name"),
                     rs.getString("designation"),
