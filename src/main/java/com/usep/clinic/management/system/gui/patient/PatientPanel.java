@@ -7,6 +7,8 @@ import com.usep.clinic.management.system.service.EntityNotFoundException;
 import com.usep.clinic.management.system.service.PatientService;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -70,6 +72,14 @@ public class PatientPanel extends JPanel implements ActionListener {
             patientTable = new JTable(patientModel);
             patientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+            patientTable.getSelectionModel().addListSelectionListener(e ->{
+                if (patientTable.getSelectedRow() == -1 ){
+                    patientViewButton.setEnabled(false);
+                } else {
+                    patientViewButton.setEnabled(true);
+                }
+            });
+
             JScrollPane patientTableScrollPane = new JScrollPane(patientTable);
             patientTableScrollPane.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(242, 242, 242), 4),
@@ -90,6 +100,7 @@ public class PatientPanel extends JPanel implements ActionListener {
             patientViewButton = new RoundedButton("VIEW");
             patientViewButton.setBackground(new Color(143, 186, 229));
             patientViewButton.setPreferredSize(new Dimension(120, 30));
+            patientViewButton.setEnabled(false);
             controlPanel.add(patientViewButton);
             patientViewButton.addActionListener(this);
 
@@ -136,21 +147,13 @@ public class PatientPanel extends JPanel implements ActionListener {
             PatientService patientService = PatientService.getInstance();
             ArrayList<Patient> patients = patientService.getPatientsByName(searchingPatient);
 
-            // patientModel.setRowCount(0);
-
             try {
                 for (Patient patient : patients) {
                     if (patient.getName().toLowerCase().contains(searchingPatient) ||
                             String.valueOf(patient.getId()).contains(searchingPatient) ||
                             patient.getContact().toLowerCase().contains(searchingPatient)) {
 
-                        // patientModel.addRow(new Object[]{
-                        //         patient.getId(),
-                        //         patient.getName(),
-                        //         patient.getDesignation(),
-                        //         patient.getCategory(),
-                        //         patient.getContact()
-                        // });
+                        patientModel.add(patient);
                     }
                 }
 
