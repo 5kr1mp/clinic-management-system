@@ -6,6 +6,9 @@ package com.usep.clinic.management.system.gui;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.usep.clinic.management.system.AppContext;
+import com.usep.clinic.management.system.gui.patient.PatientPanel;
+import com.usep.clinic.management.system.gui.patient.RecordsPanel;
+import com.usep.clinic.management.system.gui.reports.ReportsPanel;
 import com.usep.clinic.management.system.model.User;
 import com.usep.clinic.management.system.model.enums.Role;
 import java.awt.CardLayout;
@@ -16,21 +19,26 @@ import java.awt.CardLayout;
  */
 public class MainWindow extends javax.swing.JFrame {
 
-    
-    
+    NavigationManager navigationManager;
+
+    PatientPanel patientPanel;
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
-        
         authorizeUser();
         
-        ReportsPanel reportsPanel = new ReportsPanel(); // katong inyong panel diri i instantiate
-        CardLayout layout = (CardLayout) mainContent.getLayout();
-        mainContent.add(reportsPanel); // i add tung object sa panel
-        layout.addLayoutComponent(reportsPanel, "Report"); // ang string ani kay anything
-        layout.show(mainContent, "Report");
+        patientPanel = new PatientPanel();
+
+        navigationManager = NavigationManager.getInstance();
+        mainContent.setLayout(navigationManager);
+        navigationManager.setContainer(mainContent);
+
+        mainContent.add(patientPanel);
+        navigationManager.registerPanel(patientPanel, "Patients");
+
+        navigationManager.show("Patients");
         
         setVisible(true);
     }

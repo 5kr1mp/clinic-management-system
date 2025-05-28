@@ -2,19 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.usep.clinic.management.system.gui;
+package com.usep.clinic.management.system.gui.patient;
+
+import com.usep.clinic.management.system.model.Patient;
 
 /**
  *
  * @author Krizia Faye
  */
-public class Records extends javax.swing.JPanel {
+public class RecordsPanel extends javax.swing.JPanel {
+
+    private Patient patient;
 
     /**
      * Creates new form Records
      */
-    public Records() {
+    public RecordsPanel() {
         initComponents();
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     /**
