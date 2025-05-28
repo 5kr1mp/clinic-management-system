@@ -4,9 +4,11 @@
  */
 package com.usep.clinic.management.system.gui;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import com.usep.clinic.management.system.AppContext;
 import com.usep.clinic.management.system.gui.patient.PatientPanel;
 import com.usep.clinic.management.system.gui.patient.RecordsPanel;
+import com.usep.clinic.management.system.gui.reports.ReportsPanel;
 import com.usep.clinic.management.system.model.User;
 import com.usep.clinic.management.system.model.enums.Role;
 
@@ -19,30 +21,27 @@ public class MainWindow extends javax.swing.JFrame {
     NavigationManager navigationManager;
 
     PatientPanel patientPanel;
-    RecordsPanel recordsPanel;
+    ReportsPanel reportsPanel;
+
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
-        authorizeUser();
-        
-        patientPanel = new PatientPanel();
-        recordsPanel = new RecordsPanel();
         
         // setup navigation manager
         navigationManager = NavigationManager.getInstance();
         mainContent.setLayout(navigationManager);
         navigationManager.setContainer(mainContent);
 
-        // register panels
-        mainContent.add(patientPanel);
-        navigationManager.registerPanel(patientPanel, "Patients");
-        mainContent.add(recordsPanel);
-        navigationManager.registerPanel(recordsPanel, "Records");
-
-        navigationManager.show("Patients");
+        patientPanel = new PatientPanel();
+        reportsPanel = new ReportsPanel();
         
+        // register panels
+        navigationManager.registerPanel(patientPanel, "Patients");
+        navigationManager.registerPanel(reportsPanel, "Reports");
+                
+        authorizeUser();
         setVisible(true);
     }
 
@@ -56,24 +55,28 @@ public class MainWindow extends javax.swing.JFrame {
                 inventoryBtn.setVisible(true);
                 logbookBtn.setVisible(true);
                 reportsBtn.setVisible(false);
+                navigationManager.show("Patients");
             }
             case Role.DOCTOR -> {
                 patientRecordsBtn.setVisible(true);
                 inventoryBtn.setVisible(true);
                 logbookBtn.setVisible(false);
                 reportsBtn.setVisible(false);
+                navigationManager.show("Patients");
             }
             case Role.PATIENT -> {
                 patientRecordsBtn.setVisible(false);
                 inventoryBtn.setVisible(false);
                 logbookBtn.setVisible(true);
                 reportsBtn.setVisible(false);
+                navigationManager.show("Logbook");
             }
             case Role.ADMIN -> {
                 patientRecordsBtn.setVisible(true);
                 inventoryBtn.setVisible(true);
                 logbookBtn.setVisible(true);
                 reportsBtn.setVisible(true);
+                navigationManager.show("Reports");
             }
         }
         
@@ -251,18 +254,21 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void patientRecordsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientRecordsBtnActionPerformed
         // TODO add your handling code here:
+        navigationManager.show("Patients");
     }//GEN-LAST:event_patientRecordsBtnActionPerformed
 
     private void reportsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportsBtnActionPerformed
         // TODO add your handling code here:
+        navigationManager.show("Reports");
     }//GEN-LAST:event_reportsBtnActionPerformed
 
     private void inventoryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inventoryBtnActionPerformed
         // TODO add your handling code here:
+        navigationManager.show("Inventory");
     }//GEN-LAST:event_inventoryBtnActionPerformed
 
     private void logbookBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logbookBtnActionPerformed
-
+        navigationManager.show("Logbook");
     }//GEN-LAST:event_logbookBtnActionPerformed
 
     //

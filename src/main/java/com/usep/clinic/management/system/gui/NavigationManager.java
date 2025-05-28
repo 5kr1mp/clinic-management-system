@@ -6,10 +6,15 @@ import javax.swing.*;
 public class NavigationManager extends CardLayout{
 
     private JPanel container;
-    private static NavigationManager navigationManager;
+    private static NavigationManager instance;
 
     public static NavigationManager getInstance(){
-        return navigationManager == null ? new NavigationManager() : navigationManager;
+        
+        if (instance == null){
+            instance = new NavigationManager();
+        }
+
+        return instance;
     }
 
     private NavigationManager(){}
@@ -20,6 +25,7 @@ public class NavigationManager extends CardLayout{
      * @param name the name of the panel
      */
     public void registerPanel(JPanel panel, String name){
+        container.add(panel);
         addLayoutComponent(panel, name);
     }
 

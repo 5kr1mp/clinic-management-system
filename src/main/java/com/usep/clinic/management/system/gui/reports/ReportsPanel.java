@@ -123,7 +123,7 @@ public class ReportsPanel extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Reports");
+        jLabel1.setText("REPORTS");
         header.add(jLabel1);
 
         add(header, java.awt.BorderLayout.PAGE_START);

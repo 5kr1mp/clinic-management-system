@@ -1,5 +1,7 @@
 package com.usep.clinic.management.system.gui.patient;
 
+import com.usep.clinic.management.system.gui.NavigationManager;
+import com.usep.clinic.management.system.gui.model.PatientTableModel;
 import com.usep.clinic.management.system.model.Patient;
 import com.usep.clinic.management.system.service.EntityNotFoundException;
 import com.usep.clinic.management.system.service.PatientService;
@@ -13,85 +15,99 @@ import java.util.ArrayList;
 
 public class PatientPanel extends JPanel implements ActionListener {
 
-    private DefaultTableModel patientModel;
+    private PatientTableModel patientModel;
     private JTable patientTable;
+
+    private RecordsPanel recordsPanel;
+    NavigationManager navigationManager;
+
     private RoundedTextField searchPatients;
     private JButton patientAddButton, patientViewButton, patientUpdateButton, patientSearchButton;
 
     public PatientPanel() {
         super();
         setSize(850, 565);
-        setLayout(null);
+        setLayout(new BorderLayout());
 
-        JLabel patientHeader = new JLabel("   PATIENTS");
-        patientHeader.setForeground(Color.WHITE);
-        patientHeader.setBackground(new Color(143, 186, 229));
-        patientHeader.setOpaque(true);
-        patientHeader.setFont(new Font("Arial", Font.BOLD, 16));
-        patientHeader.setBounds(20, 15, 570, 30);
-        add(patientHeader);
+        recordsPanel = new RecordsPanel();
 
-        searchPatients = new RoundedTextField(15);
-        searchPatients.setBounds(595, 16, 160, 30);
-        searchPatients.setFont(new Font("Arial", Font.PLAIN, 12));
-        add(searchPatients);
+        navigationManager = NavigationManager.getInstance();
+        navigationManager.registerPanel(recordsPanel, "Records");
 
-        patientSearchButton = new JButton("🔍");
-        patientSearchButton.setBounds(760, 15, 35, 25);
-        patientSearchButton.setFocusable(false);
-        patientSearchButton.setBackground(new Color(143, 186, 229));
-        patientSearchButton.setHorizontalAlignment(SwingConstants.CENTER);
-        patientSearchButton.setVerticalAlignment(SwingConstants.CENTER);
-        patientSearchButton.setMargin(new Insets(0, 0, 0, 0));
-        patientSearchButton.setFocusPainted(false);
-        patientSearchButton.setContentAreaFilled(false);
-        patientSearchButton.setBorderPainted(false);
-        add(patientSearchButton);
-        patientSearchButton.addActionListener(this);
+        JPanel header = new JPanel(new BorderLayout(10,0));
+            header.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(242, 242, 242), 4));
+            JLabel patientHeader = new JLabel("PATIENTS");
+            patientHeader.setForeground(Color.WHITE);
+            patientHeader.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(143, 186, 229), 5));
+            patientHeader.setBackground(new Color(143, 186, 229));
+            patientHeader.setOpaque(true);
+            patientHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            header.add(patientHeader, BorderLayout.CENTER);
 
-        String[] patientTableColumns = {"PatientID", "Name", "Designation", "Category", "Contact"};
-        patientModel = new DefaultTableModel(patientTableColumns, 0);
-        patientTable = new JTable(patientModel);
-        JScrollPane patientTableScrollPane = new JScrollPane(patientTable);
-        patientTableScrollPane.setBounds(20, 50, 800, 400);
-        add(patientTableScrollPane);
+            JPanel searchPanel = new JPanel(new BorderLayout());
+                searchPatients = new RoundedTextField(15);
+                searchPatients.setFont(new Font("Arial", Font.PLAIN, 12));
+                searchPatients.setPreferredSize(new Dimension(25,25));
+                searchPanel.add(searchPatients, BorderLayout.CENTER);
+
+                patientSearchButton = new JButton("🔍");
+                patientSearchButton.setFocusable(false);
+                patientSearchButton.setPreferredSize(new Dimension(30,30));
+                patientSearchButton.setBackground(new Color(143, 186, 229));
+                patientSearchButton.setHorizontalAlignment(SwingConstants.CENTER);
+                patientSearchButton.setVerticalAlignment(SwingConstants.CENTER);
+                patientSearchButton.setMargin(new Insets(0, 0, 0, 0));
+                patientSearchButton.setFocusPainted(false);
+                patientSearchButton.setContentAreaFilled(false);
+                patientSearchButton.setBorderPainted(false);
+                searchPanel.add(patientSearchButton, BorderLayout.EAST);
+                patientSearchButton.addActionListener(this);
+            header.add(searchPanel, BorderLayout.EAST);
+        add(header, BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new BorderLayout());
+            patientModel = new PatientTableModel();
+            patientTable = new JTable(patientModel);
+            patientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+            JScrollPane patientTableScrollPane = new JScrollPane(patientTable);
+            patientTableScrollPane.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(242, 242, 242), 4),
+                patientTableScrollPane.getBorder()
+            ));
+            centerPanel.add(patientTableScrollPane, BorderLayout.CENTER);
+
+        add(centerPanel, BorderLayout.CENTER);
+
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+            patientAddButton = new RoundedButton("ADD PATIENT");
+            patientAddButton.setBackground(new Color(143, 186, 229));
+            patientAddButton.setPreferredSize(new Dimension(120, 30));
+            controlPanel.add(patientAddButton);
+            patientAddButton.addActionListener(this);
+
+            patientViewButton = new RoundedButton("VIEW");
+            patientViewButton.setBackground(new Color(143, 186, 229));
+            patientViewButton.setPreferredSize(new Dimension(120, 30));
+            controlPanel.add(patientViewButton);
+            patientViewButton.addActionListener(this);
+
+            patientUpdateButton = new RoundedButton("UPDATE");
+            patientUpdateButton.setBackground(new Color(143, 186, 229));
+            patientUpdateButton.setPreferredSize(new Dimension(120, 30));
+            controlPanel.add(patientUpdateButton);
+            patientUpdateButton.addActionListener(this);
+
+        add(controlPanel, BorderLayout.SOUTH);
 
         loadAllPatients();
-
-        patientAddButton = new RoundedButton("ADD PATIENT");
-        patientAddButton.setBackground(new Color(143, 186, 229));
-        patientAddButton.setBounds(199, 470, 135, 30);
-        add(patientAddButton);
-        patientAddButton.addActionListener(this);
-
-        patientViewButton = new RoundedButton("VIEW");
-        patientViewButton.setBackground(new Color(143, 186, 229));
-        patientViewButton.setBounds(340, 470, 100, 30);
-        add(patientViewButton);
-        patientViewButton.addActionListener(this);
-
-        patientUpdateButton = new RoundedButton("UPDATE");
-        patientUpdateButton.setBackground(new Color(143, 186, 229));
-        patientUpdateButton.setBounds(450, 470, 100, 30);
-        add(patientUpdateButton);
-        patientUpdateButton.addActionListener(this);
     }
 
     private void loadAllPatients() {
         PatientService patientService = PatientService.getInstance();
         ArrayList<Patient> patients = patientService.getPatients();
-        patientModel.setRowCount(0);
-
-        for (Patient patient : patients) {
-            Object[] row = new Object[]{
-                    patient.getId(),
-                    patient.getName(),
-                    patient.getDesignation(),
-                    patient.getCategory(),
-                    patient.getContact()
-            };
-            patientModel.addRow(row);
-        }
+        patientModel.addAll(patients);
     }
 
     @Override
@@ -103,13 +119,24 @@ public class PatientPanel extends JPanel implements ActionListener {
         } else if (source == patientUpdateButton) {
            // new PatientUpdateDialog(); // boist d matawag
         } else if (source == patientViewButton) {
-            // la pa
+            
+            // Step 1: Kuhaon ang selected row index sa jtable
+            int selectedRowIndex = patientTable.getSelectedRow();
+            // Step 2: Retrieve ang selected na data from the model
+            if (selectedRowIndex >= 0){
+                Patient patient = patientModel.getRow(selectedRowIndex);
+                // Step 3: i set ang kuan
+                recordsPanel.setPatient(patient);
+            }
+
+            navigationManager.show("Records");
+
         } else if (source == patientSearchButton) {
             String searchingPatient = searchPatients.getText().trim().toLowerCase();
             PatientService patientService = PatientService.getInstance();
             ArrayList<Patient> patients = patientService.getPatientsByName(searchingPatient);
 
-            patientModel.setRowCount(0);
+            // patientModel.setRowCount(0);
 
             try {
                 for (Patient patient : patients) {
@@ -117,13 +144,13 @@ public class PatientPanel extends JPanel implements ActionListener {
                             String.valueOf(patient.getId()).contains(searchingPatient) ||
                             patient.getContact().toLowerCase().contains(searchingPatient)) {
 
-                        patientModel.addRow(new Object[]{
-                                patient.getId(),
-                                patient.getName(),
-                                patient.getDesignation(),
-                                patient.getCategory(),
-                                patient.getContact()
-                        });
+                        // patientModel.addRow(new Object[]{
+                        //         patient.getId(),
+                        //         patient.getName(),
+                        //         patient.getDesignation(),
+                        //         patient.getCategory(),
+                        //         patient.getContact()
+                        // });
                     }
                 }
 

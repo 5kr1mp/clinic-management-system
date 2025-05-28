@@ -1,5 +1,6 @@
 package com.usep.clinic.management.system.gui.patient;
 
+import com.usep.clinic.management.system.model.Patient;
 import com.usep.clinic.management.system.model.PatientRecord;
 import com.usep.clinic.management.system.service.PatientService;
 
@@ -17,6 +18,8 @@ public class RecordsPanel extends JPanel implements ActionListener {
     private DefaultTableModel recordModel;
 
     private RoundedButton addButton, viewButton, updateButton;
+
+    private Patient patient;// private Medicine medicine;
 
     public RecordsPanel() {
         setLayout(null);
@@ -76,6 +79,14 @@ public class RecordsPanel extends JPanel implements ActionListener {
         }
 
         loadRecords();
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     private void loadRecords() {
