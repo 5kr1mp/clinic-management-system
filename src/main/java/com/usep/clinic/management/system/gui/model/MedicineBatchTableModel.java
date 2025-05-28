@@ -37,8 +37,9 @@ public class MedicineBatchTableModel extends AbstractTableModel {
         return switch(columnIndex){
             case 0 -> batches.get(rowIndex).getId();
             case 1 -> batches.get(rowIndex).getStock();
-            case 2 -> DateTimeFormat.formatDate(batches.get(rowIndex).getExpiryDate());
-            case 3 -> DateTimeFormat.formatDate(batches.get(rowIndex).getStockedDate());
+            case 2 -> batches.get(rowIndex).getQuantity();
+            case 3 -> DateTimeFormat.formatDate(batches.get(rowIndex).getExpiryDate());
+            case 4 -> DateTimeFormat.formatDate(batches.get(rowIndex).getStockedDate());
             default -> throw new ArrayIndexOutOfBoundsException(columnIndex);
         };
     }

@@ -172,10 +172,11 @@ public class MedicineDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String query = "UPDATE medicines SET id = ?, manufacturer = ? WHERE name = ?";
+            String query = "UPDATE medicines SET name = ?, manufacturer = ? WHERE id = ?";
             statement = conn.prepareStatement(query);
-            statement.setInt(1, medicine.getId());
+            statement.setString(1, medicine.getName());
             statement.setString(2, medicine.getManufacturer());
+            statement.setInt(3, medicine.getId());
             statement.executeUpdate();
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);

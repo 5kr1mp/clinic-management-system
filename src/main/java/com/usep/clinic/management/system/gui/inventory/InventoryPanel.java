@@ -8,7 +8,10 @@ import com.usep.clinic.management.system.gui.NavigationManager;
 import com.usep.clinic.management.system.gui.model.MedicineBatchTableModel;
 import com.usep.clinic.management.system.model.Medicine;
 import com.usep.clinic.management.system.model.MedicineBatch;
+import com.usep.clinic.management.system.service.MedicineService;
+import com.usep.clinic.management.system.util.DateTimeFormat;
 import java.awt.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.*;
 
@@ -19,7 +22,8 @@ import javax.swing.*;
 public class InventoryPanel extends javax.swing.JPanel {
     private MedicineBatchTableModel batchTable = new MedicineBatchTableModel();
     private Medicine medicine;
-    NavigationManager navigation;
+    NavigationManager navigation = NavigationManager.getInstance();
+    MedicineService medicineService;
 
     /**
      * Creates new form InventoryPanel
@@ -27,6 +31,8 @@ public class InventoryPanel extends javax.swing.JPanel {
     
     public void setMedicine(Medicine medicine){
         this.medicine = medicine;
+        setTexts();
+        refreshBatchTable();
     }
     
     public Medicine getMedicine(){
@@ -35,6 +41,7 @@ public class InventoryPanel extends javax.swing.JPanel {
     
     public InventoryPanel() {
         initComponents();
+        medicineService = MedicineService.getInstance();
         confirmButton.setVisible(false);
         cancelButton.setVisible(false);
         setVisible(true);
@@ -52,8 +59,18 @@ public class InventoryPanel extends javax.swing.JPanel {
         confirmButton.setVisible(false);
         cancelButton.setVisible(false);
         editButton.setVisible(true);
+
+        medicine.setName(medicineNameField.getText().trim());
+        medicine.setManufacturer(manufacturerField.getText().trim());
+
+        try {
+            MedicineService.getInstance().updateMedicine(medicine);
+            JOptionPane.showMessageDialog(this, "Changes saved successfully.");
+        } catch (Exception ex){
+            JOptionPane.showMessageDialog(this, "Failed to update","Failed to update",JOptionPane.ERROR_MESSAGE);
+        }
         
-        JOptionPane.showMessageDialog(this, "Changes saved successfully.");
+
     }                                             
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
@@ -70,10 +87,6 @@ public class InventoryPanel extends javax.swing.JPanel {
         confirmButton.setVisible(false);
         cancelButton.setVisible(false);
         editButton.setVisible(true);
-        
-        // Medicine medicine = AppContext.getMedicineService().getMedicineById(medicineIdField.getText());
-        // medicineNameField.setText(medicine.getName());
-        // manufacturerField.setText(medicine.getManufacturer());
     }
     
     public void medNameAndManufacturerFields(){
@@ -90,6 +103,13 @@ public class InventoryPanel extends javax.swing.JPanel {
     private void clearTextFields(){
         medicineNameField.setText("");
         manufacturerField.setText("");
+    }
+    
+    private void refreshBatchTable() {
+        if (medicine != null) {
+            ArrayList<MedicineBatch> batches = medicineService.getMedicineBatchesByMedicineId(medicine.getId(), true);
+            batchTable.replaceAll(batches);
+        }
     }
 
     /**
@@ -133,10 +153,19 @@ public class InventoryPanel extends javax.swing.JPanel {
         manufacturerLabel.setText("Manufacturer:");
 
         editButton.setText("Edit");
+        editButton.addActionListener(e->{
+            editButtonActionPerformed(e);
+        });
 
         confirmButton.setText("Confirm");
+        confirmButton.addActionListener(e -> {
+            confirmButtonActionPerformed(e);
+        });
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(e -> {
+            cancelButtonActionPerformed(e);
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -266,19 +295,22 @@ public class InventoryPanel extends javax.swing.JPanel {
 
         JPanel formPanel = new JPanel(new GridLayout(4, 2, 5, 5));
 
-        JTextField batchNumberField = new JTextField();
+        JTextField medicineNameField = new JTextField();
         JTextField quantityField = new JTextField();
+        JTextField stockField = new JTextField();
         JTextField expiryDateField = new JTextField();
-        JTextField purchasePriceField = new JTextField();
-
-        formPanel.add(new JLabel("Batch Number:"));
-        formPanel.add(batchNumberField);
+        
+        formPanel.add(new JPanel());
+        formPanel.add(medicineNameField);
+        medicineNameField.setVisible(false);
         formPanel.add(new JLabel("Quantity:"));
         formPanel.add(quantityField);
-        formPanel.add(new JLabel("Expiry Date (YYYY-MM-DD):"));
+        formPanel.add(new JLabel("Expiry Date (MM-dd-yyyy):"));
         formPanel.add(expiryDateField);
-        formPanel.add(new JLabel("Purchase Price:"));
-        formPanel.add(purchasePriceField);
+        formPanel.add(new JPanel());
+        formPanel.add(stockField);
+        stockField.setVisible(false);
+       
 
         JPanel buttonPanel = new JPanel();
         JButton saveButton = new JButton("Save");
@@ -286,33 +318,47 @@ public class InventoryPanel extends javax.swing.JPanel {
 
         saveButton.addActionListener(e -> {
             try {
-                // Validate inputs
-                if (batchNumberField.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(dialog, "Batch number is required.");
-                    return;
-                }
-
+                int medId;
+                int stock;
                 int quantity;
                 double price;
+                LocalDate expiryDate;
 
                 try {
+                    medId = medicine.getId();
+                    
                     quantity = Integer.parseInt(quantityField.getText().trim());
-                    price = Double.parseDouble(purchasePriceField.getText().trim());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(dialog, "Quantity and price must be valid numbers");
-                    return;
+                    if (quantity <= 0) {
+                        JOptionPane.showMessageDialog(dialog, "Quantity must be greater than 0.");
+                        quantityField.setText("");
+                        return;
+                    }
+                    
+                    stock = quantity;
+                    
+                    expiryDate = DateTimeFormat.parseDate(expiryDateField.getText().trim());
+                    
+                    if (expiryDate.isBefore(LocalDate.now())) {
+                        JOptionPane.showMessageDialog(dialog, "Date should not be earlier than today's date");
+                        return;
+                    }
+                    
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(dialog, "Quantity and price must be valid numbers");
+                        return;
                 }
+                    medId = medicine.getId();
+                    String quantityStr = quantityField.getText().trim();
+                    quantity = Integer.parseInt(quantityStr);
+                    stock = quantity;
+                    LocalDate parsedExpiryDate = DateTimeFormat.parseDate(expiryDateField.getText().trim());
+                    // upat ka int, need med id
+                    MedicineBatch newBatch = new MedicineBatch(medicineService.generateBatchId(), medId, quantity, stock, parsedExpiryDate, LocalDate.now());
+                    ArrayList<MedicineBatch> allBatch = MedicineService.getInstance().getMedicineBatches();
+                    batchTable.replaceAll(allBatch);
+                    MedicineService.getInstance().addBatch(newBatch);
 
-                // MedicineBatch batch = new MedicineBatch();
-                // batch.setBatchNumber(batchNumberField.getText());
-                // batch.setMedicineId(medicineIdField.getText());
-                // batch.setQuantity(quantity);
-                // batch.setExpiryDate(expiryDateField.getText());
-                // batch.setPurchasePrice(price);
-                // AppContext.getBatchService().createBatch(batch);
-
-                // ArrayList<MedicineBatch> batches = AppContext.getBatchService().getBatchesByMedicineId(medicineIdField.getText());
-                // batchTable.replaceAll(batches);
+                refreshBatchTable();
 
                 JOptionPane.showMessageDialog(dialog, "Batch added successfully");
                 dialog.dispose();
@@ -334,9 +380,7 @@ public class InventoryPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addRecordButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        if(evt.getSource() == backButton){
-            new MedicinePanel().setVisible(true);
-        }
+        NavigationManager.getInstance().show("Medicines");
     }//GEN-LAST:event_backButtonActionPerformed
 
 

@@ -24,8 +24,7 @@ public class MedicineBatchDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String query = "INSERT INTO issued_medicines (medicine_id, stock," +
-                    "quantity, expiry_date, stock_date) VALUES(?, ?, ?, ?, ?)";
+            String query = "INSERT INTO medicine_batch (medicine_id, stock, quantity, expiry_date, stock_date) VALUES(?, ?, ?, ?, ?)";
             statement = conn.prepareStatement(query);
 
             statement.setInt(1, batch.getMedicineId());

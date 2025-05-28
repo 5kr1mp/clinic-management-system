@@ -8,6 +8,7 @@ import com.usep.clinic.management.system.AppContext;
 import com.usep.clinic.management.system.gui.NavigationManager;
 import com.usep.clinic.management.system.gui.model.MedicineTableModel;
 import com.usep.clinic.management.system.model.Medicine;
+import com.usep.clinic.management.system.service.MedicineService;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,9 +21,11 @@ import javax.swing.*;
  */
 public class MedicinePanel extends javax.swing.JPanel implements ActionListener{
     private MedicineTableModel medicineModel;
-    private JTable medicineTable;
     private InventoryPanel invPanel;
+    private MedicineService medicineService = MedicineService.getInstance();
+    
     NavigationManager navigation;
+    private Medicine Medicine;
 
     /**
      * Creates new form MedicinePanel
@@ -33,7 +36,8 @@ public class MedicinePanel extends javax.swing.JPanel implements ActionListener{
         invPanel = new InventoryPanel();
         navigation = NavigationManager.getInstance();
         navigation.registerPanel(invPanel, "Inventory");
-        
+        medicineModel.replaceAll(MedicineService.getInstance().getMedicines());
+
         setVisible(true);
     }
     
@@ -42,92 +46,82 @@ public class MedicinePanel extends javax.swing.JPanel implements ActionListener{
         
         if(source == addMedicineButton){
             
-        } else if (source == viewButton){
-            int selectedRowIndex = medicineTable.getSelectedRow();
+        } 
+
+        if (source == searchButton){
+            searchValidation();
+        }
+
+        if (source == viewButton){
+            int selectedRowIndex = jTable1.getSelectedRow();
             if(selectedRowIndex >= 0){
                 Medicine medicine = medicineModel.getRow(selectedRowIndex);
                 invPanel.setMedicine(medicine);
             }
-
             navigation.show("Inventory");
         }
     }
     
-    public void addMedicineDialog() {
-        // Create a modal dialog
-        JDialog dialog = new JDialog((Frame)SwingUtilities.getWindowAncestor(this), "Add New Medicine", true);
-        dialog.setLayout(new BorderLayout());
-        dialog.setSize(400, 300);
-        dialog.setLocationRelativeTo(this);
+        public void addMedicineDialog() {
+            Medicine medicine;
+            
+            JDialog dialog = new JDialog((Frame)SwingUtilities.getWindowAncestor(this), "Add New Medicine", true);
+            dialog.setLayout(new BorderLayout());
+            dialog.setSize(400, 300);
+            dialog.setLocationRelativeTo(this);
 
-        // Create form panel
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 5, 5));
+            JPanel formPanel = new JPanel(new GridLayout(5, 2, 5, 5));
 
-        // Form fields
-        JTextField nameField = new JTextField();
-        JTextField manufacturerField = new JTextField();
-        JTextField descriptionField = new JTextField();
-        JTextField priceField = new JTextField();
+            JTextField medicineNameField = new JTextField();
+            JTextField manufacturerField = new JTextField();
+            JTextField descriptionField = new JTextField();
+            JTextField priceField = new JTextField();
 
-        formPanel.add(new JLabel("Medicine Name:"));
-        formPanel.add(nameField);
-        formPanel.add(new JLabel("Manufacturer:"));
-        formPanel.add(manufacturerField);
-        formPanel.add(new JLabel("Description:"));
-        formPanel.add(descriptionField);
-        formPanel.add(new JLabel("Price:"));
-        formPanel.add(priceField);
+            formPanel.add(new JLabel("Medicine Name:"));
+            formPanel.add(medicineNameField);
+            formPanel.add(new JLabel("Manufacturer:"));
+            formPanel.add(manufacturerField);
 
-        // Button panel
-        JPanel buttonPanel = new JPanel();
-        JButton saveButton = new JButton("Save");
-        JButton cancelButton = new JButton("Cancel");
 
-        saveButton.addActionListener(e -> {
-            try {
-                // Validate inputs
-                if (nameField.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(dialog, "Medicine name is required");
-                    return;
+            JPanel buttonPanel = new JPanel();
+            JButton saveButton = new JButton("Save");
+            JButton cancelButton = new JButton("Cancel");
+
+            saveButton.addActionListener(e -> {
+                try {
+                    if (medicineNameField.getText().trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(dialog, "Medicine name is required. Try again.");
+                        medicineNameField.setText("");
+                        return;
+                    }
+
+                    String medicineName = medicineNameField.getText();
+                    String manufacturer = manufacturerField.getText();
+                    
+                    Medicine newMedicine = new Medicine(medicineService.generateMedicineId(), medicineName, manufacturer);
+
+                    medicineService.addMedicine(newMedicine);
+                    ArrayList<Medicine> allMedicines = MedicineService.getInstance().getMedicines();
+                    medicineModel.replaceAll(allMedicines);
+
+
+                    dialog.dispose();
+                    JOptionPane.showMessageDialog(this, "Medicine added successfully!");
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage());
                 }
+            });
 
-                // Create new medicine
-                // Medicine newMedicine = new Medicine();
-                // newMedicine.setName(nameField.getText().trim());
-                // newMedicine.setManufacturer(manufacturerField.getText().trim());
-                // newMedicine.setDescription(descriptionField.getText().trim());
+            cancelButton.addActionListener(e -> dialog.dispose());
 
-                // try {
-                //     newMedicine.setPrice(Double.parseDouble(priceField.getText().trim()));
-                // } catch (NumberFormatException ex) {
-                //     JOptionPane.showMessageDialog(dialog, "Invalid price format");
-                //     return;
-                // }
+            buttonPanel.add(saveButton);
+            buttonPanel.add(cancelButton);
 
-                // Save to database
-                // Medicine savedMedicine = AppContext.getMedicineService().createMedicine(newMedicine);
+            dialog.add(formPanel, BorderLayout.CENTER);
+            dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-                // Add to table
-                // medicineTable.add(savedMedicine);
-
-                // Close dialog
-                dialog.dispose();
-
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Error saving medicine: " + ex.getMessage());
-            }
-        });
-
-        cancelButton.addActionListener(e -> dialog.dispose());
-
-        buttonPanel.add(saveButton);
-        buttonPanel.add(cancelButton);
-
-        // Add components to dialog
-        dialog.add(formPanel, BorderLayout.CENTER);
-        dialog.add(buttonPanel, BorderLayout.SOUTH);
-
-        dialog.setVisible(true);
+            dialog.setVisible(true);
 }
     
     
@@ -142,6 +136,7 @@ public class MedicinePanel extends javax.swing.JPanel implements ActionListener{
         if(AppContext.getMedicineService().getMedicinesByName(searchMedicine).size() == 0){
             JOptionPane.showMessageDialog(this, "Medicine not found. Please try again.");
             clearSearchField();
+            medicineModel.replaceAll(medicineService.getMedicines());
             return;
         }
         
@@ -153,7 +148,6 @@ public class MedicinePanel extends javax.swing.JPanel implements ActionListener{
             return;
         } else {
             medicineModel.replaceAll(foundMedicines);
-
         }
         
     }
@@ -189,6 +183,7 @@ public class MedicinePanel extends javax.swing.JPanel implements ActionListener{
         jLabel1.setText("Inventory");
 
         searchButton.setText("🔍");
+        searchButton.addActionListener(this);
         searchButton.setPreferredSize(new java.awt.Dimension(24, 24));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -221,6 +216,14 @@ public class MedicinePanel extends javax.swing.JPanel implements ActionListener{
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         jTable1.setModel(medicineModel);
+        jTable1.getSelectionModel().addListSelectionListener(e->{
+            if (jTable1.getSelectedRowCount() == 0){
+                viewButton.setEnabled(false);
+            }
+            else {
+                viewButton.setEnabled(true);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -233,11 +236,8 @@ public class MedicinePanel extends javax.swing.JPanel implements ActionListener{
         });
 
         viewButton.setText("View");
-        viewButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewButtonActionPerformed(evt);
-            }
-        });
+        viewButton.setEnabled(false);
+        viewButton.addActionListener(this);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);

@@ -22,5 +22,11 @@ public class Medicine {
     public int getId() {return id;}
     public String getManufacturer() {return manufacturer;}
     public String getName() {return name;}
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }
