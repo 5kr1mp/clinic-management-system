@@ -1,15 +1,15 @@
 package com.usep.clinic.management.system.gui.patient;
 
+import com.usep.clinic.management.system.gui.model.PatientTableModel;
 import com.usep.clinic.management.system.model.PatientRecord;
 import com.usep.clinic.management.system.service.DuplicateEntityException;
 import com.usep.clinic.management.system.service.PatientService;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import com.usep.clinic.management.system.gui.model.PatientTableModel;
 import com.usep.clinic.management.system.model.Patient;
 import com.usep.clinic.management.system.model.enums.Category;
 import java.util.ArrayList;
@@ -21,15 +21,21 @@ public class PatientAddDialog extends JDialog implements ActionListener {
     private RoundedButton AddPatientButton, CancelPatientButton, BackButton;
 
     private PatientTableModel tableModel;
+    private Patient patientToUpdate;
 
     public PatientAddDialog(PatientTableModel tableModel) {
-        super((Frame) null,"ADD PATIENTS", true);
+        this(tableModel, null);
+    }
+
+    public PatientAddDialog(PatientTableModel tableModel, Patient patientToUpdate) {
+        super((Frame)null, patientToUpdate == null ? "ADD PATIENTS" : "UPDATE PATIENTS", true);
         this.tableModel = tableModel;
+        this.patientToUpdate = patientToUpdate;
         setSize(415, 400);
         setLayout(null);
         setLocationRelativeTo(null);
 
-        JLabel AddPatientheader = new JLabel("  ADD PATIENT");
+        JLabel AddPatientheader = new JLabel(patientToUpdate == null ? "  ADD PATIENT" : "  UPDATE PATIENT");
         AddPatientheader.setOpaque(true);
         AddPatientheader.setBackground(new Color(143, 186, 229));
         AddPatientheader.setForeground(Color.WHITE);
@@ -83,17 +89,17 @@ public class PatientAddDialog extends JDialog implements ActionListener {
         PatientContactNumberField.setBounds(150, 210, 190, 35);
         add(PatientContactNumberField);
 
-        CategoryBox = new JComboBox<>(new String[]{"BSIT", "BSED", "BSNED", "BEED", "BECED", "BSABE", "BTVTED"});
-        CategoryBox.setBounds(80, 255, 85, 25);
-        CategoryBox.setBackground(Color.WHITE);
-        add(CategoryBox);
-
-        DesignationBox = new JComboBox<>(new String[]{"STUDENT", "FACULTY"});
-        DesignationBox.setBounds(200, 255, 85, 25);
+        DesignationBox = new JComboBox<>(new String[]{"BSIT", "BSED", "BSNED", "BEED", "BECED", "BSABE", "BTVTED"});
+        DesignationBox.setBounds(80, 255, 85, 25);
         DesignationBox.setBackground(Color.WHITE);
         add(DesignationBox);
 
-        AddPatientButton = new RoundedButton("ADD");
+        CategoryBox = new JComboBox<>(new String[]{"STUDENT", "FACULTY"});
+        CategoryBox.setBounds(200, 255, 85, 25);
+        CategoryBox.setBackground(Color.WHITE);
+        add(CategoryBox);
+
+        AddPatientButton = new RoundedButton(patientToUpdate == null ? "ADD" : "UPDATE");
         AddPatientButton.setBackground(new Color(143, 186, 229));
         AddPatientButton.setBounds(50, 300, 80, 30);
         add(AddPatientButton);
@@ -110,6 +116,16 @@ public class PatientAddDialog extends JDialog implements ActionListener {
         BackButton.setBounds(250, 300, 80, 30);
         add(BackButton);
         BackButton.addActionListener(this);
+
+        if (patientToUpdate != null) {
+            PatientIdField.setText(String.valueOf(patientToUpdate.getId()));
+            PatientFirstNameField.setText(patientToUpdate.getFirstname());
+            PatientLastNameField.setText(patientToUpdate.getLastname());
+            PatientMiddleInitialField.setText(patientToUpdate.getMiddlename());
+            PatientContactNumberField.setText(patientToUpdate.getContact());
+            CategoryBox.setSelectedItem(patientToUpdate.getCategory().name());
+            DesignationBox.setSelectedItem(patientToUpdate.getDesignation());
+        }
 
         setVisible(true);
         setResizable(false);
@@ -136,7 +152,7 @@ public class PatientAddDialog extends JDialog implements ActionListener {
             }
             int Id = Integer.parseInt(IdText);
 
-            int choice = JOptionPane.showConfirmDialog(this, "Do you want to save this patient?", "CONFIRM SAVE", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int choice = JOptionPane.showConfirmDialog(this, patientToUpdate == null ? "Do you want to save this patient?" : "Do you want to update this patient?", patientToUpdate == null ? "CONFIRM SAVE" : "CONFIRM UPDATE", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
             if (choice == JOptionPane.YES_OPTION) {
                 try {
@@ -156,21 +172,23 @@ public class PatientAddDialog extends JDialog implements ActionListener {
                     );
 
                     PatientService patientService = PatientService.getInstance();
-                    patientService.add(patient);
 
-                    JOptionPane.showMessageDialog(this, "Patient saved!", "", JOptionPane.INFORMATION_MESSAGE);
+                    if (patientToUpdate == null) {
+                        patientService.add(patient);
+                        tableModel.add(patient);
+                        JOptionPane.showMessageDialog(this, "Patient updated!", "", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
                     dispose();
 
                 } catch (DuplicateEntityException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "INPUT ERROR 404", JOptionPane.ERROR_MESSAGE);
-                } catch (IllegalArgumentException ex) {
-                    JOptionPane.showMessageDialog(this, "Please enter a valid value.", "INPUT ERROR 404", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage(), "ERROR 404", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Patient was not saved.", "", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, patientToUpdate == null ? "Patient was not saved." : "Patient update canceled.", "", JOptionPane.INFORMATION_MESSAGE);
             }
         } else if (source == CancelPatientButton) {
             PatientIdField.setText("");
@@ -184,8 +202,6 @@ public class PatientAddDialog extends JDialog implements ActionListener {
             dispose();
         }
     }
-
-
 
     static class RoundedButton extends JButton {
         public RoundedButton(String label) {
@@ -233,7 +249,7 @@ public class PatientAddDialog extends JDialog implements ActionListener {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(Color.WHITE);
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
             g2.dispose();
             super.paintComponent(g);
         }

@@ -1,186 +1,181 @@
 package com.usep.clinic.management.system.gui.patient;
 
-import com.usep.clinic.management.system.model.PatientRecord;
-import com.usep.clinic.management.system.service.DuplicateEntityException;
+import com.usep.clinic.management.system.gui.model.PatientTableModel;
+import com.usep.clinic.management.system.model.Patient;
+import com.usep.clinic.management.system.model.enums.Category;
 import com.usep.clinic.management.system.service.PatientService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import com.usep.clinic.management.system.model.Patient;
-import com.usep.clinic.management.system.model.enums.Category;
-import java.util.ArrayList;
 
 public class PatientUpdateDialog extends JDialog implements ActionListener {
-    private RoundedTextField PatientIdField, PatientFirstNameField, PatientLastNameField, PatientMiddleInitialField, PatientContactNumberField;
-    private JComboBox<String> CategoryBox;
-    private JComboBox<String> DesignationBox;
-    private RoundedButton UpdatePatientButton, CancelPatientButton, BackButton;
 
-    public PatientUpdateDialog(JFrame parent) {
-        super(parent, "UPDATE PATIENTS", true);
+    private RoundedTextField PatientIdField, PatientFirstNameField, PatientLastNameField,
+            PatientMiddleInitialField, PatientContactNumberField;
+    private JComboBox<String> CategoryBox, DesignationBox;
+    private RoundedButton UpdateButton, CancelButton, BackButton;
+
+    private PatientTableModel tableModel;
+    private Patient patient;
+
+    public PatientUpdateDialog(PatientTableModel tableModel, Patient patient) {
+        super((Frame) null, "UPDATE PATIENT", true);
+        this.tableModel = tableModel;
+        this.patient = patient;
+
         setSize(415, 400);
         setLayout(null);
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(null);
 
-        JLabel AddPatientheader = new JLabel("  UPDATE PATIENT");
-        AddPatientheader.setOpaque(true);
-        AddPatientheader.setBackground(new Color(143, 186, 229));
-        AddPatientheader.setForeground(Color.WHITE);
-        AddPatientheader.setFont(new Font("Arial", Font.BOLD, 16));
-        AddPatientheader.setBounds(0, 0, 415, 40);
-        AddPatientheader.setBorder(null);
-        add(AddPatientheader);
+        JLabel header = new JLabel("  UPDATE PATIENT");
+        header.setOpaque(true);
+        header.setBackground(new Color(143, 186, 229));
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("Arial", Font.BOLD, 16));
+        header.setBounds(0, 0, 415, 40);
+        add(header);
 
-        JLabel PatientIDLabel = new JLabel("PATIENT ID :");
-        PatientIDLabel.setBounds(20, 50, 120, 35);
-        PatientIDLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(PatientIDLabel);
-
+        addLabel("PATIENT ID :", 20, 50);
         PatientIdField = new RoundedTextField(20);
         PatientIdField.setBounds(150, 50, 190, 35);
+        PatientIdField.setEnabled(false);
         add(PatientIdField);
 
-        JLabel PatientFirstNameLabel = new JLabel("FIRST NAME :");
-        PatientFirstNameLabel.setBounds(20, 90, 120, 35);
-        PatientFirstNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(PatientFirstNameLabel);
-
+        addLabel("FIRST NAME :", 20, 90);
         PatientFirstNameField = new RoundedTextField(20);
         PatientFirstNameField.setBounds(150, 90, 190, 35);
         add(PatientFirstNameField);
 
-        JLabel PatientLastNameLabel = new JLabel("LAST NAME :");
-        PatientLastNameLabel.setBounds(20, 130, 120, 35);
-        PatientLastNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(PatientLastNameLabel);
-
+        addLabel("LAST NAME :", 20, 130);
         PatientLastNameField = new RoundedTextField(20);
         PatientLastNameField.setBounds(150, 130, 190, 35);
         add(PatientLastNameField);
 
-        JLabel PatientMiddleInitialLabel = new JLabel("MIDDLE INITIAL :");
-        PatientMiddleInitialLabel.setBounds(20, 170, 130, 35);
-        PatientMiddleInitialLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(PatientMiddleInitialLabel);
-
+        addLabel("MIDDLE INITIAL :", 20, 170);
         PatientMiddleInitialField = new RoundedTextField(20);
         PatientMiddleInitialField.setBounds(150, 170, 190, 35);
         add(PatientMiddleInitialField);
 
-        JLabel PatientContactLabel = new JLabel("CONTACT NO. :");
-        PatientContactLabel.setBounds(20, 210, 120, 35);
-        PatientContactLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(PatientContactLabel);
-
+        addLabel("CONTACT NO. :", 20, 210);
         PatientContactNumberField = new RoundedTextField(20);
         PatientContactNumberField.setBounds(150, 210, 190, 35);
         add(PatientContactNumberField);
 
-        CategoryBox = new JComboBox<>(new String[]{"BSIT", "BSED", "BSNED", "BEED", "BECED", "BSABE", "BTVTED"});
-        CategoryBox.setBounds(80, 255, 85, 25);
-        CategoryBox.setBackground(Color.WHITE);
-        add(CategoryBox);
-
-        DesignationBox = new JComboBox<>(new String[]{"STUDENT", "FACULTY"});
-        DesignationBox.setBounds(200, 255, 85, 25);
-        DesignationBox.setBackground(Color.WHITE);
+        DesignationBox = new JComboBox<>(new String[]{"BSIT", "BSED", "BSNED", "BEED", "BECED", "BSABE", "BTVTED"});
+        DesignationBox.setBounds(80, 255, 85, 25);
         add(DesignationBox);
 
-        UpdatePatientButton = new RoundedButton("UPDATE");
-        UpdatePatientButton.setBackground(new Color(143, 186, 229));
-        UpdatePatientButton.setBounds(50, 300, 80, 30);
-        add(UpdatePatientButton);
-        UpdatePatientButton.addActionListener(this);
+        CategoryBox = new JComboBox<>(new String[]{"STUDENT", "FACULTY"});
+        CategoryBox.setBounds(200, 255, 85, 25);
+        add(CategoryBox);
 
-        CancelPatientButton = new RoundedButton("CANCEL");
-        CancelPatientButton.setBackground(new Color(143, 186, 229));
-        CancelPatientButton.setBounds(140, 300, 100, 30);
-        add(CancelPatientButton);
-        CancelPatientButton.addActionListener(this);
+        UpdateButton = new RoundedButton("UPDATE");
+        UpdateButton.setBackground(new Color(143, 186, 229));
+        UpdateButton.setBounds(50, 300, 100, 30);
+        add(UpdateButton);
+        UpdateButton.addActionListener(this);
+
+        CancelButton = new RoundedButton("CANCEL");
+        CancelButton.setBackground(new Color(143, 186, 229));
+        CancelButton.setBounds(160, 300, 100, 30);
+        add(CancelButton);
+        CancelButton.addActionListener(this);
 
         BackButton = new RoundedButton("BACK");
         BackButton.setBackground(new Color(143, 186, 229));
-        BackButton.setBounds(250, 300, 80, 30);
+        BackButton.setBounds(270, 300, 80, 30);
         add(BackButton);
         BackButton.addActionListener(this);
 
+        // patient data
+        PatientIdField.setText(String.valueOf(patient.getId()));
+        PatientFirstNameField.setText(patient.getFirstname());
+        PatientLastNameField.setText(patient.getLastname());
+        PatientMiddleInitialField.setText(patient.getMiddlename());
+        PatientContactNumberField.setText(patient.getContact());
+        CategoryBox.setSelectedItem(patient.getCategory().name());
+        DesignationBox.setSelectedItem(patient.getDesignation());
+
         setVisible(true);
         setResizable(false);
+    }
+
+    private void addLabel(String text, int x, int y) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Arial", Font.BOLD, 14));
+        label.setBounds(x, y, 130, 35);
+        add(label);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == UpdatePatientButton) {
-            String IdText = PatientIdField.getText().trim();
-            String FirstName = PatientFirstNameField.getText().trim();
-            String LastName = PatientLastNameField.getText().trim();
-            String Contact = PatientContactNumberField.getText().trim();
+        if (source == UpdateButton) {
+            String firstName = PatientFirstNameField.getText().trim();
+            String lastName = PatientLastNameField.getText().trim();
+            String contact = PatientContactNumberField.getText().trim();
 
-            if (IdText.isEmpty() || FirstName.isEmpty() || LastName.isEmpty() || Contact.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in all required fields (ID, First Name, Last Name, Contact).", "INPUT ERROR 404", JOptionPane.ERROR_MESSAGE);
+            if (firstName.isEmpty() || lastName.isEmpty() || contact.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "First name, last name, and contact number are required.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            if (!IdText.matches("\\d+")) {
-                JOptionPane.showMessageDialog(this, "Patient ID must be numeric.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            int Id = Integer.parseInt(IdText);
-
-            int choice = JOptionPane.showConfirmDialog(this, "Do you want to update this patient?", "CONFIRM SAVE", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int choice = JOptionPane.showConfirmDialog(this,
+                    "Save changes to this patient?",
+                    "Confirm Update",
+                    JOptionPane.YES_NO_OPTION);
 
             if (choice == JOptionPane.YES_OPTION) {
                 try {
-                    String MiddleInitial = PatientMiddleInitialField.getText().trim();
-                    String category = (String) CategoryBox.getSelectedItem();
-                    String Designation = (String) DesignationBox.getSelectedItem();
 
-                    Patient patient = new Patient(
-                            Id,
-                            LastName,
-                            FirstName,
-                            MiddleInitial,
-                            Designation,
-                            Category.valueOf(category),
-                            Contact,
-                            new ArrayList<PatientRecord>()
-                    );
+                    if (patient == null) {
+                        JOptionPane.showMessageDialog(this,
+                                "No patient selected for update.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
 
-                    PatientService patientService = PatientService.getInstance();
-                    patientService.update(patient);
+                    patient.setFirstname(firstName);
+                    patient.setLastname(lastName);
+                    patient.setMiddlename(PatientMiddleInitialField.getText().trim());
+                    patient.setContact(contact);
+                    patient.setCategory(Category.valueOf((String) CategoryBox.getSelectedItem()));
+                    patient.setDesignation((String) DesignationBox.getSelectedItem());
 
-                    JOptionPane.showMessageDialog(this, "Patient updated!", "", JOptionPane.INFORMATION_MESSAGE);
+                    PatientService.getInstance().update(patient);
+
+                    JOptionPane.showMessageDialog(this, "Patient updated successfully.");
                     dispose();
 
-                } catch (DuplicateEntityException ex) { // wa tung entityNotfound kay di man sia search
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "INPUT ERROR 404", JOptionPane.ERROR_MESSAGE);
-                } catch (IllegalArgumentException ex) {
-                    JOptionPane.showMessageDialog(this, "Please enter a valid value.", "INPUT ERROR 404", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage(), "ERROR 404", JOptionPane.ERROR_MESSAGE);
-                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this,
+                            "Error updating patient: " + ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Patient was not updated.", "", JOptionPane.INFORMATION_MESSAGE);
             }
-        } else if (source == CancelPatientButton) {
-            PatientIdField.setText("");
-            PatientFirstNameField.setText("");
-            PatientLastNameField.setText("");
-            PatientMiddleInitialField.setText("");
-            PatientContactNumberField.setText("");
-            CategoryBox.setSelectedIndex(0);
-            DesignationBox.setSelectedIndex(0);
+
+
+
+    } else if (source == CancelButton) {
+            PatientIdField.setText(String.valueOf(patient.getId()));
+            PatientFirstNameField.setText(patient.getFirstname());
+            PatientLastNameField.setText(patient.getLastname());
+            PatientMiddleInitialField.setText(patient.getMiddlename());
+            PatientContactNumberField.setText(patient.getContact());
+            CategoryBox.setSelectedItem(patient.getCategory().name());
+            DesignationBox.setSelectedItem(patient.getDesignation());
         } else if (source == BackButton) {
             dispose();
         }
     }
-
-
 
     static class RoundedButton extends JButton {
         public RoundedButton(String label) {
@@ -228,7 +223,7 @@ public class PatientUpdateDialog extends JDialog implements ActionListener {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(Color.WHITE);
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
             g2.dispose();
             super.paintComponent(g);
         }
