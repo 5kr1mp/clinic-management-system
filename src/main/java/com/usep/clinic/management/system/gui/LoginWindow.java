@@ -21,7 +21,6 @@ public class LoginWindow extends javax.swing.JFrame {
      * Creates new form LoginWindow
      */
     public LoginWindow() {
-        FlatLightLaf.setup();
         initComponents();
         
         setVisible(true);

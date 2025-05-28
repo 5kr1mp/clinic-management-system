@@ -16,10 +16,7 @@ public class App {
             @Override
             public void run() {
                 FlatLightLaf.setup();
-                try{
-                    AuthService.getInstance().attemptLogin("admin", "admin123");
-                } catch (Exception e){}
-                new MainWindow();
+                new LoginWindow();
             }
             
         });
