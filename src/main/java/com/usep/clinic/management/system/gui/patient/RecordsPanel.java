@@ -1,23 +1,22 @@
 package com.usep.clinic.management.system.gui.patient;
 
+import com.usep.clinic.management.system.gui.NavigationManager;
+import com.usep.clinic.management.system.gui.model.PatientRecordTableModel;
 import com.usep.clinic.management.system.model.Patient;
-import com.usep.clinic.management.system.model.PatientRecord;
 import com.usep.clinic.management.system.service.PatientService;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class RecordsPanel extends JPanel implements ActionListener {
 
     private RoundedTextField patientIdField, patientNameField, patientContactField, patientDesignationField, patientCategoryField;
     private JTable recordTable;
-    private DefaultTableModel recordModel;
+    private PatientRecordTableModel recordModel;
 
-    private RoundedButton addButton, viewButton, updateButton;
+    private RoundedButton addButton, viewButton, updateButton, backbutton;
 
     private Patient patient;
 
@@ -79,10 +78,20 @@ public class RecordsPanel extends JPanel implements ActionListener {
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createLineBorder(new Color(242, 242, 242), 4));
 
-        String[] recordColumns = {"RecordID", "PatientID", "Date", "Description", "Diagnosis"};
-        recordModel = new DefaultTableModel(recordColumns, 0);
+        recordModel = new PatientRecordTableModel();
         recordTable = new JTable(recordModel);
         recordTable.setRowHeight(25);
+        recordTable.getSelectionModel().addListSelectionListener(e -> {
+            int selectedRow = recordTable.getSelectedRow();
+            if (selectedRow == -1) {
+                viewButton.setEnabled(false);
+                updateButton.setEnabled(false);
+                populatePatientDetails(null);
+            } else {
+                viewButton.setEnabled(true);
+                updateButton.setEnabled(true);
+            }
+        });
         JScrollPane scrollPane = new JScrollPane(recordTable);
         centerPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -102,8 +111,9 @@ public class RecordsPanel extends JPanel implements ActionListener {
         addButton = new RoundedButton("ADD RECORD");
         viewButton = new RoundedButton("VIEW");
         updateButton = new RoundedButton("UPDATE");
+        backbutton = new RoundedButton("BACK");
 
-        RoundedButton[] buttons = {addButton, viewButton, updateButton};
+        RoundedButton[] buttons = {addButton, viewButton, updateButton, backbutton};
         for (RoundedButton button : buttons) {
             button.setPreferredSize(new Dimension(120, 30));
             button.setBackground(new Color(143, 186, 229));
@@ -116,21 +126,12 @@ public class RecordsPanel extends JPanel implements ActionListener {
         loadRecords();
     }
 
-    private void loadRecords() {
+    public void loadRecords() {
         PatientService service = PatientService.getInstance();
-        ArrayList<PatientRecord> records = service.getRecords();
 
-        recordModel.setRowCount(0);
-
-        for (PatientRecord record : records) {
-            Object[] row = new Object[]{
-                    record.getId(),
-                    record.getPatientId(),
-                    record.getDateTime().toLocalDate(),
-                    record.getDesc(),
-                    record.getDiagnosis()
-            };
-            recordModel.addRow(row);
+        if (patient != null){
+            recordModel.replaceAll( service.getRecordsByPatientId(patient.getId()));
+            return;
         }
     }
 
@@ -139,14 +140,16 @@ public class RecordsPanel extends JPanel implements ActionListener {
         Object source = e.getSource();
 
         if (source == viewButton) {
-           // new RecordPatientView();
+            // new RecordPatientView();
         } else if (source == addButton) {
-           // new RecordAddDialog();
+            new RecordAddDialog(recordModel,patient);
         } else if (source == updateButton) {
-           // new RecordUpdateDialog();
+            // new RecordUpdateDialog();
+        } else if (source == backbutton) {
+           NavigationManager.getInstance().show("Patients");
         }
-    }
 
+    }
 
     public void populatePatientDetails(Patient patient) {
         this.patient = patient;

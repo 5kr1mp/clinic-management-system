@@ -1,210 +1,312 @@
 package com.usep.clinic.management.system.gui.patient;
 
+import com.usep.clinic.management.system.gui.model.IssuedMedicineTableModel;
+import com.usep.clinic.management.system.gui.model.PatientRecordTableModel;
+import com.usep.clinic.management.system.gui.model.PatientTableModel;
 import com.usep.clinic.management.system.model.Medicine;
 import com.usep.clinic.management.system.model.IssuedMedicine;
+import com.usep.clinic.management.system.model.Patient;
 import com.usep.clinic.management.system.model.PatientRecord;
 import com.usep.clinic.management.system.service.DuplicateEntityException;
 import com.usep.clinic.management.system.service.MedicineService;
 import com.usep.clinic.management.system.service.PatientService;
 
 import javax.swing.*;
+import javax.swing.Box.Filler;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 public class RecordAddDialog extends JDialog implements ActionListener {
-    private RoundedTextField recordIdField, patientIdField, dateField, descriptionField, diagnosisField;
-    private JComboBox<Medicine> medicineComboBox;
-    private RoundedTextField quantityField;
-    private RoundedButton addButton, cancelButton, backButton;
 
-    public RecordAddDialog() {
+    private RoundedTextField descriptionField, diagnosisField, quantityField, medicineField;
+    private JTable issuedMedTable;
+    private IssuedMedicineTableModel tableModel;
+    private RoundedButton confirmButton, cancelButton;
+    private JButton addBtn, removeBtn, editBtn;
+
+    private PatientRecordTableModel recordModel;
+    private Patient patientToUpdate;
+
+    public RecordAddDialog(PatientRecordTableModel recordModel) {
+        this(recordModel, null);
+    }
+
+    public RecordAddDialog(PatientRecordTableModel recordModel, Patient patientToUpdate) {
         super((Frame) null, "ADD PATIENT RECORD", true);
-        setSize(415, 450);
-        setLayout(null);
+        this.recordModel = recordModel;
+        this.patientToUpdate = patientToUpdate;
+
+        setSize(450, 600);
+        setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
-        JLabel header = new JLabel("  ADD PATIENT RECORD");
+        JLabel header = new JLabel("ADD PATIENT RECORD");
         header.setOpaque(true);
         header.setBackground(new Color(143, 186, 229));
+        header.setBorder(BorderFactory.createLineBorder(header.getBackground(),4));
         header.setForeground(Color.WHITE);
         header.setFont(new Font("Arial", Font.BOLD, 16));
-        header.setBounds(0, 0, 415, 40);
-        add(header);
+        add(header, BorderLayout.NORTH);
 
-        JLabel recordIdLabel = new JLabel("RECORD ID:");
-        recordIdLabel.setBounds(20, 50, 120, 30);
-        recordIdLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(recordIdLabel);
+        JPanel centerPanel = new JPanel(new BorderLayout());
 
-        recordIdField = new RoundedTextField(20);
-        recordIdField.setBounds(205, 50, 180, 30);
-        add(recordIdField);
+        JPanel topCenterPanel = new JPanel();
+        topCenterPanel.setLayout(new BoxLayout(topCenterPanel, BoxLayout.Y_AXIS));
 
-        JLabel patientIdLabel = new JLabel("PATIENT ID:");
-        patientIdLabel.setBounds(20, 90, 120, 30);
-        patientIdLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(patientIdLabel);
+            topCenterPanel.add(Box.createVerticalStrut(5));
 
-        patientIdField = new RoundedTextField(20);
-        patientIdField.setBounds(205, 90, 180, 30);
-        add(patientIdField);
+            JPanel descriptionPanel = new JPanel(new BorderLayout(0,2));
+            descriptionPanel.setMaximumSize(new Dimension(410,50));
 
-        JLabel dateLabel = new JLabel("DATE (YYYY-MM-DD):");
-        dateLabel.setBounds(20, 130, 200, 30);
-        dateLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(dateLabel);
+                JLabel descLbl= new JLabel("Description:" );
+                descLbl.setFont(new Font("Arial", Font.BOLD, 14));
+                descLbl.setHorizontalAlignment(JLabel.LEFT);
+                descriptionPanel.add(descLbl, BorderLayout.NORTH );
 
-        dateField = new RoundedTextField(20);
-        dateField.setBounds(205, 130, 180, 30);
-        add(dateField);
+                descriptionField = new RoundedTextField();
+                descriptionField.setPreferredSize(new Dimension(200,25));
+                descriptionPanel.add(descriptionField, BorderLayout.CENTER);
+            topCenterPanel.add(descriptionPanel);
 
-        JLabel descriptionLabel = new JLabel("DESCRIPTION:");
-        descriptionLabel.setBounds(20, 170, 120, 30);
-        descriptionLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(descriptionLabel);
+            JPanel diagnosisPanel = new JPanel(new BorderLayout(0,2));
+            diagnosisPanel.setMaximumSize(new Dimension(410,50));
 
-        descriptionField = new RoundedTextField(20);
-        descriptionField.setBounds(205, 170, 180, 30);
-        add(descriptionField);
+                JLabel diagnosisLbl= new JLabel("Diagnosis:" );
+                diagnosisLbl.setFont(new Font("Arial", Font.BOLD, 14));
+                diagnosisLbl.setHorizontalAlignment(JLabel.LEFT);
+                diagnosisPanel.add(diagnosisLbl, BorderLayout.NORTH );
 
-        JLabel diagnosisLabel = new JLabel("DIAGNOSIS:");
-        diagnosisLabel.setBounds(20, 210, 120, 30);
-        diagnosisLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(diagnosisLabel);
+                diagnosisField = new RoundedTextField();
+                diagnosisField.setPreferredSize(new Dimension(200,25));
+                diagnosisPanel.add(diagnosisField, BorderLayout.CENTER);
+            topCenterPanel.add(diagnosisPanel);
+            
+            topCenterPanel.add(Box.createVerticalStrut(10));
 
-        diagnosisField = new RoundedTextField(20);
-        diagnosisField.setBounds(205, 210, 180, 30);
-        add(diagnosisField);
+                                JSeparator jSeparator = new JSeparator(JSeparator.HORIZONTAL);
+                                jSeparator.setPreferredSize(new Dimension(310, 10));
+                                topCenterPanel.add(jSeparator);
 
-        JLabel medicineLabel = new JLabel("MEDICINE:");
-        medicineLabel.setBounds(20, 250, 120, 30);
-        medicineLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(medicineLabel);
+            JPanel medicinePanel = new JPanel(new BorderLayout(0,2));
+            medicinePanel.setMaximumSize(new Dimension(410,50));
 
-        medicineComboBox = new JComboBox<>();
-        medicineComboBox.setBounds(205, 250, 180, 30);
-        add(medicineComboBox);
+                JLabel medicineLbl= new JLabel("Medicine Name:" );
+                medicineLbl.setFont(new Font("Arial", Font.BOLD, 14));
+                medicineLbl.setHorizontalAlignment(JLabel.LEFT);
+                medicinePanel.add(medicineLbl, BorderLayout.NORTH );
 
+                medicineField = new RoundedTextField();
+                medicineField.setPreferredSize(new Dimension(200,25));
+                medicinePanel.add(medicineField, BorderLayout.CENTER);
+            topCenterPanel.add(medicinePanel);
 
-        for (Medicine med : MedicineService.getInstance().getMedicines()) {
-            medicineComboBox.addItem(med);
-        }
+            JPanel qtyPanel = new JPanel(new BorderLayout(0,2));
+            qtyPanel.setMaximumSize(new Dimension(410,50));
+                JLabel qtyLbl= new JLabel("Quantity:" );
+                qtyLbl.setFont(new Font("Arial", Font.BOLD, 14));
+                qtyLbl.setHorizontalAlignment(JLabel.LEFT);
+                qtyPanel.add(qtyLbl, BorderLayout.NORTH );
 
-        JLabel quantityLabel = new JLabel("QUANTITY:");
-        quantityLabel.setBounds(20, 290, 120, 30);
-        quantityLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(quantityLabel);
+                quantityField = new RoundedTextField();
+                quantityField.setPreferredSize(new Dimension(200,25));
+                qtyPanel.add(quantityField, BorderLayout.CENTER);
+            topCenterPanel.add(qtyPanel);
 
-        quantityField = new RoundedTextField(20);
-        quantityField.setBounds(205, 290, 180, 30);
-        add(quantityField);
+        centerPanel.add(topCenterPanel, BorderLayout.NORTH);
 
-        addButton = new RoundedButton("ADD");
-        addButton.setBackground(new Color(143, 186, 229));
-        addButton.setBounds(50, 340, 90, 30);
-        add(addButton);
-        addButton.addActionListener(this);
+        tableModel = new IssuedMedicineTableModel();
+        issuedMedTable = new JTable(tableModel);
+        issuedMedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane tableScrollPane = new JScrollPane(issuedMedTable);
+        tableScrollPane.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createEmptyBorder(20,20,20,20),
+            tableScrollPane.getBorder()
+        ));
+        centerPanel.add(tableScrollPane, BorderLayout.CENTER);
 
-        cancelButton = new RoundedButton("CANCEL");
-        cancelButton.setBackground(new Color(143, 186, 229));
-        cancelButton.setBounds(150, 340, 100, 30);
-        add(cancelButton);
-        cancelButton.addActionListener(this);
+        JPanel issuedMedControlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        backButton = new RoundedButton("BACK");
-        backButton.setBackground(new Color(143, 186, 229));
-        backButton.setBounds(260, 340, 90, 30);
-        add(backButton);
-        backButton.addActionListener(this);
+            addBtn = new JButton("Add");
+            addBtn.setPreferredSize(new Dimension(90,25));
+            issuedMedControlPanel.add(addBtn);
+            
+            editBtn = new JButton("Edit");
+            editBtn.setPreferredSize(new Dimension(90,25));
+            editBtn.setEnabled(false);
+            issuedMedControlPanel.add(editBtn);
+            
+            removeBtn = new JButton("Remove");
+            removeBtn.setPreferredSize(new Dimension(90,25));
+            removeBtn.setEnabled(false);
+            issuedMedControlPanel.add(removeBtn);
+        centerPanel.add(issuedMedControlPanel, BorderLayout.SOUTH);
+
+        add(centerPanel, BorderLayout.CENTER);
+        
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        
+            confirmButton = new RoundedButton("Confirm");
+            confirmButton.setPreferredSize(new Dimension(120,35));
+            confirmButton.setBackground(new Color(143,186,229));
+            controlPanel.add(confirmButton);
+
+            cancelButton = new RoundedButton("Cancel");
+            cancelButton.setPreferredSize(new Dimension(120,35));
+            cancelButton.setBackground(new Color(143,186,229));
+            controlPanel.add(cancelButton);
+        
+        add(controlPanel, BorderLayout.SOUTH);
+
+        addListeners();
 
         setResizable(false);
         setVisible(true);
+    }
+
+    private void addListeners(){
+        issuedMedTable.getSelectionModel().addListSelectionListener(e->{
+            if (issuedMedTable.getSelectedRowCount() == 0){
+                editBtn.setEnabled(false);
+                removeBtn.setEnabled(false);
+                return;
+            }
+            editBtn.setEnabled(true);
+            removeBtn.setEnabled(true);
+
+        });
+        addBtn.addActionListener(this);
+        editBtn.addActionListener(this);
+        removeBtn.addActionListener(this);
+        confirmButton.addActionListener(this);
+        cancelButton.addActionListener(this);
+    }
+
+    private int showConfirmDialog(String message){
+        return JOptionPane.showConfirmDialog(null,
+        message, "Confirm", JOptionPane.YES_NO_OPTION);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == addButton) {
-            String recordIdText = recordIdField.getText().trim();
-            String patientIdText = patientIdField.getText().trim();
-            String dateText = dateField.getText().trim();
+        if (source == addBtn){
+            MedicineService medService = MedicineService.getInstance();
+            PatientService patientService = PatientService.getInstance();
+            String nameInp = medicineField.getText().trim();
+            String quantityInp = quantityField.getText().trim();
+            IssuedMedicine pendingMedicine;
+            Medicine med;
+
+            if ((med = medService.getMedicineByName(nameInp)) == null){
+                showError( nameInp + " medicine does not exist.");
+                return;
+            }
+
+            if (!quantityInp.matches("\\d+")){
+                showError("Please enter a valid quantity");
+                return;
+            }
+
+            pendingMedicine = new IssuedMedicine(
+                medService.generateIssuedMedicineId(),
+                patientService.generateRecordId(),
+                med.getId(),
+                Integer.valueOf(quantityInp)
+            );
+
+            tableModel.add(pendingMedicine);
+            
+        }
+
+        if (source == editBtn){
+
+            String inp = JOptionPane.showInputDialog(null,"Enter new quantity: ",0);
+
+            if (!inp.matches("\\d+")){
+                showError("Please enter a valid quantity");
+                return;
+            }
+
+            int selectedRowIndex = issuedMedTable.getSelectedRow();
+            IssuedMedicine pendingMedicine = tableModel.getRow(selectedRowIndex); 
+            pendingMedicine.setAmount(Integer.valueOf(inp));
+            tableModel.fireTableDataChanged();
+        }
+
+        if (source == removeBtn){
+            if (showConfirmDialog("Confirm removal?") == JOptionPane.YES_OPTION){
+                tableModel.remove(issuedMedTable.getSelectedRow());
+            }
+        }
+
+        if (source == confirmButton) {
             String description = descriptionField.getText().trim();
             String diagnosis = diagnosisField.getText().trim();
-
-            if (recordIdText.isEmpty() || patientIdText.isEmpty() || dateText.isEmpty() || description.isEmpty() || diagnosis.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in all required fields.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (!recordIdText.matches("\\d+") || !patientIdText.matches("\\d+")) {
-                JOptionPane.showMessageDialog(this, "Record ID and Patient ID must be numeric.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            Medicine selectedMedicine = (Medicine) medicineComboBox.getSelectedItem();
-            String quantityText = quantityField.getText().trim();
-
-            boolean hasMedicineInfo = selectedMedicine != null && !quantityText.isEmpty();
-
-            int recordId = Integer.parseInt(recordIdText);
-            int patientId = Integer.parseInt(patientIdText);
-            int quantity = 0;
-
-            if (hasMedicineInfo && !quantityText.matches("\\d+")) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid numeric quantity.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (hasMedicineInfo) {
-                quantity = Integer.parseInt(quantityText);
-            }
-
-            LocalDate date;
-            try {
-                date = LocalDate.parse(dateText);
-            } catch (DateTimeParseException ex) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid date in YYYY-MM-DD format.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            ArrayList<IssuedMedicine> issuedMedicines = tableModel.getIssueMeds();
 
             int choice = JOptionPane.showConfirmDialog(this, "Do you want to save this record?", "CONFIRM SAVE", JOptionPane.YES_NO_OPTION);
 
             if (choice == JOptionPane.YES_OPTION) {
                 try {
-                    PatientRecord record = new PatientRecord(recordId, patientId, date.atStartOfDay(), description, diagnosis);
+
+                    PatientRecord record = new PatientRecord(
+                        PatientService.getInstance().generateRecordId(),
+                        patientToUpdate.getId(),
+                        LocalDateTime.now(),
+                        description,
+                        diagnosis
+                    );
+
                     PatientService.getInstance().add(record);
 
+                    for (IssuedMedicine issuedMedicine : issuedMedicines) {
+                        MedicineService.getInstance().issueMedicine(issuedMedicine.getMedicineId(), choice);
+                    }
+
                     JOptionPane.showMessageDialog(this, "Record saved.", "", JOptionPane.INFORMATION_MESSAGE);
+                    recordModel.replaceAll(
+                        PatientService.getInstance().getRecordsByPatientId(patientToUpdate.getId())
+                    );
                     dispose();
                 } catch (DuplicateEntityException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "DUPLICATE RECORD ERROR", JOptionPane.ERROR_MESSAGE);
+                    showError(ex.getMessage());
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+                    showError("An error occurred: " + ex.getMessage());
                     ex.printStackTrace();
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Record was not saved.", "", JOptionPane.INFORMATION_MESSAGE);
             }
-
-        } else if (source == cancelButton) {
-            recordIdField.setText("");
-            patientIdField.setText("");
-            dateField.setText("");
-            descriptionField.setText("");
-            diagnosisField.setText("");
-            quantityField.setText("");
-            medicineComboBox.setSelectedIndex(0);
-        } else if (source == backButton) {
-            dispose();
         }
+        if (source == cancelButton) {
+            if (
+                showConfirmDialog("Confirm cancel?") == JOptionPane.YES_OPTION
+            ){
+                dispose();
+            }
+        }
+
+    }
+
+    private void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
 
     static class RoundedTextField extends JTextField {
+
+        public RoundedTextField(){
+            super();
+        }
+
         public RoundedTextField(int size) {
             super(size);
             setOpaque(false);

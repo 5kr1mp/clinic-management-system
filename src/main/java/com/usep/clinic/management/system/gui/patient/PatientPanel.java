@@ -218,6 +218,7 @@ public class PatientPanel extends JPanel implements java.awt.event.ActionListene
             if (selectedRowIndex >= 0) {
                 Patient patient = patientModel.getRow(selectedRowIndex);
                 recordsPanel.setPatient(patient);
+                recordsPanel.loadRecords();
                 recordsPanel.populatePatientDetails(patient); // ensure details populate
                 navigationManager.show("Records");
             } else {
