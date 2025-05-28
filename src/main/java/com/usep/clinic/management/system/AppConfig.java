@@ -61,6 +61,7 @@ public class AppConfig {
                 description TEXT,
                 diagnosis TEXT NOT NULL,
                 FOREIGN KEY(patient_id) REFERENCES patients(id)
+                ON DELETE CASCADE
             );""");
 
             conn.createStatement().execute("""
@@ -69,7 +70,8 @@ public class AppConfig {
                 record_id INT NOT NULL ,
                 medicine_id INT NOT NULL,
                 amount INTEGER NOT NULL,
-                FOREIGN KEY(record_id) REFERENCES records(id),
+                FOREIGN KEY(record_id) REFERENCES records(id)
+                ON DELETE CASCADE,
                 FOREIGN KEY(medicine_id) REFERENCES medicines(id)
             );""");
 

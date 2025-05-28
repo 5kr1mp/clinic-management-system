@@ -174,7 +174,8 @@ public class PatientAddDialog extends JDialog implements ActionListener {
 
                     if (patientToUpdate == null) {
                         patientService.add(patient);
-                        tableModel.add(patient);
+                        ArrayList<Patient> patients = patientService.getPatients();
+                        tableModel.replaceAll(patients);
                         JOptionPane.showMessageDialog(this, "Patient updated!", "", JOptionPane.INFORMATION_MESSAGE);
                     }
 

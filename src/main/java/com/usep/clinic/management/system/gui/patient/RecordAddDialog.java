@@ -1,3 +1,5 @@
+package com.usep.clinic.management.system.gui.patient;
+
 import com.usep.clinic.management.system.model.Medicine;
 import com.usep.clinic.management.system.model.IssuedMedicine;
 import com.usep.clinic.management.system.model.PatientRecord;

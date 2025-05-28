@@ -3,6 +3,8 @@ package com.usep.clinic.management.system.gui.patient;
 import com.usep.clinic.management.system.gui.NavigationManager;
 import com.usep.clinic.management.system.gui.model.PatientTableModel;
 import com.usep.clinic.management.system.model.Patient;
+import com.usep.clinic.management.system.model.enums.Role;
+import com.usep.clinic.management.system.service.AuthService;
 import com.usep.clinic.management.system.service.EntityNotFoundException;
 import com.usep.clinic.management.system.service.PatientService;
 
@@ -11,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PatientPanel extends JPanel implements ActionListener {
@@ -22,7 +25,7 @@ public class PatientPanel extends JPanel implements ActionListener {
     NavigationManager navigationManager;
 
     private RoundedTextField searchPatients;
-    private JButton patientAddButton, patientViewButton, patientUpdateButton, patientSearchButton;
+    private JButton patientAddButton, patientViewButton, patientUpdateButton, patientSearchButton, patientDeleteButton;
 
     public PatientPanel() {
         super();
@@ -73,8 +76,13 @@ public class PatientPanel extends JPanel implements ActionListener {
         patientTable.getSelectionModel().addListSelectionListener(e -> {
             if (patientTable.getSelectedRow() == -1) {
                 patientViewButton.setEnabled(false);
+                patientDeleteButton.setEnabled(false);
+                patientUpdateButton.setEnabled(false);
+
             } else {
+                patientDeleteButton.setEnabled(true);
                 patientViewButton.setEnabled(true);
+                patientUpdateButton.setEnabled(true);
             }
         });
 
@@ -104,10 +112,25 @@ public class PatientPanel extends JPanel implements ActionListener {
         patientUpdateButton = new RoundedButton("UPDATE");
         patientUpdateButton.setBackground(new Color(143, 186, 229));
         patientUpdateButton.setPreferredSize(new Dimension(120, 30));
+        patientUpdateButton.setEnabled(false);
         controlPanel.add(patientUpdateButton);
         patientUpdateButton.addActionListener(this);
 
+        patientDeleteButton = new RoundedButton("DELETE");
+        patientDeleteButton.setBackground(new Color(143, 186, 229));
+        patientDeleteButton.setPreferredSize(new Dimension(120, 30));
+        patientDeleteButton.setEnabled(false);
+        controlPanel.add(patientDeleteButton);
+        patientDeleteButton.addActionListener(this);
+
         add(controlPanel, BorderLayout.SOUTH);
+
+        if (AuthService.getInstance().getLoggedInUserRole() == Role.ADMIN){
+            patientDeleteButton.setVisible(true);
+        }
+        else {
+            patientDeleteButton.setVisible(false);
+        }
 
         loadAllPatients();
     }
@@ -115,8 +138,9 @@ public class PatientPanel extends JPanel implements ActionListener {
     private void loadAllPatients() {
         PatientService patientService = PatientService.getInstance();
         ArrayList<Patient> patients = patientService.getPatients();
-        patientModel.addAll(patients);
+        patientModel.replaceAll(patients);
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -174,41 +198,72 @@ public class PatientPanel extends JPanel implements ActionListener {
                     patientModel.add(patient);
                 }
             }
+        } else if (source == patientDeleteButton){
+            Patient patient = patientModel.getRow(
+                patientTable.getSelectedRow()
+            );
+
+            if (confirmDelete(patient.getFullName()) == JOptionPane.YES_OPTION){
+                try {
+                    PatientService.getInstance().delete(patient.getId());
+                } catch (Exception ex){
+                    JOptionPane.showMessageDialog(this, "Failed to delete patient", "Failed to delete", JOptionPane.ERROR_MESSAGE);
+                }
+
+                loadAllPatients();
+            }
         }
+    }
+
+    private int confirmDelete(String name){
+        return JOptionPane.showConfirmDialog(
+            null,
+            "Confirm deletion of " + name + " and all their records.",
+            "Confirm Delete",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
     }
 
 
 
-        static class RoundedButton extends JButton {
-        public RoundedButton(String label) {
-            super(label);
-            setFocusPainted(false);
-            setContentAreaFilled(false);
-            setBorderPainted(false);
-            setOpaque(false);
-            setForeground(Color.WHITE);
-            setFont(new Font("Arial", Font.BOLD, 14));
-            setMargin(new Insets(0, 0, 0, 0));
-            setHorizontalAlignment(SwingConstants.CENTER);
-            setVerticalAlignment(SwingConstants.CENTER);
-        }
+static class RoundedButton extends JButton {
+    public RoundedButton(String label) {
+        super(label);
+        setFocusPainted(false);
+        setContentAreaFilled(false);
+        setBorderPainted(false);
+        setOpaque(false);
+        setForeground(Color.WHITE);
+        setFont(new Font("Arial", Font.BOLD, 14));
+        setMargin(new Insets(0, 0, 0, 0));
+        setHorizontalAlignment(SwingConstants.CENTER);
+        setVerticalAlignment(SwingConstants.CENTER);
+    }
 
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        if (isEnabled()) {
             g2.setColor(getBackground());
             g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-
-            FontMetrics fm = g2.getFontMetrics();
-            int stringWidth = fm.stringWidth(getText());
-            int stringHeight = fm.getAscent();
             g2.setColor(getForeground());
-            g2.drawString(getText(), (getWidth() - stringWidth) / 2, (getHeight() + stringHeight) / 2 - 2);
-
-            g2.dispose();
+        } else {
+            g2.setColor(new Color(180, 180, 180));
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            g2.setColor(new Color(100, 100, 100));
         }
+
+        FontMetrics fm = g2.getFontMetrics();
+        int stringWidth = fm.stringWidth(getText());
+        int stringHeight = fm.getAscent();
+        g2.drawString(getText(), (getWidth() - stringWidth) / 2, (getHeight() + stringHeight) / 2 - 2);
+
+        g2.dispose();
     }
+}
 
     static class RoundedTextField extends JTextField {
         public RoundedTextField(int size) {
