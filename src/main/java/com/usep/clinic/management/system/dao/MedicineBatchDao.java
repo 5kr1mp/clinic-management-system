@@ -190,14 +190,14 @@ public class MedicineBatchDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String query = "UPDATE medicine_batch SET medicine_id = ?, stock = ?, quantity = ?" +
-                    "expiry_date = ?, stock_date = ? WHERE id = ?";
+            String query = "UPDATE medicine_batch SET medicine_id = ?, stock = ?, quantity = ?, expiry_date = ?, stock_date = ? WHERE batch_id = ?";
             statement = conn.prepareStatement(query);
             statement.setInt(1, batch.getMedicineId());
             statement.setInt(2, batch.getStock());
             statement.setInt(3, batch.getQuantity());
             statement.setDate(4, Date.valueOf(batch.getExpiryDate()));
             statement.setDate(5, Date.valueOf(batch.getStockedDate()));
+            statement.setInt(6, batch.getId());
             statement.executeUpdate();
         } catch (SQLException e){
             DatabaseConnection.displaySQLErrors(e);

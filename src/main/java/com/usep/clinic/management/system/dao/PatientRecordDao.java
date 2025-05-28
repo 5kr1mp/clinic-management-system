@@ -1,6 +1,7 @@
 package com.usep.clinic.management.system.dao;
 
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.*;
 import com.usep.clinic.management.system.model.*;
@@ -16,7 +17,7 @@ public class PatientRecordDao {
         try {
             conn = DatabaseConnection.getConnection();
 
-            String query = "INSERT INTO patients (patient_id, date_time, description, diagnosis) VALUES(?,?,?,?)";
+            String query = "INSERT INTO records (patient_id, date_time, description, diagnosis) VALUES(?,?,?,?)";
             statement = conn.prepareStatement(query);
 
             statement.setInt(1, record.getPatientId());
@@ -99,16 +100,16 @@ public class PatientRecordDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String query = "SELECT * FROM records WHERE date = ?";
+            String query = "SELECT * FROM records WHERE Date(date_time) = ?";
             statement = conn.prepareStatement(query);
-            statement.setString(1, "date");
+            statement.setDate(1, Date.valueOf(date));
             rs = statement.executeQuery();
 
             while (rs.next()) {
                 records.add(new PatientRecord(
                     rs.getInt("id"),
                     rs.getInt("patient_id"),
-                    LocalDateTime.parse(rs.getString("date")),
+                    rs.getTimestamp("date_time").toLocalDateTime(),
                     rs.getString("description"),
                     rs.getString("diagnosis")
                 ));
@@ -144,14 +145,14 @@ public class PatientRecordDao {
             conn = DatabaseConnection.getConnection();
             String query = "SELECT * FROM records WHERE patient_id = ?";
             statement = conn.prepareStatement(query);
-            statement.setInt(2, patientId);
+            statement.setInt(1, patientId);
             rs = statement.executeQuery();
 
             while (rs.next()) {
                 records.add(new PatientRecord(
                         rs.getInt("id"),
                         rs.getInt("patient_id"),
-                        LocalDateTime.parse(rs.getString("date")),
+                        rs.getTimestamp("date_time").toLocalDateTime(),
                         rs.getString("description"),
                         rs.getString("diagnosis")
                 ));
