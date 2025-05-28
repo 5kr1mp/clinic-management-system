@@ -21,35 +21,52 @@ public class RecordsPanel extends JPanel implements ActionListener {
 
     private Patient patient;
 
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 
     public RecordsPanel() {
-        setLayout(null);
-        setPreferredSize(new Dimension(850, 680));
+        setLayout(new BorderLayout());
+        setPreferredSize(new Dimension(850, 565));
 
-        JLabel header = new JLabel("  ADD PATIENT");
+        JPanel headerPanel = new JPanel(new BorderLayout(10, 0));
+        headerPanel.setBorder(BorderFactory.createLineBorder(new Color(242, 242, 242), 4));
+
+        JLabel header = new JLabel("PATIENT RECORDS");
         header.setOpaque(true);
         header.setBackground(new Color(143, 186, 229));
         header.setForeground(Color.WHITE);
         header.setFont(new Font("Arial", Font.BOLD, 16));
-        header.setBounds(0, 0, 850, 40);
-        add(header);
+        header.setBorder(BorderFactory.createLineBorder(new Color(143, 186, 229), 5));
+        headerPanel.add(header, BorderLayout.CENTER);
+
+        add(headerPanel, BorderLayout.NORTH);
+
+        JPanel formPanel = new JPanel(null);
+        formPanel.setPreferredSize(new Dimension(850, 200));
+        formPanel.setBackground(Color.WHITE);
 
         String[] labels = {"PATIENT ID:", "NAME:", "CONTACT NO.:", "DESIGNATION:", "CATEGORY:"};
         RoundedTextField[] fields = new RoundedTextField[5];
-        int y = 55;
+        int y = 25;
 
         for (int i = 0; i < labels.length; i++) {
             JLabel label = new JLabel(labels[i]);
             label.setBounds(30, y, 100, 25);
-            add(label);
+            label.setFont(new Font("Arial", Font.BOLD, 12));
+            formPanel.add(label);
 
             RoundedTextField field = new RoundedTextField(20);
-            field.setBounds(150, y, 200, 30);
+            field.setBounds(155, y, 200, 28);
             field.setEditable(false);
             fields[i] = field;
-            add(field);
+            formPanel.add(field);
 
-            y += 40;
+            y += 30;
         }
 
         patientIdField = fields[0];
@@ -58,36 +75,45 @@ public class RecordsPanel extends JPanel implements ActionListener {
         patientDesignationField = fields[3];
         patientCategoryField = fields[4];
 
+        // sa Table
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBorder(BorderFactory.createLineBorder(new Color(242, 242, 242), 4));
+
         String[] recordColumns = {"RecordID", "PatientID", "Date", "Description", "Diagnosis"};
         recordModel = new DefaultTableModel(recordColumns, 0);
         recordTable = new JTable(recordModel);
+        recordTable.setRowHeight(25);
         JScrollPane scrollPane = new JScrollPane(recordTable);
-        scrollPane.setBounds(20, 270, 800, 280);
-        add(scrollPane);
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
+
+        JPanel formAndTablePanel = new JPanel();
+        formAndTablePanel.setLayout(new BorderLayout());
+        formAndTablePanel.add(formPanel, BorderLayout.NORTH);
+
+        JPanel tablePanelWrapper = new JPanel(new BorderLayout());
+        tablePanelWrapper.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0)); // Space before table
+        tablePanelWrapper.add(centerPanel, BorderLayout.CENTER);
+
+        formAndTablePanel.add(tablePanelWrapper, BorderLayout.CENTER);
+        add(formAndTablePanel, BorderLayout.CENTER);
+
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         addButton = new RoundedButton("ADD RECORD");
         viewButton = new RoundedButton("VIEW");
         updateButton = new RoundedButton("UPDATE");
 
         RoundedButton[] buttons = {addButton, viewButton, updateButton};
-        int x = 200;
         for (RoundedButton button : buttons) {
-            button.setBounds(x, 570, 130, 30);
+            button.setPreferredSize(new Dimension(120, 30));
             button.setBackground(new Color(143, 186, 229));
             button.addActionListener(this);
-            add(button);
-            x += 140;
+            controlPanel.add(button);
         }
 
+        add(controlPanel, BorderLayout.SOUTH);
+
         loadRecords();
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
     }
 
     private void loadRecords() {
@@ -108,26 +134,38 @@ public class RecordsPanel extends JPanel implements ActionListener {
         }
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
         if (source == viewButton) {
-           // no
+           // new RecordPatientView();
         } else if (source == addButton) {
-            // new RecordAddDialog();
+           // new RecordAddDialog();
         } else if (source == updateButton) {
-
+           // new RecordUpdateDialog();
         }
     }
 
-    public RoundedTextField getPatientIdField() { return patientIdField; }
-    public RoundedTextField getPatientNameField() { return patientNameField; }
-    public RoundedTextField getPatientContactField() { return patientContactField; }
-    public RoundedTextField getPatientDesignationField() { return patientDesignationField; }
-    public RoundedTextField getPatientCategoryField() { return patientCategoryField; }
-    public JTable getRecordTable() { return recordTable; }
+
+    public void populatePatientDetails(Patient patient) {
+        this.patient = patient;
+
+        if (patient != null) {
+            patientIdField.setText(" " + String.valueOf(patient.getId()));
+            patientNameField.setText(" " + patient.getFirstname() + " " + patient.getMiddlename()  + ". " + patient.getLastname());
+            patientContactField.setText(" " + patient.getContact());
+            patientDesignationField.setText(" " + patient.getDesignation());
+            patientCategoryField.setText(" " +String.valueOf(patient.getCategory()));
+
+            patientIdField.setEditable(false);
+            patientNameField.setEditable(false);
+            patientContactField.setEditable(false);
+            patientDesignationField.setEditable(false);
+            patientCategoryField.setEditable(false);
+        }
+    }
+
 
     static class RoundedButton extends JButton {
         public RoundedButton(String label) {
@@ -171,7 +209,7 @@ public class RecordsPanel extends JPanel implements ActionListener {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(Color.WHITE);
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 5, 5);
             super.paintComponent(g);
             g2.dispose();
         }
@@ -185,5 +223,4 @@ public class RecordsPanel extends JPanel implements ActionListener {
             g2.dispose();
         }
     }
-
 }
