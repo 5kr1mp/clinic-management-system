@@ -99,7 +99,7 @@ public class MedicineService {
     public void addMedicine(Medicine medicine) throws Exception {
         
         for (Medicine med : medicineDao.getAll()){
-            if (med.getId() == medicine.getId()){
+            if (med.getId() == medicine.getId() || med.getName().equals(medicine.getName())){
                 throw new DuplicateEntityException("Duplicate medicine.");
             }
         }
