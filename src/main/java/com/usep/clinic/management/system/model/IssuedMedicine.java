@@ -47,4 +47,7 @@ public class IssuedMedicine {
     public int getId() {return id;}
     public int getMedicineId() {return medicineId;}
     public int getRecordId() {return recordId;}
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 }
