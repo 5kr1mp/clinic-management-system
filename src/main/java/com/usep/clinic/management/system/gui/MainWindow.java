@@ -4,14 +4,11 @@
  */
 package com.usep.clinic.management.system.gui;
 
-import com.formdev.flatlaf.FlatLightLaf;
 import com.usep.clinic.management.system.AppContext;
 import com.usep.clinic.management.system.gui.patient.PatientPanel;
 import com.usep.clinic.management.system.gui.patient.RecordsPanel;
-import com.usep.clinic.management.system.gui.reports.ReportsPanel;
 import com.usep.clinic.management.system.model.User;
 import com.usep.clinic.management.system.model.enums.Role;
-import java.awt.CardLayout;
 
 /**
  *
@@ -22,6 +19,7 @@ public class MainWindow extends javax.swing.JFrame {
     NavigationManager navigationManager;
 
     PatientPanel patientPanel;
+    RecordsPanel recordsPanel;
     /**
      * Creates new form MainWindow
      */
@@ -30,13 +28,18 @@ public class MainWindow extends javax.swing.JFrame {
         authorizeUser();
         
         patientPanel = new PatientPanel();
-
+        recordsPanel = new RecordsPanel();
+        
+        // setup navigation manager
         navigationManager = NavigationManager.getInstance();
         mainContent.setLayout(navigationManager);
         navigationManager.setContainer(mainContent);
 
+        // register panels
         mainContent.add(patientPanel);
         navigationManager.registerPanel(patientPanel, "Patients");
+        mainContent.add(recordsPanel);
+        navigationManager.registerPanel(recordsPanel, "Records");
 
         navigationManager.show("Patients");
         
