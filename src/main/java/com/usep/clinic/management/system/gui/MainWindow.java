@@ -48,7 +48,7 @@ public class MainWindow extends javax.swing.JFrame {
         navigationManager.registerPanel(reportsPanel, "Reports");
                 
         authorizeUser();
-        setVisible(true);
+        setVisible(true); 
     }
 
     private void authorizeUser(){

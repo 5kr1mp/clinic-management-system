@@ -67,8 +67,8 @@ public class PatientDao {
                 patients.add(
                         new Patient (
                                 rs.getInt("id"),
-                                rs.getString("firstname"),
                                 rs.getString("lastname"),
+                                rs.getString("firstname"),
                                 rs.getString("middlename"),
                                 rs.getString("designation"),
                                 Category.valueOf(rs.getString("category")),
@@ -277,8 +277,8 @@ public class PatientDao {
             if (rs.next()) {
                 patient = new Patient(
                         rs.getInt("id"),
-                        rs.getString("firstname"),
                         rs.getString("lastname"),
+                        rs.getString("firstname"),
                         rs.getString("middlename"),
                         rs.getString("designation"),
                         Category.valueOf(rs.getString("category")),

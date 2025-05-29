@@ -35,7 +35,7 @@ public class PatientTableModel extends AbstractTableModel {
             case 0 -> patients.get(rowIndex).getId();
             case 1 -> patients.get(rowIndex).getLastname();
             case 2 -> patients.get(rowIndex).getFirstname();
-            case 3 -> patients.get(rowIndex).getMiddlename().charAt(0);
+            case 3 -> patients.get(rowIndex).getMiddlename().isEmpty() ? "" : patients.get(rowIndex).getMiddlename().charAt(0);
             case 4 -> patients.get(rowIndex).getDesignation();
             case 5 -> patients.get(rowIndex).getContact();
             default -> throw new ArrayIndexOutOfBoundsException(columnIndex);

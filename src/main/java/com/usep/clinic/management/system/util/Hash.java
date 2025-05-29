@@ -37,6 +37,7 @@ public class Hash {
      * Generates a 128-bit salt to be added to
      * passwords to ensure no duplicate hashes
      * are generated even if passwords are the same.
+     * PBKDF2WithHmacSHA256
      * 
      * @return the 128-bit salt
      */
